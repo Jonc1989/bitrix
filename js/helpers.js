@@ -55,17 +55,29 @@ function makeid()
 }
 function format() {
 
-    var textarea = document.getElementById("TextArea1");
+    //var textarea = document.getElementById("TextArea1");
+    //
+    //var start = textarea.selectionStart;
+    //var finish = textarea.selectionEnd;
+    //
+    //var sel = '<b>' + textarea.value.substring(start, finish) + '</b>';
+    //var val = textarea.value;
+    //var str1 = val.substring(0, start);
+    //var str3 = val.substring(finish, val.length);
+    //textarea.value = str1 + sel + str3;
 
-    var start = textarea.selectionStart;
-    var finish = textarea.selectionEnd;
+    var span = document.createElement("span");
+    span.style.fontWeight = "bold";
+    //span.style.color = "green";
 
-
-    var sel = '<b>' + textarea.value.substring(start, finish) + '</b>';
-
-    var val = textarea.value;
-    var str1 = val.substring(0, start);
-    var str3 = val.substring(finish, val.length);
-    textarea.value = str1 + sel + str3;
+    if (window.getSelection) {
+        var sel = window.getSelection();
+        if (sel.rangeCount) {
+            var range = sel.getRangeAt(0).cloneRange();
+            range.surroundContents(span);
+            sel.removeAllRanges();
+            sel.addRange(range);
+        }
+    }
 
 }

@@ -21,7 +21,20 @@ function recursiveCheck( neighbours, data, obj, row ){
     return row;
 }
 
-
+function matchAll(str, regex) {
+    var res = [];
+    var m;
+    if (regex.global) {
+        while (m = regex.exec(str)) {
+            res.push(m[1]);
+        }
+    } else {
+        if (m = regex.exec(str)) {
+            res.push(m[1]);
+        }
+    }
+    return res;
+}
 
 
 
@@ -54,24 +67,34 @@ function downloadPdf( text, dataObjects, propertipes, crmName, companyData, cont
 
 
 
+    var bold = matchAll(text, /<span style="font-weight: bold;">(.*)<\/span>/g);console.log(bold);
 
 
-
-
-
-    text = text.split(" "); console.log(text);
-    text.forEach(function( t ){
-
-        output.push(
-            {
-                text: t, fontSize: fontSize, lineHeight: lineHeight
-            },
-            {
-                text: '.', color: 'white', lineHeight: lineHeight
-            }
-        );
-
+    bold.forEach(function(b){
+        text = text.split(b); console.log(text)
+        text.forEach(function( t ){
+            t = t.replace( b, {
+                text: b, fontSize: fontSize, lineHeight: lineHeight
+            });
+        });
     });
+
+
+
+
+    //text = text.split("&nbsp;"); console.log(text);
+    //text.forEach(function( t ){
+    //
+    //    output.push(
+    //        {
+    //            text: t, fontSize: fontSize, lineHeight: lineHeight
+    //        },
+    //        {
+    //            text: '.', color: 'white', lineHeight: lineHeight
+    //        }
+    //    );
+    //
+    //});
 
     var docDefinition = {
         content: [

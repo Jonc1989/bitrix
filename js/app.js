@@ -37,7 +37,10 @@ function initDocument(fields){
 
         }else{
             initDroppable($("#TextArea1"));
-            $('#TextArea1').val( properties );
+            $('#TextArea1').html( properties );
+            $('#TextArea1').each(function(){
+                this.contentEditable = true;
+            });
         }
     }
     });
@@ -47,18 +50,31 @@ function initDroppable($elements) {
         hoverClass: "textarea",
         accept: ":not(.ui-sortable-helper)",
         drop: function(event, ui) {
-            var $this = $(this);
 
             var tempid = ui.draggable.text();
             var dropText;
             dropText = " {" + ui.draggable.data().method + ":" + tempid + "} ";
-            var droparea = document.getElementById('TextArea1');
-            var range1 = droparea.selectionStart;
-            var range2 = droparea.selectionEnd;
-            var val = droparea.value;
-            var str1 = val.substring(0, range1);
-            var str3 = val.substring(range1, val.length);
-            droparea.value = str1 + dropText + str3;
+
+            if (window.getSelection) {
+                var sel = window.getSelection();
+                if (sel.rangeCount) {
+                    var range = sel.getRangeAt(0);
+                    range.deleteContents();
+                    range.insertNode( document.createTextNode(dropText) );
+                }
+            }
+
+
+
+
+
+            //var droparea = document.getElementById('TextArea1');
+            //var range1 = droparea.selectionStart;
+            //var range2 = droparea.selectionEnd;
+            //var val = droparea.value;
+            //var str1 = val.substring(0, range1);
+            //var str3 = val.substring(range1, val.length);
+            //droparea.value = str1 + dropText + str3;
         }
     });
 }
@@ -384,7 +400,7 @@ jQuery(document).ready(function(){
 
         var PROPERTY_VALUES = {};
 
-        PROPERTY_VALUES['text'] = $('#TextArea1').val();
+        PROPERTY_VALUES['text'] = $('#TextArea1').html();
 
         PROPERTY_VALUES['docProperties'] = {
             left: ( $('.margin-left').val() != '') ? $('.margin-left').val() : 40 ,
@@ -398,5 +414,11 @@ jQuery(document).ready(function(){
         sync( currentSection, PROPERTY_VALUES );
 
     });
+
+    $('#debug').click(function(){
+
+        console.log( $('#TextArea1').html() );
+        console.log( $('#TextArea1').text() );
+    })
 
 });
