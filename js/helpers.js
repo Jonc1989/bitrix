@@ -53,3 +53,19 @@ function makeid()
 
     return text;
 }
+function format() {
+
+    var textarea = document.getElementById("TextArea1");
+
+    var start = textarea.selectionStart;
+    var finish = textarea.selectionEnd;
+
+
+    var sel = '<b>' + textarea.value.substring(start, finish) + '</b>';
+
+    var val = textarea.value;
+    var str1 = val.substring(0, start);
+    var str3 = val.substring(finish, val.length);
+    textarea.value = str1 + sel + str3;
+
+}

@@ -12,6 +12,7 @@
     width: calc(100% - 800px);
     width: -webkit-calc(100% - 800px);
     width: -moz-calc(100% - 800px);
+    padding-top: 30px;
 }
 #document .field{
     background-color: aliceblue;
@@ -164,7 +165,10 @@ a {
 .crm-menu2-journal .crm-menu2-icon {
     background-position: center -163px;
 }
-textarea{
+#TextArea1{
     width: 100%;
     height: 100%;
+}
+.style-buttons{
+
 }

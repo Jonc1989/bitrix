@@ -86,13 +86,7 @@
 </div>
 
 <div class="data-container">
-    <!--<a data-toggle="modal" data-target="#document-edit-modal">-->
-        <!--<span class="bx-button bx-button-accept">Rediģēt šablonu</span>-->
-    <!--</a>-->
-
     <div class="data-list"></div>
-    <!--<button class="list btn btn-primary">Saraksts</button>-->
-
 
     <div class="modal fade" id="document-edit-modal" tabindex="-1" role="dialog">
         <div class="modal-dialog">
@@ -107,26 +101,26 @@
                         <select id="api">
                             <option>Izvēlieties sadaļu</option>
                             <optgroup label="CRM">
-                                <option value="crm.deal">Darījumi</option>
-                                <option value="crm.currency">Valūtas</option>
-                                <option value="crm.company">Kompānija</option>
-                                <option value="crm.contact">Kontakti</option>
-                                <option value="crm.invoice">Rēķini</option>
-                                <option value="crm.productrow">Produkti</option>
-                                <option value="crm.lead">Līdi</option>
+                                <option value="deal">Darījumi</option>
+                                <option value="currency">Valūtas</option>
+                                <option value="company">Kompānija</option>
+                                <option value="contact">Kontakti</option>
+                                <option value="invoice">Rēķini</option>
+                                <option value="productrow">Produkti</option>
+                                <option value="lead">Līdi</option>
                             </optgroup>
                         </select>
                     </div>
 
                     <div class="col-md-12">
                         <div id="document" class="">
-                            <textarea id="TextArea1" name="S1" class="ui-droppable"></textarea>
+                            <textarea id="TextArea1" name="S1" class="ui-droppable" wrap="hard"></textarea>
                         </div>
 
                         <div id="fields" class="">
 
                             <div class="doc-props col-md-6">
-                                <div style="margin-top: 30px;">Margins</div>
+                                <div>Margins</div>
                                 <div class="input-group">
                                     <span class="input-group-addon" id="left">Left</span>
                                     <input class="margin-left margins form-control" type="text" class="form-control" placeholder="40" aria-describedby="left">
@@ -147,13 +141,18 @@
 
                             <div class="doc-props col-md-6">
                                 <div class="input-group">
-                                    <div style="margin-top: 30px;">Line height</div>
+                                    <div>Line height</div>
                                     <input class="line-height form-control" type="text" class="form-control">
-                                    <div style="margin-top: 30px;">Font size</div>
+                                    <div>Font size</div>
                                     <input class="font-size form-control" type="text" class="form-control">
                                 </div>
                             </div>
 
+                            <div class="style-buttons">
+                                <button class="btn" onclick="format()">B</button>
+                                <button class="btn">I</button>
+                                <button class="btn">U</button>
+                            </div>
                             <div id="field-wrap" class="col-md-12">
 
                             </div>

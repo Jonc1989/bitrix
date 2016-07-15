@@ -51,7 +51,7 @@ function initDroppable($elements) {
 
             var tempid = ui.draggable.text();
             var dropText;
-            dropText = " {" + /*ui.draggable.data().method + ":" +*/ tempid + "} ";
+            dropText = " {" + ui.draggable.data().method + ":" + tempid + "} ";
             var droparea = document.getElementById('TextArea1');
             var range1 = droparea.selectionStart;
             var range2 = droparea.selectionEnd;
@@ -130,11 +130,79 @@ function getEntityProperties( entity ){
 
                       $.each(fieldData, function (i, field) {
 
-                          var div = $('<div class="col-lg-12 col-md-12 list-item" id="doc_' + i + '"/>', {text: i});
-                          $('<span />', {text: i}).appendTo(div);
-                          div.appendTo('.data-list');
-                          $('#doc_' + i).on('click', function () {
-                              downloadPdf( text, fieldData[i], documentProperties );
+                          var companyId, contactId, dealId, invoiceId, currencyId, productRowId, leadId, quoteId;
+
+                          switch (data.NAME) {
+                              case 'company':
+                                  currencyId = field.CURRENCY_ID != undefined ? field.CURRENCY_ID : null;
+                                  leadId = field.LEAD_ID != undefined ? d.LEAD_ID : null;
+                                  break;
+                              case 'contact':
+                                  companyId = field.COMPANY_ID != undefined ? field.COMPANY_ID : null;
+                                  leadId = field.LEAD_ID != undefined ? field.LEAD_ID : null;
+                                  break;
+                              case 'deal':
+                                  companyId = field.COMPANY_ID != undefined ? field.COMPANY_ID : null;
+                                  contactId = field.CONTACT_ID != undefined ? field.CONTACT_ID : null;
+                                  quoteId = field.QUOTE_ID != undefined ? field.QUOTE_ID : null;
+                                  leadId = field.LEAD_ID != undefined ? field.LEAD_ID : null;
+                                  break;
+                              case 'invoice':
+                                  companyId = field.UF_COMPANY_ID != undefined ? field.UF_COMPANY_ID : null;
+                                  contactId = field.UF_CONTACT_ID != undefined ? field.UF_CONTACT_ID : null;
+                                  dealId = field.UF_DEAL_ID != undefined ? field.UF_DEAL_ID : null;
+                                  break;
+                              case 'currency':
+
+                                  break;
+                              case 'lead':
+
+                                  break;
+                              default:
+                                  console.log('default');
+                          }
+
+
+                          BX24.callBatch({
+                              getCompany: {
+                                  method: 'crm.company.get',
+                                  params: {
+                                      ID: companyId
+                                  }
+                              }, getContact: {
+                                  method: 'crm.contact.get',
+                                  params: {
+                                      ID: contactId
+                                  }
+                              },
+                              getDeal: {
+                                  method: 'crm.deal.get',
+                                  params: {
+                                      ID: dealId
+                                  }
+                              }
+                          }, function (result) {
+
+                              var companyData = {}, contactData = {}, dealData = {};
+                              if (!result.getCompany.error() ) {
+                                  companyData = result.getCompany.data();
+                              }
+                              if (!result.getContact.error()) {
+                                  contactData = result.getContact.data();
+                              }
+                              if (!result.getDeal.error()) {
+                                  dealData = result.getDeal.data();
+                              }
+
+
+                              var div = $('<div class="col-lg-12 col-md-12 list-item" id="doc_' + i + '"/>', {text: i});
+                              $('<span />', {text: i}).appendTo(div);
+                              div.appendTo('.data-list');
+                              $('#doc_' + i).on('click', function () {
+                                  downloadPdf( text, fieldData[i], documentProperties, data.NAME, companyData, contactData, dealData );
+                              });
+
+
                           });
                       });
                   }
@@ -296,7 +364,7 @@ jQuery(document).ready(function(){
             var method = $(this).val();
             if (method.length > 0) {
                 BX24.callMethod(
-                    method+'.fields',
+                    'crm.' + method +'.fields',
                     {},
                     function(result) {
                         if(!result.error()) {

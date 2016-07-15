@@ -25,7 +25,7 @@ function recursiveCheck( neighbours, data, obj, row ){
 
 
 
-function downloadPdf( text, dataObjects, propertipes ){
+function downloadPdf( text, dataObjects, propertipes, crmName, companyData, contactData, dealData ){
 
     var left = Number(propertipes.left),
         top = Number(propertipes.top),
@@ -35,21 +35,42 @@ function downloadPdf( text, dataObjects, propertipes ){
         fontSize = Number(propertipes.fontSize);
 
     var output = [];
+
     $.each(dataObjects, function (i, field) {
-        text = text.replace( '{' + i + '}', field);
+        text = text.replace( '{' + crmName + ':' + i + '}', field);
     });
+
+    $.each(companyData, function (i, field) {
+        text = text.replace( '{company:' + i + '}', field);
+    });
+
+    $.each(contactData, function (i, field) {
+        text = text.replace( '{contact:' + i + '}', field);
+    });
+
+    $.each(dealData, function (i, field) {
+        text = text.replace( '{deal:' + i + '}', field);
+    });
+
+
+
+
+
+
+
 
     text = text.split(" "); console.log(text);
     text.forEach(function( t ){
-        if( t == ""){
-            output.push({
-                text: '.', color: 'white', lineHeight: lineHeight
-            });
-        }else{
-            output.push({
+
+        output.push(
+            {
                 text: t, fontSize: fontSize, lineHeight: lineHeight
-            });
-        }
+            },
+            {
+                text: '.', color: 'white', lineHeight: lineHeight
+            }
+        );
+
     });
 
     var docDefinition = {
