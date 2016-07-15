@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/pdfmake.min.js"></script>
+    <script type="text/javascript" src="js/vfs_fonts.js"></script>
+    <script type="text/javascript" src="js/pdf.js"></script>
+    <script type="text/javascript" src="js/install.js"></script>
+    <script type="text/javascript" src="js/helpers.js"></script>
+
+    <script type="text/javascript" src="js/services.js"></script>
+    <script type="text/javascript" src="js/app.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+
+    <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.1.1/normalize.min.css">-->
+    <link rel="stylesheet" href="style.css">
+    <script type="text/javascript" src="//api.bitrix24.com/api/v1/"></script>
+
+</head>
+<body>
+<div class="col-md-12">
+    <table class="crm-menu-table">
+        <tbody>
+        <tr>
+            <!--<td class="crm-menu-cell">-->
+                <!--<div class="crm-menu-item-wrap" id="crm_ctrl_panel_item_my_activity_TASKS">-->
+                    <!--<a onclick="getEntity('task');" class="crm-menu-item crm-menu-tasks" title="Задачи">-->
+                        <!--<span class="crm-menu-icon"></span>-->
+                        <!--<span class="crm-menu-name">Задачи</span></a>-->
+                    <!--<div id="crm-menu-plus-btn-tasks"></div></div>-->
+            <!--</td>-->
+            <td class="crm-menu-cell">
+                <div class="crm-menu-item-wrap" id="crm_ctrl_panel_item_my_activity_CONTACT">
+                    <a onclick="getEntity('contact');" class="crm-menu-item crm-menu-contact" title="Список контактов">
+                        <span class="crm-menu-icon"></span>
+                        <span class="crm-menu-name">Контакты</span></a>
+                    <div id="crm-menu-plus-btn-contact" class="crm-menu-plus-btn crm-menu-plus-btn-pro" style="display: none;"></div></div>
+            </td>
+            <td class="crm-menu-cell">
+                <div class="crm-menu-item-wrap" id="crm_ctrl_panel_item_my_activity_COMPANY">
+                    <a onclick="getEntity('company');" class="crm-menu-item crm-menu-company" title="Список компаний">
+                        <span class="crm-menu-icon"></span>
+                        <span class="crm-menu-name">Компании</span></a>
+                    <div id="crm-menu-plus-btn-company" class="crm-menu-plus-btn crm-menu-plus-btn-pro" style="display: none;"></div></div>
+            </td>
+            <td class="crm-menu-cell">
+                <div class="crm-menu-item-wrap" id="crm_ctrl_panel_item_my_activity_DEAL">
+                    <a onclick="getEntity('deal');" class="crm-menu-item crm-menu-deal" title="Список сделок">
+                        <span class="crm-menu-icon"></span>
+                        <span class="crm-menu-name">Сделки</span></a>
+                    <div id="crm-menu-plus-btn-deal" class="crm-menu-plus-btn crm-menu-plus-btn-pro" style="display: none;"></div></div>
+            </td>
+            <td class="crm-menu-cell">
+                <div class="crm-menu-item-wrap" id="crm_ctrl_panel_item_my_activity_QUOTE">
+                    <a onclick="getEntity('quote');" class="crm-menu-item crm-menu-quote" title="Список предложений">
+                        <span class="crm-menu-icon"></span>
+                        <span class="crm-menu-name">Предложения</span></a>
+                    </div>
+            </td>
+            <td class="crm-menu-cell">
+                <div class="crm-menu-item-wrap" id="crm_ctrl_panel_item_my_activity_INVOICE">
+                    <a onclick="getEntity('invoice');" class="crm-menu-item crm-menu-invoice" title="Список счетов">
+                        <span class="crm-menu-icon"></span>
+                        <span class="crm-menu-name">Счета</span></a>
+                    </div>
+            </td>
+            <td class="crm-menu-cell">
+                <div class="crm-menu-item-wrap" id="crm_ctrl_panel_item_my_activity_LEAD">
+                    <a onclick="getEntity('lead');" class="crm-menu-item crm-menu-lead" title="Список лидов">
+                        <span class="crm-menu-icon"></span>
+                        <span class="crm-menu-name">Лиды</span></a>
+                    <div id="crm-menu-plus-btn-lead" class="crm-menu-plus-btn crm-menu-plus-btn-pro" style="display: none;"></div></div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <a data-toggle="modal" data-target="#entity-add-modal" style="float: right;">
+        <span class="bx-button bx-button-accept">Pievienot</span>
+    </a>
+</div>
+
+<div class="data-container">
+    <!--<a data-toggle="modal" data-target="#document-edit-modal">-->
+        <!--<span class="bx-button bx-button-accept">Rediģēt šablonu</span>-->
+    <!--</a>-->
+
+    <div class="data-list"></div>
+    <!--<button class="list btn btn-primary">Saraksts</button>-->
+
+
+    <div class="modal fade" id="document-edit-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Modal title</h4>
+                </div>
+                <div class="modal-body col-md-12">
+
+                    <div class="col-md-12">
+                        <select id="api">
+                            <option>Izvēlieties sadaļu</option>
+                            <optgroup label="CRM">
+                                <option value="crm.deal">Darījumi</option>
+                                <option value="crm.currency">Valūtas</option>
+                                <option value="crm.company">Kompānija</option>
+                                <option value="crm.contact">Kontakti</option>
+                                <option value="crm.invoice">Rēķini</option>
+                                <option value="crm.productrow">Produkti</option>
+                                <option value="crm.lead">Līdi</option>
+                            </optgroup>
+                        </select>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div id="document" class="">
+                            <textarea id="TextArea1" name="S1" class="ui-droppable"></textarea>
+                        </div>
+
+                        <div id="fields" class="">
+
+                            <div class="doc-props col-md-6">
+                                <div style="margin-top: 30px;">Margins</div>
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="left">Left</span>
+                                    <input class="margin-left margins form-control" type="text" class="form-control" placeholder="40" aria-describedby="left">
+                                </div>
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="top">Top</span>
+                                    <input class="margin-top margins form-control" type="text" class="form-control" placeholder="60" aria-describedby="top">
+                                </div>
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="right">Right</span>
+                                    <input class="margin-right margins form-control" type="text" class="form-control" placeholder="40" aria-describedby="right">
+                                </div>
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="bottom">Bottom</span>
+                                    <input class="margin-bottom margins form-control" type="text" class="form-control" placeholder="60" aria-describedby="bottom">
+                                </div>
+                            </div>
+
+                            <div class="doc-props col-md-6">
+                                <div class="input-group">
+                                    <div style="margin-top: 30px;">Line height</div>
+                                    <input class="line-height form-control" type="text" class="form-control">
+                                    <div style="margin-top: 30px;">Font size</div>
+                                    <input class="font-size form-control" type="text" class="form-control">
+                                </div>
+                            </div>
+
+                            <div id="field-wrap" class="col-md-12">
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button id="save-doc" type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+
+
+    <div class="modal fade" id="entity-add-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Šablona nosaukums</h4>
+                </div>
+                <div class="modal-body">
+
+                    <div class="input-group">
+                        <input id="entity-name" type="text" class="form-control" placeholder="">
+                    </div>
+
+                    <div class="btn-group" data-toggle="buttons">
+                        <label class="btn btn-primary">
+                            <input type="radio" name="options" id="deal" autocomplete="off"> Darījumi
+                        </label>
+                        <label class="btn btn-primary">
+                            <input type="radio" name="options" id="currency" autocomplete="off"> Valūtas
+                        </label>
+                        <label class="btn btn-primary">
+                            <input type="radio" name="options" id="company" autocomplete="off"> Kompānijas
+                        </label>
+                        <label class="btn btn-primary">
+                            <input type="radio" name="options" id="contact" autocomplete="off"> Kontakti
+                        </label>
+                        <label class="btn btn-primary">
+                            <input type="radio" name="options" id="invoice" autocomplete="off"> Rēķini
+                        </label>
+                        <label class="btn btn-primary">
+                            <input type="radio" name="options" id="productrow" autocomplete="off"> Produkti
+                        </label>
+                        <label class="btn btn-primary">
+                            <input type="radio" name="options" id="lead" autocomplete="off"> Līdi
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button id="save-entity" type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+</div>
+
+
+
+</body>
+</html>

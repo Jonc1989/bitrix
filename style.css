@@ -1,0 +1,170 @@
+
+#document, #fields{
+    vertical-align: top;
+    border: 1px solid black;
+    display: inline-block;
+}
+#document{
+    width: 793px!important;
+    height: 1122px;
+}
+#fields{
+    width: calc(100% - 800px);
+    width: -webkit-calc(100% - 800px);
+    width: -moz-calc(100% - 800px);
+}
+#document .field{
+    background-color: aliceblue;
+    //border-radius: 5px;
+    //margin: 5px;
+    font-size: 10px;
+    padding: 0px;
+    line-height: 1;
+    height: auto;
+    width: auto;
+}
+#fields .field{
+    background-color: aliceblue;
+    margin: 5px;
+    font-size: 10px;
+    padding: 0px;
+    line-height: 1;
+    height: auto;
+    width: auto;
+}
+#api{
+    float: right;
+}
+.margins{
+    //width: 50px;
+}
+.field-container{
+    width: 100%;
+    min-height: 20px;
+    height: 20px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    display: inline-block;
+    margin: 0px;
+    padding: 0px;
+    vertical-align: bottom;
+}
+.clear-pads{
+    padding: 0px;
+}
+.modal-dialog {
+    width: 100%;
+}
+.entity-name, .list_entity, .edit_entity{
+    padding: 5px;
+}
+.list_entity, .edit_entity{
+    float: right;
+}
+.list-item{
+    border-bottom: 1px solid rgba(128, 128, 128, 0.18);
+}
+.doc-props{
+    width: 150px;
+    display: inline-block;
+}
+#field-wrap{
+    margin-top: 30px;
+    min-height: 200px;
+}
+
+/*----------------*/
+
+.crm-menu-table {
+    border-spacing: 0;
+    max-width: 890px;
+    padding: 0;
+    width: 100%;
+}
+table {
+    display: table;
+    border-collapse: separate;
+    border-spacing: 2px;
+    border-color: grey;
+}
+.crm-header {
+    color: #000;
+    font-size: 14px;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing: antialiased;
+    height: 107px;
+    min-width: 870px;
+    position: relative;
+}
+.crm-menu-cell {
+    text-align: left;
+    padding: 0;
+    vertical-align: top;
+}
+.crm-menu-item-wrap {
+    display: inline-block;
+    height: 86px;
+    position: relative;
+}.crm-menu-item {
+     cursor: pointer;
+     display: inline-block;
+     border-radius: 4px;
+     height: 78px;
+     margin-right: 5px;
+     min-width: 70px;
+     padding: 0 5px;
+     position: relative;
+     text-align: center;
+     text-decoration: none;
+     vertical-align: top;
+ }
+.crm-menu-item-active, .crm-menu-item:active, .crm-menu-item:hover {
+    background-color: #D6F1FB;
+}
+a {
+    color: #08D;
+}
+.crm-menu-name {
+    color: #80868E;
+    display: block;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+.crm-menu-icon {
+    background: url('images/crm-control-panel-sprite-12.png') no-repeat 500px 500px;
+    display: block;
+    height: 53px;
+}
+.crm-menu2-icon {
+    background: url('images/app-sprite32.png') no-repeat 500px 500px;
+    display: block;
+    height: 53px;
+}
+.crm-menu-tasks .crm-menu-icon {
+    background-position: center 13px;
+}
+.crm-menu-contact .crm-menu-icon {
+    background-position: center -75px;
+}
+.crm-menu-company .crm-menu-icon {
+    background-position: center -33px;
+}
+.crm-menu-deal .crm-menu-icon {
+    background-position: center -122px;
+}
+.crm-menu-quote .crm-menu-icon {
+    background-position: center -3283px;
+}
+.crm-menu-invoice .crm-menu-icon {
+    background-position: center -2813px;
+}
+.crm-menu-lead .crm-menu-icon {
+    background-position: center -170px;
+}
+.crm-menu2-journal .crm-menu2-icon {
+    background-position: center -163px;
+}
+textarea{
+    width: 100%;
+    height: 100%;
+}
