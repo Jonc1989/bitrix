@@ -1,6 +1,6 @@
 var entityFields = [];
 var currentSection = null;
-
+var editor;
 var deal = 'crm.deal';
 var currency = 'crm.currency';
 var company = 'crm.company';
@@ -36,11 +36,26 @@ function initDocument(fields){
             });
 
         }else{
-            initDroppable($("#TextArea1"));
-            $('#TextArea1').html( properties );
-            $('#TextArea1').each(function(){
-                this.contentEditable = true;
-            });
+
+            //$('#TextArea1').html( properties );
+            // $('#TextArea1').each(function(){
+            //     this.contentEditable = true;
+            // });
+
+            // CKEDITOR.editorConfig = function( config ) {
+            //     config.language = 'es';
+            //     config.uiColor = '#F7B42C';
+            //     config.height = 300;
+            //     config.toolbarCanCollapse = true;
+            // };
+            CKEDITOR.replace( 'TextArea1' );
+            editor = CKEDITOR.instances['TextArea1'];
+            editor.setData(properties);
+
+console.log(editor);
+            //initDroppable( editor.document.activeElement );
+
+
         }
     }
     });
@@ -48,9 +63,10 @@ function initDocument(fields){
 function initDroppable($elements) {
     $elements.droppable({
         hoverClass: "textarea",
-        accept: ":not(.ui-sortable-helper)",
-        drop: function(event, ui) {
-
+        iframeFix: true,
+        iframeScroll: true,
+        drop: function(event, ui) { console.log( event);
+            console.log( ui);
             var tempid = ui.draggable.text();
             var dropText;
             dropText = " {" + ui.draggable.data().method + ":" + tempid + "} ";
@@ -67,14 +83,14 @@ function initDroppable($elements) {
 
 
 
-
-            //var droparea = document.getElementById('TextArea1');
-            //var range1 = droparea.selectionStart;
-            //var range2 = droparea.selectionEnd;
-            //var val = droparea.value;
-            //var str1 = val.substring(0, range1);
-            //var str3 = val.substring(range1, val.length);
-            //droparea.value = str1 + dropText + str3;
+            //
+            // var droparea = $('#cke_TextArea1 iframe html body');
+            // var range1 = droparea.selectionStart;
+            // var range2 = droparea.selectionEnd;
+            // var val = droparea.value;
+            // var str1 = val.substring(0, range1);
+            // var str3 = val.substring(range1, val.length);
+            // droparea.value = str1 + dropText + str3;
         }
     });
 }
@@ -320,8 +336,23 @@ function createField( fields, fieldName, method){
 
         $('.field').draggable({
             cursor: 'move',
-            helper: "clone"
-            //revert: "invalid"
+            helper: "clone",
+
+            stop: function(event, ui) { console.log(ui.helper[0].innerText);
+                var tempid = ui.helper[0].innerText;
+                var dropText;
+                dropText = " {" + method + ":" + tempid + "} ";
+
+                if (CKEDITOR.dom.selection) {
+                    var sel = editor.getSelection();console.log(sel);
+                    // if (sel.rangeCount) {
+                    //     var range = sel.getRangeAt(0); console.log(range);
+                    //     range.deleteContents();
+                    //     range.insertNode( document.createTextNode(dropText) );
+                    // }
+                    editor.insertText( dropText )
+                }
+            }
 
         }).css('z-index', 1);
     }
@@ -400,7 +431,11 @@ jQuery(document).ready(function(){
 
         var PROPERTY_VALUES = {};
 
-        PROPERTY_VALUES['text'] = $('#TextArea1').html();
+        for(var instanceName in CKEDITOR.instances){
+            CKEDITOR.instances[instanceName].updateElement();
+        }
+
+        PROPERTY_VALUES['text'] = CKEDITOR.instances['TextArea1'].getData();
 
         PROPERTY_VALUES['docProperties'] = {
             left: ( $('.margin-left').val() != '') ? $('.margin-left').val() : 40 ,
@@ -416,9 +451,23 @@ jQuery(document).ready(function(){
     });
 
     $('#debug').click(function(){
+        console.log(window.getSelection())
 
-        console.log( $('#TextArea1').html() );
-        console.log( $('#TextArea1').text() );
     })
+    $(document).on( 'click', '#go', function () {
+        html2canvas(document.getElementById('ok'), {
+            onrendered: function (canvas) {
+                var data = canvas.toDataURL();
+                var docDefinition = {
+                    content: [{
+                        image: data,
+                        width: 500,
+                    }]
+                };
+                pdfMake.createPdf(docDefinition).open("Score_Details.pdf");
+            }
+        });
+    });
+
 
 });

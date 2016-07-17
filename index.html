@@ -8,6 +8,10 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/pdfmake.min.js"></script>
+    <script type="text/javascript" src="js/jquery-ui-droppable-iframe-fix.js"></script>
+    <script type="text/javascript" src="js/html2canvas.js"></script>
+
+    <script type="text/javascript" src="js/ckeditor/ckeditor.js"></script>
     <script type="text/javascript" src="js/vfs_fonts.js"></script>
     <script type="text/javascript" src="js/pdf.js"></script>
     <script type="text/javascript" src="js/install.js"></script>
@@ -22,7 +26,7 @@
     <script type="text/javascript" src="//api.bitrix24.com/api/v1/"></script>
 
 </head>
-<body>
+<body id="print">
 <div class="col-md-12">
     <table class="crm-menu-table">
         <tbody>
@@ -114,7 +118,9 @@
 
                     <div class="col-md-12">
                         <div id="document" class="">
-                            <div id="TextArea1" contenteditable="true" name="S1" class="ui-droppable" wrap="hard"></div>
+                            <!--<div id="TextArea1" contenteditable="true" name="S1" class="ui-droppable" wrap="hard"></div>-->
+                            <textarea id="TextArea1" contenteditable="true" name="S1" class="ui-droppable" wrap="hard"></textarea>
+
                         </div>
 
                         <div id="fields" class="">
@@ -220,6 +226,24 @@
 </div>
 
 
+<div class="modal fade" id="render_me" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Modal title</h4>
+            </div>
+            <div class="modal-body" id="ok">
 
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button id="go" type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div id="document-preview"></div>
 </body>
 </html>

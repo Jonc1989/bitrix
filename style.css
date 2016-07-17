@@ -72,7 +72,12 @@
     margin-top: 30px;
     min-height: 200px;
 }
-
+#document-preview{
+    width: 793px;
+    height: 1122px;
+    position: absolute;
+    left:-1000px;
+}
 /*----------------*/
 
 .crm-menu-table {
