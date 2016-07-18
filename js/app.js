@@ -11,6 +11,8 @@ var lead = 'crm.lead';
 
 function initDocument(fields){
     $('.dropped').remove();
+    $("#document-edit-modal .modal-title").empty();
+    $("#document-edit-modal .modal-title").text(fields[0].ENTITY);
     $.each(fields[0].PROPERTY_VALUES, function( name, val ){
         if(val){
             var properties = JSON.parse(val);
@@ -23,13 +25,14 @@ function initDocument(fields){
             $('.margin-bottom').val( ( properties.bottom != "" ) ? properties.bottom : 60 ),
             $('.line-height').val( ( properties.lHeight != "" ) ? properties.lHeight : 1 ),
             $('.font-size').val( ( properties.fontSize != "" ) ? properties.fontSize : 10 ),
+            $('.date-format').val( properties.dateFormat != "" ? properties.dateFormat : 'YYYY-MM-DD' ),
 
-            $('#document').css({
-                'padding-left': ( properties.left != "" ) ? properties.left + 'px' : 40 + 'px',
-                'padding-top': ( properties.top != "" ) ? properties.top + 'px' : 60 + 'px' ,
-                'padding-right': ( properties.right != "" ) ? properties.right + 'px' : 40 + 'px',
-                'padding-bottom': ( properties.bottom != "" ) ? properties.bottom + 'px' : 60 + 'px'
-            }),
+            //$('#document').css({
+            //    'padding-left': ( properties.left != "" ) ? properties.left + 'px' : 40 + 'px',
+            //    'padding-top': ( properties.top != "" ) ? properties.top + 'px' : 60 + 'px' ,
+            //    'padding-right': ( properties.right != "" ) ? properties.right + 'px' : 40 + 'px',
+            //    'padding-bottom': ( properties.bottom != "" ) ? properties.bottom + 'px' : 60 + 'px'
+            //}),
             $('.field').css({
                 'line-height': ( properties.lHeight != "" ) ? properties.lHeight : 1,
                 'font-size': ( properties.fontSize != "" ) ? properties.fontSize : 10
@@ -42,18 +45,11 @@ function initDocument(fields){
             //     this.contentEditable = true;
             // });
 
-            // CKEDITOR.editorConfig = function( config ) {
-            //     config.language = 'es';
-            //     config.uiColor = '#F7B42C';
-            //     config.height = 300;
-            //     config.toolbarCanCollapse = true;
-            // };
-            CKEDITOR.replace( 'TextArea1' );
-            editor = CKEDITOR.instances['TextArea1'];
+
+            //editor.resize($("#document").width(),$("#document").height());
             editor.setData(properties);
 
-console.log(editor);
-            //initDroppable( editor.document.activeElement );
+            initDroppable( $('#cke_TextArea1') );
 
 
         }
@@ -65,32 +61,14 @@ function initDroppable($elements) {
         hoverClass: "textarea",
         iframeFix: true,
         iframeScroll: true,
-        drop: function(event, ui) { console.log( event);
-            console.log( ui);
+        drop: function(event, ui) {
             var tempid = ui.draggable.text();
             var dropText;
             dropText = " {" + ui.draggable.data().method + ":" + tempid + "} ";
 
-            if (window.getSelection) {
-                var sel = window.getSelection();
-                if (sel.rangeCount) {
-                    var range = sel.getRangeAt(0);
-                    range.deleteContents();
-                    range.insertNode( document.createTextNode(dropText) );
-                }
+            if (CKEDITOR.dom.selection) {
+                editor.insertText( dropText )
             }
-
-
-
-
-            //
-            // var droparea = $('#cke_TextArea1 iframe html body');
-            // var range1 = droparea.selectionStart;
-            // var range2 = droparea.selectionEnd;
-            // var val = droparea.value;
-            // var str1 = val.substring(0, range1);
-            // var str3 = val.substring(range1, val.length);
-            // droparea.value = str1 + dropText + str3;
         }
     });
 }
@@ -178,6 +156,7 @@ function getEntityProperties( entity ){
                                   contactId = field.CONTACT_ID != undefined ? field.CONTACT_ID : null;
                                   quoteId = field.QUOTE_ID != undefined ? field.QUOTE_ID : null;
                                   leadId = field.LEAD_ID != undefined ? field.LEAD_ID : null;
+                                  productRowId = field.ID != undefined ? field.ID : null;
                                   break;
                               case 'invoice':
                                   companyId = field.UF_COMPANY_ID != undefined ? field.UF_COMPANY_ID : null;
@@ -212,10 +191,22 @@ function getEntityProperties( entity ){
                                   params: {
                                       ID: dealId
                                   }
+                              },
+                              get_deal_productRow: {
+                                  method: 'crm.deal.productrows.get',
+                                  params: {
+                                      ID:  productRowId
+                                  }
+                              },
+                              getLead: {
+                                  method: 'crm.lead.get',
+                                  params: {
+                                      ID:  leadId
+                                  }
                               }
                           }, function (result) {
 
-                              var companyData = {}, contactData = {}, dealData = {};
+                              var companyData = {}, contactData = {}, dealData = {}, dealProductRow = {}, leadData = {};
                               if (!result.getCompany.error() ) {
                                   companyData = result.getCompany.data();
                               }
@@ -225,13 +216,21 @@ function getEntityProperties( entity ){
                               if (!result.getDeal.error()) {
                                   dealData = result.getDeal.data();
                               }
+                              if (!result.get_deal_productRow.error()) {
+                                  dealProductRow = result.get_deal_productRow.data();
+                              }
+                              if (!result.getLead.error()) {
+                                  leadData = result.getLead.data();
+                              }
 
 
                               var div = $('<div class="col-lg-12 col-md-12 list-item" id="doc_' + i + '"/>', {text: i});
-                              $('<span />', {text: i}).appendTo(div);
+                              var span = $('<span />', {text: i}); span.appendTo(div);
+                              var print = $( '<span />', {text: 'Printēt', class: 'action'}); print.appendTo(div);
+
                               div.appendTo('.data-list');
-                              $('#doc_' + i).on('click', function () {
-                                  downloadPdf( text, fieldData[i], documentProperties, data.NAME, companyData, contactData, dealData );
+                              $('#doc_' + i + ' .action').on('click', function () {
+                                  downloadPdf( text, fieldData[i], documentProperties, data.NAME, companyData, contactData, dealData, dealProductRow, leadData );
                               });
 
 
@@ -317,7 +316,20 @@ function sync( name, fields ){
 
 
                                 setTimeout(function(){
-                                    updateEntity( entity.ID, name, entity.NAME, update );
+
+
+                                    var response, xhr;
+                                    xhr = updateEntity( entity.ID, name, entity.NAME, update );
+                                    xhr.onreadystatechange = function() {
+                                        if (xhr.readyState == 4 && xhr.status == 200) {
+                                            response = JSON.parse(xhr.response);
+                                            if(response.result){
+                                                $("#document-edit-modal #close-edit-modal").click()
+                                            }
+
+                                        }
+                                    };
+
                                 }, 3000);
                             }
 
@@ -338,20 +350,20 @@ function createField( fields, fieldName, method){
             cursor: 'move',
             helper: "clone",
 
-            stop: function(event, ui) { console.log(ui.helper[0].innerText);
-                var tempid = ui.helper[0].innerText;
-                var dropText;
-                dropText = " {" + method + ":" + tempid + "} ";
-
-                if (CKEDITOR.dom.selection) {
-                    var sel = editor.getSelection();console.log(sel);
-                    // if (sel.rangeCount) {
-                    //     var range = sel.getRangeAt(0); console.log(range);
-                    //     range.deleteContents();
-                    //     range.insertNode( document.createTextNode(dropText) );
-                    // }
-                    editor.insertText( dropText )
-                }
+            stop: function(event, ui) {
+                //var tempid = ui.helper[0].innerText;
+                //var dropText;
+                //dropText = " {" + method + ":" + tempid + "} ";
+                //
+                //if (CKEDITOR.dom.selection) {
+                //    var sel = editor.getSelection();
+                //    // if (sel.rangeCount) {
+                //    //     var range = sel.getRangeAt(0); console.log(range);
+                //    //     range.deleteContents();
+                //    //     range.insertNode( document.createTextNode(dropText) );
+                //    // }
+                //    editor.insertText( dropText )
+                //}
             }
 
         }).css('z-index', 1);
@@ -364,24 +376,12 @@ jQuery(document).ready(function(){
     var dealFields = [], currencyFields = [], companyFields = [], dealData = [], currencyData = [], companyData = [];
     var dataArray = [];
 
+    CKEDITOR.replace( 'TextArea1' );
+    editor = CKEDITOR.instances['TextArea1'];
 
-    $('#TextArea1').droppable( {
-        drop: function(event, ui) {
-            var $this = $(this);
-
-            var tempid = ui.draggable.text();
-            var dropText;
-            dropText = " {" + tempid + "} ";
-            var droparea = document.getElementById('TextArea1');
-            var range1 = droparea.selectionStart;
-            var range2 = droparea.selectionEnd;
-            var val = droparea.value;
-            var str1 = val.substring(0, range1);
-            var str3 = val.substring(range1, val.length);
-            droparea.value = str1 + dropText + str3;
-        }
-    } );
-
+    CKEDITOR.editorConfig = function( config ) {
+             //config.uiColor = '#F7B42C';
+        };
     BX24.init(function(){
 
         $(document).on('click', '#save-entity', function () {
@@ -396,7 +396,7 @@ jQuery(document).ready(function(){
                                 NAME: id
                             },function( result ){
                                 if(!result.error()){
-
+                                    $("#entity-add-modal #close-add-entity").click()
                                 }
                             });
                         }
@@ -416,7 +416,10 @@ jQuery(document).ready(function(){
                     function(result) {
                         if(!result.error()) {
                             $.each(result.data(), function(fieldName, e){
-                                if( fieldName != 'COMPANY_ID' || fieldName != 'CONTACT_ID' || fieldName != 'UF_DEAL_ID' ){
+                                if( fieldName == 'COMPANY_ID' || fieldName == 'CONTACT_ID' || fieldName == 'UF_DEAL_ID' ||
+                                    fieldName == 'QUOTE_ID' || fieldName == 'LEAD_ID' || fieldName == 'PRODUCT_ID' ){
+
+                                }else{
                                     createField( entityFields, fieldName, method );
                                 }
                             });
@@ -443,7 +446,8 @@ jQuery(document).ready(function(){
             right: ( $('.margin-right').val() != '') ? $('.margin-right').val() : 40 ,
             bottom: ($('.margin-bottom').val() != '') ? $('.margin-bottom').val() : 60 ,
             lHeight: ( $('.line-height').val() != '' ) ? $('.line-height').val() : 1,
-            fontSize: $('.font-size').val()
+            fontSize: $('.font-size').val(),
+            dateFormat: ($('.date-format').val() != '') ? $('.date-format').val() : 'YYYY-MM-DD'
         };
 
         sync( currentSection, PROPERTY_VALUES );
@@ -454,20 +458,6 @@ jQuery(document).ready(function(){
         console.log(window.getSelection())
 
     })
-    $(document).on( 'click', '#go', function () {
-        html2canvas(document.getElementById('ok'), {
-            onrendered: function (canvas) {
-                var data = canvas.toDataURL();
-                var docDefinition = {
-                    content: [{
-                        image: data,
-                        width: 500,
-                    }]
-                };
-                pdfMake.createPdf(docDefinition).open("Score_Details.pdf");
-            }
-        });
-    });
 
 
 });

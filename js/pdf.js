@@ -38,31 +38,67 @@ function matchAll(str, regex) {
 
 
 
-function downloadPdf( text, dataObjects, propertipes, crmName, companyData, contactData, dealData ){
 
-    // var left = Number(propertipes.left),
-    //     top = Number(propertipes.top),
-    //     right = Number(propertipes.right),
-    //     bottom = Number(propertipes.bottom),
-    //     lineHeight = Number(propertipes.lHeight),
-    //     fontSize = Number(propertipes.fontSize);
-    //
-    // var output = [];
-    //
+function replaceMatched( field, text, crmName, key, dateFormat ){
+    var found = text.match('{' + crmName +':' + key + '}');
+    if( found ){
+        if( typeof field === 'object' ){
+            var string = '';
+            $.each( field, function( i, val ){
+                string += val.VALUE + ', ';
+            } );
+            string.slice(0,-3);
+            text = text.replace( '{' + crmName +':' + key + '}', string);
+        }else if( field.constructor === Array ){
+            console.log( field )
+        }else{
+            if( checkDate( key ) != -1 ){
+                var date = formatDateString( field, dateFormat );
+                text = text.replace( '{' + crmName +':' + key + '}', date );
+            }else{
+                text = text.replace( '{' + crmName +':' + key + '}', field);
+            }
+
+        }
+        return replaceMatched( field, text, crmName, key, dateFormat );
+    }
+    return text;
+}
+
+function downloadPdf( text, dataObjects, propertipes, crmName, companyData, contactData, dealData, dealProductRow, leadData ){
+
+    var left = Number(propertipes.left) * Number(0.353),
+         top = Number(propertipes.top)* Number(0.353),
+         right = Number(propertipes.right)* Number(0.353),
+         bottom = Number(propertipes.bottom)* Number(0.353),
+         lineHeight = Number(propertipes.lHeight),
+         fontSize = Number(propertipes.fontSize),
+         dateFormat = propertipes.dateFormat;
+
+
     $.each(dataObjects, function (i, field) {
-        text = text.replace( '{' + crmName + ':' + i + '}', field);
+        text =  replaceMatched( field, text, crmName, i, dateFormat );
+        //text = text.replace( '{' + crmName + ':' + i + '}', field);
     });
 
     $.each(companyData, function (i, field) {
-        text = text.replace( '{company:' + i + '}', field);
+        text =  replaceMatched( field, text, 'company', i, dateFormat );
     });
 
     $.each(contactData, function (i, field) {
-        text = text.replace( '{contact:' + i + '}', field);
+        text =  replaceMatched( field, text, 'contact', i, dateFormat );
     });
 
     $.each(dealData, function (i, field) {
-        text = text.replace( '{deal:' + i + '}', field);
+        text =  replaceMatched( field, text, 'deal', i, dateFormat );
+    });
+    console.log( dealProductRow );
+    $.each(dealProductRow, function (i, field) {
+        text =  replaceMatched( field, text, 'productrow', i, field, dateFormat );
+    });
+
+    $.each(leadData, function (i, field) {
+        text =  replaceMatched( field, text, 'lead', i, field, dateFormat );
     });
     //
     //
@@ -109,23 +145,11 @@ function downloadPdf( text, dataObjects, propertipes, crmName, companyData, cont
 /*--------------------------------------------*/
 
 
-    $( '#render_me').modal('show');
-    $('#ok').empty();
-    $('#ok').html(text);
-    //
-    // var doc = new jsPDF();
-    // var specialElementHandlers = {
-    //     '#editor': function(element, renderer){
-    //         return true;
-    //     }
-    // };
-    // doc.fromHTML($('#print').get(0), 15, 15, {
-    //     'width': 170,
-    //     'elementHandlers': specialElementHandlers
-    // });
-    // setTimeout(function () {
-    //     doc.save('TestHTMLDoc.pdf');
-    // }, 1000);
+    //$( '#render_me').modal('show');
+    //$('#ok').empty();
+    //$('#ok').html(text);
+
+
 /*-----------------------------------------------*/
     // var doc = new jsPDF('p','pt','a4');
     //
@@ -164,5 +188,14 @@ function downloadPdf( text, dataObjects, propertipes, crmName, companyData, cont
     //         alert( "Data Loaded: " + data );
     //     });
 
+    var mywindow = window.open('', 'Document');
+    mywindow.document.write('<html><head><style>@page{ margin: ' + top + 'mm ' + right + 'mm ' + bottom + 'mm ' + left + 'mm;} </style>');
+    /*optional stylesheet*/ //mywindow.document.write('<link rel="stylesheet" href="main.css" type="text/css" />');
+    mywindow.document.write('</head><body >');
+    mywindow.document.write(text);
+    mywindow.document.write('</body></html>');
+
+    mywindow.print();
+    mywindow.close();
 
 }

@@ -7,9 +7,9 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/moment.js"></script>
     <script type="text/javascript" src="js/pdfmake.min.js"></script>
     <script type="text/javascript" src="js/jquery-ui-droppable-iframe-fix.js"></script>
-    <script type="text/javascript" src="js/html2canvas.js"></script>
 
     <script type="text/javascript" src="js/ckeditor/ckeditor.js"></script>
     <script type="text/javascript" src="js/vfs_fonts.js"></script>
@@ -21,7 +21,7 @@
     <script type="text/javascript" src="js/app.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 
-    <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.1.1/normalize.min.css">-->
+
     <link rel="stylesheet" href="style.css">
     <script type="text/javascript" src="//api.bitrix24.com/api/v1/"></script>
 
@@ -59,13 +59,13 @@
                         <span class="crm-menu-name">Сделки</span></a>
                     <div id="crm-menu-plus-btn-deal" class="crm-menu-plus-btn crm-menu-plus-btn-pro" style="display: none;"></div></div>
             </td>
-            <td class="crm-menu-cell">
-                <div class="crm-menu-item-wrap" id="crm_ctrl_panel_item_my_activity_QUOTE">
-                    <a onclick="getEntity('quote');" class="crm-menu-item crm-menu-quote" title="Список предложений">
-                        <span class="crm-menu-icon"></span>
-                        <span class="crm-menu-name">Предложения</span></a>
-                    </div>
-            </td>
+            <!--<td class="crm-menu-cell">-->
+                <!--<div class="crm-menu-item-wrap" id="crm_ctrl_panel_item_my_activity_QUOTE">-->
+                    <!--<a onclick="getEntity('quote');" class="crm-menu-item crm-menu-quote" title="Список предложений">-->
+                        <!--<span class="crm-menu-icon"></span>-->
+                        <!--<span class="crm-menu-name">Предложения</span></a>-->
+                    <!--</div>-->
+            <!--</td>-->
             <td class="crm-menu-cell">
                 <div class="crm-menu-item-wrap" id="crm_ctrl_panel_item_my_activity_INVOICE">
                     <a onclick="getEntity('invoice');" class="crm-menu-item crm-menu-invoice" title="Список счетов">
@@ -97,78 +97,73 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">Modal title</h4>
+                    <h4 class="modal-title"></h4>
                 </div>
                 <div class="modal-body col-md-12">
 
-                    <div class="col-md-12">
-                        <select id="api">
-                            <option>Izvēlieties sadaļu</option>
-                            <optgroup label="CRM">
-                                <option value="deal">Darījumi</option>
-                                <option value="currency">Valūtas</option>
-                                <option value="company">Kompānija</option>
-                                <option value="contact">Kontakti</option>
-                                <option value="invoice">Rēķini</option>
-                                <option value="productrow">Produkti</option>
-                                <option value="lead">Līdi</option>
-                            </optgroup>
-                        </select>
-                    </div>
+
 
                     <div class="col-md-12">
-                        <div id="document" class="">
-                            <!--<div id="TextArea1" contenteditable="true" name="S1" class="ui-droppable" wrap="hard"></div>-->
-                            <textarea id="TextArea1" contenteditable="true" name="S1" class="ui-droppable" wrap="hard"></textarea>
-
-                        </div>
-
                         <div id="fields" class="">
+                            <select id="api">
+                                <option>Izvēlieties sadaļu</option>
+                                <optgroup label="CRM">
+                                    <option value="deal">Darījumi</option>
+                                    <option value="currency">Valūtas</option>
+                                    <option value="company">Kompānija</option>
+                                    <option value="contact">Kontakti</option>
+                                    <option value="invoice">Rēķini</option>
+                                    <option value="productrow">Produkti</option>
+                                    <option value="lead">Līdi</option>
+                                </optgroup>
+                            </select>
+                            <div>
+                                <!-- Nav tabs -->
+                                <ul class="nav nav-tabs" role="tablist">
+                                    <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">CRM lauki</a></li>
+                                    <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Dokumenta uzstādījumi</a></li>
+                                </ul>
 
-                            <div class="doc-props col-md-6">
-                                <div>Margins</div>
-                                <div class="input-group">
-                                    <span class="input-group-addon" id="left">Left</span>
-                                    <input class="margin-left margins form-control" type="text" class="form-control" placeholder="40" aria-describedby="left">
-                                </div>
-                                <div class="input-group">
-                                    <span class="input-group-addon" id="top">Top</span>
-                                    <input class="margin-top margins form-control" type="text" class="form-control" placeholder="60" aria-describedby="top">
-                                </div>
-                                <div class="input-group">
-                                    <span class="input-group-addon" id="right">Right</span>
-                                    <input class="margin-right margins form-control" type="text" class="form-control" placeholder="40" aria-describedby="right">
-                                </div>
-                                <div class="input-group">
-                                    <span class="input-group-addon" id="bottom">Bottom</span>
-                                    <input class="margin-bottom margins form-control" type="text" class="form-control" placeholder="60" aria-describedby="bottom">
-                                </div>
-                            </div>
+                                <!-- Tab panes -->
+                                <div class="tab-content">
+                                    <div role="tabpanel" class="tab-pane active" id="home">
+                                        <div id="field-wrap" class="col-md-12"></div>
+                                    </div>
+                                    <div role="tabpanel" class="tab-pane" id="profile">
 
-                            <div class="doc-props col-md-6">
-                                <div class="input-group">
-                                    <div>Line height</div>
-                                    <input class="line-height form-control" type="text" class="form-control">
-                                    <div>Font size</div>
-                                    <input class="font-size form-control" type="text" class="form-control">
+                                        <div class="col-md-12">
+                                            <div>Margins</div>
+                                            <div class="input-group">
+                                                <span class="input-group-addon" id="left">Left</span>
+                                                <input class="margin-left margins form-control" type="text" class="form-control" placeholder="40" aria-describedby="left">
+                                            </div>
+                                            <div class="input-group">
+                                                <span class="input-group-addon" id="top">Top</span>
+                                                <input class="margin-top margins form-control" type="text" class="form-control" placeholder="60" aria-describedby="top">
+                                            </div>
+                                            <div class="input-group">
+                                                <span class="input-group-addon" id="right">Right</span>
+                                                <input class="margin-right margins form-control" type="text" class="form-control" placeholder="40" aria-describedby="right">
+                                            </div>
+                                            <div class="input-group">
+                                                <span class="input-group-addon" id="bottom">Bottom</span>
+                                                <input class="margin-bottom margins form-control" type="text" class="form-control" placeholder="60" aria-describedby="bottom">
+                                            </div>
+                                        </div>
+
+                                        <div><span>Datuma formāts: </span><input class="form-control date-format"></div>
+                                    </div>
                                 </div>
-                            </div>
-
-                            <div class="style-buttons">
-                                <button class="btn" onclick="format()">B</button>
-                                <button class="btn">I</button>
-                                <button class="btn">U</button>
-                            </div>
-                            <div id="field-wrap" class="col-md-12">
-
                             </div>
                         </div>
 
+                        <div id="document" class="">
+                            <textarea id="TextArea1" name="S1" class="ui-droppable" wrap="hard"></textarea>
+                        </div>
                     </div>
-
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button id="close-edit-modal" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     <button id="save-doc" type="button" class="btn btn-primary">Save changes</button>
                     <button id="debug" type="button" class="btn btn-default">Debug</button>
                 </div>
@@ -188,16 +183,16 @@
                 <div class="modal-body">
 
                     <div class="input-group">
-                        <input id="entity-name" type="text" class="form-control" placeholder="">
+                        <input id="entity-name" type="text" class="form-control" placeholder="" style="margin-bottom: 15px;">
                     </div>
 
                     <div class="btn-group" data-toggle="buttons">
                         <label class="btn btn-primary">
                             <input type="radio" name="options" id="deal" autocomplete="off"> Darījumi
                         </label>
-                        <label class="btn btn-primary">
-                            <input type="radio" name="options" id="currency" autocomplete="off"> Valūtas
-                        </label>
+                        <!--<label class="btn btn-primary">-->
+                            <!--<input type="radio" name="options" id="currency" autocomplete="off"> Valūtas-->
+                        <!--</label>-->
                         <label class="btn btn-primary">
                             <input type="radio" name="options" id="company" autocomplete="off"> Kompānijas
                         </label>
@@ -216,7 +211,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button id="close-add-entity" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     <button id="save-entity" type="button" class="btn btn-primary">Save changes</button>
                 </div>
             </div><!-- /.modal-content -->
@@ -225,25 +220,5 @@
 
 </div>
 
-
-<div class="modal fade" id="render_me" tabindex="-1" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Modal title</h4>
-            </div>
-            <div class="modal-body" id="ok">
-
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button id="go" type="button" class="btn btn-primary">Save changes</button>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-
-<div id="document-preview"></div>
 </body>
 </html>

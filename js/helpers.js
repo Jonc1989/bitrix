@@ -10,61 +10,31 @@ function sortById(a,b) {
     return a.id.substring(1) - b.id.substring(1);
 }
 
-
-function sortByValues( myObj, bool ){
-    var values = [];
-    $.each(myObj, function(i, v){
-        values.push(v);
-    });
-
-    if( bool ){
-        values.sort(sortByParams);
-    }else{
-        values.sort(sortById);
-    }
-
-return values;
+function checkDate( date ){
+    var dates = [
+        'BEGINDATE',
+        'CLOSEDATE',
+        'DATE_CREATE',
+        'DATE_MODIFY',
+        'DATE_UPDATE',
+        'BIRTHDATE',
+        'DATE_CLOSED',
+        'DATE_BILL',
+        'DATE_INSERT',
+        'DATE_MARKED',
+        'DATE_PAY_BEFORE',
+        'DATE_PAYED',
+        'DATE_STATUS',
+        'DATE_UPDATE',
+        'PAY_VOUCHER_DATE'
+    ];
+    return $.inArray( date, dates );
 }
-function addProperties( keys, response, data, name ){
-    $.each(keys, function (i, params) {
-        if( params.method == name ){
-            data[i] = {
-                value: response[i],
-                params: params,
-                field: i
-            }
-        }
-    });
-    delete data['ID'];
-    return data;
+function formatDateString( date, format ){
+    return moment(date).format( format )
 }
 
-function mergeObjects( data, dataToAdd){
-    for (var attrname in dataToAdd) { data[attrname] = dataToAdd[attrname]; }
-    return data;
-}
-function makeid()
-{
-    var text = "";
-    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-    for( var i=0; i < 8; i++ )
-        text += possible.charAt(Math.floor(Math.random() * possible.length));
-
-    return text;
-}
 function format() {
-
-    //var textarea = document.getElementById("TextArea1");
-    //
-    //var start = textarea.selectionStart;
-    //var finish = textarea.selectionEnd;
-    //
-    //var sel = '<b>' + textarea.value.substring(start, finish) + '</b>';
-    //var val = textarea.value;
-    //var str1 = val.substring(0, start);
-    //var str3 = val.substring(finish, val.length);
-    //textarea.value = str1 + sel + str3;
 
     var span = document.createElement("span");
     span.style.fontWeight = "bold";

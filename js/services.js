@@ -29,7 +29,7 @@ function addEntity( name, data ){
 }
 
 function updateEntity( id, entity, name, data ){
-    BX24.callMethod('entity.item.update', {
+    return BX24.callMethod('entity.item.update', {
         ENTITY: entity,
         NAME: name,
         ID: id,
@@ -38,7 +38,7 @@ function updateEntity( id, entity, name, data ){
         if(result.error())
             console.error(result.error(), 'Kluda');
         else{
-            console.log(result.data());
+            return result.data();
         }
     });
 }

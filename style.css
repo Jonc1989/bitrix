@@ -4,40 +4,30 @@
     border: 1px solid black;
     display: inline-block;
 }
-#document{
+#document, #render_me .modal-content{
     width: 793px!important;
-    height: 1122px;
+    //height: 1122px;
 }
 #fields{
-    width: calc(100% - 800px);
-    width: -webkit-calc(100% - 800px);
-    width: -moz-calc(100% - 800px);
-    padding-top: 30px;
+    width: 100%;
 }
-#document .field{
+.field{
     background-color: aliceblue;
     //border-radius: 5px;
-    //margin: 5px;
-    font-size: 10px;
-    padding: 0px;
-    line-height: 1;
-    height: auto;
-    width: auto;
-}
-#fields .field{
-    background-color: aliceblue;
     margin: 5px;
     font-size: 10px;
-    padding: 0px;
+    padding: 5px;
     line-height: 1;
     height: auto;
     width: auto;
 }
+
 #api{
     float: right;
 }
-.margins{
-    //width: 50px;
+#entity-add-modal .btn {
+    display: inline-block;
+    padding: 4px 10px;
 }
 .field-container{
     width: 100%;
@@ -70,13 +60,28 @@
 }
 #field-wrap{
     margin-top: 30px;
-    min-height: 200px;
+    min-height: 100px;
 }
-#document-preview{
-    width: 793px;
-    height: 1122px;
-    position: absolute;
-    left:-1000px;
+#entity-add-modal{
+    width: 600px;
+    margin: 0 auto;
+}
+#document-edit-modal{
+    width: 872px;
+    margin: 0 auto;
+
+}
+#document-edit-modal.modal{
+    bottom: initial;
+}
+
+.input-group {
+    width: 120px;
+}
+.action{
+    cursor: pointer;
+    margin-right: 30px;
+    float: right;
 }
 /*----------------*/
 
