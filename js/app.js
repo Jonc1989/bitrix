@@ -226,6 +226,35 @@ function getEntityProperties( entity ){
 
                               var div = $('<div class="col-lg-12 col-md-12 list-item" id="doc_' + i + '"/>', {text: i});
                               var span = $('<span />', {text: i}); span.appendTo(div);
+                              var name = '';
+                              switch (data.NAME) {
+                                  case 'company':
+                                      name = field.TITLE;
+                                      var nameSpan = $('<span />', {text: name}); nameSpan.appendTo(div);
+                                      break;
+                                  case 'contact':
+                                      name = field.NAME + ' ' + field.LAST_NAME;
+                                      var nameSpan = $('<span />', {text: name}); nameSpan.appendTo(div);
+                                      break;
+                                  case 'deal':
+                                      name = field.TITLE;
+                                      var nameSpan = $('<span />', {text: name}); nameSpan.appendTo(div);
+                                      break;
+                                  case 'invoice':
+                                      name = field.ORDER_TOPIC;
+                                      var nameSpan = $('<span />', {text: name}); nameSpan.appendTo(div);
+                                      break;
+                                  case 'lead':
+                                      name = field.TITLE;
+                                      var nameSpan = $('<span />', {text: name}); nameSpan.appendTo(div);
+                                      break;
+                                  default:
+                                      console.log('default');
+                              }
+
+
+
+
                               var print = $( '<span />', {text: 'Printēt', class: 'action'}); print.appendTo(div);
 
                               div.appendTo('.data-list');
@@ -247,8 +276,6 @@ function getEntityProperties( entity ){
 
 function getEntity( name ){
     $('.data-list').empty();
-    $('.crm-menu-item').removeClass('crm-menu-item-active');
-    $(this).addClass('crm-menu-item-active');
     BX24.callMethod('entity.get',
         {},
         function (result) {
@@ -454,6 +481,10 @@ jQuery(document).ready(function(){
 
     });
 
+    $('.crm-menu-item').click(function(){
+        $('.crm-menu-item').removeClass('crm-menu-item-active');
+        $(this).addClass('crm-menu-item-active');
+    });
     $('#debug').click(function(){
         console.log(window.getSelection())
 

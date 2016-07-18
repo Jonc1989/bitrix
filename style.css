@@ -83,11 +83,15 @@
     margin-right: 30px;
     float: right;
 }
+.data-list span{
+    padding-right: 10px;
+    padding-left: 10px;
+}
 /*----------------*/
 
 .crm-menu-table {
     border-spacing: 0;
-    max-width: 890px;
+    max-width: 420px;
     padding: 0;
     width: 100%;
 }
@@ -174,6 +178,11 @@ a {
 }
 .crm-menu2-journal .crm-menu2-icon {
     background-position: center -163px;
+}
+.crm-menu-new .crm-menu-icon {
+    background: url('images/new.png') no-repeat;
+    background-position: center 14px;
+    background-size: 50% 60%;
 }
 #TextArea1{
     width: 100%;

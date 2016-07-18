@@ -36,9 +36,6 @@ function matchAll(str, regex) {
     return res;
 }
 
-
-
-
 function replaceMatched( field, text, crmName, key, dateFormat ){
     var found = text.match('{' + crmName +':' + key + '}');
     if( found ){
@@ -50,7 +47,7 @@ function replaceMatched( field, text, crmName, key, dateFormat ){
             string.slice(0,-3);
             text = text.replace( '{' + crmName +':' + key + '}', string);
         }else if( field.constructor === Array ){
-            console.log( field )
+
         }else{
             if( checkDate( key ) != -1 ){
                 var date = formatDateString( field, dateFormat );
@@ -64,6 +61,11 @@ function replaceMatched( field, text, crmName, key, dateFormat ){
     }
     return text;
 }
+
+function checkProduct( key, field ){
+    var productRow = $('*:contains("{productrow:"' + key + '})'); console.log(productRow);
+}
+
 
 function downloadPdf( text, dataObjects, propertipes, crmName, companyData, contactData, dealData, dealProductRow, leadData ){
 
@@ -93,8 +95,12 @@ function downloadPdf( text, dataObjects, propertipes, crmName, companyData, cont
         text =  replaceMatched( field, text, 'deal', i, dateFormat );
     });
     console.log( dealProductRow );
-    $.each(dealProductRow, function (i, field) {
-        text =  replaceMatched( field, text, 'productrow', i, field, dateFormat );
+    $.each(dealProductRow, function (index, product) {
+        $.each(product, function (key, field) {
+            text =  checkProduct( key, field );
+        });
+
+
     });
 
     $.each(leadData, function (i, field) {

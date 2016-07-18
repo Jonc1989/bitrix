@@ -26,7 +26,7 @@
     <script type="text/javascript" src="//api.bitrix24.com/api/v1/"></script>
 
 </head>
-<body id="print">
+<body>
 <div class="col-md-12">
     <table class="crm-menu-table">
         <tbody>
@@ -42,21 +42,21 @@
                 <div class="crm-menu-item-wrap" id="crm_ctrl_panel_item_my_activity_CONTACT">
                     <a onclick="getEntity('contact');" class="crm-menu-item crm-menu-contact" title="Список контактов">
                         <span class="crm-menu-icon"></span>
-                        <span class="crm-menu-name">Контакты</span></a>
+                        <span class="crm-menu-name">KONTAKTI</span></a>
                     <div id="crm-menu-plus-btn-contact" class="crm-menu-plus-btn crm-menu-plus-btn-pro" style="display: none;"></div></div>
             </td>
             <td class="crm-menu-cell">
                 <div class="crm-menu-item-wrap" id="crm_ctrl_panel_item_my_activity_COMPANY">
                     <a onclick="getEntity('company');" class="crm-menu-item crm-menu-company" title="Список компаний">
                         <span class="crm-menu-icon"></span>
-                        <span class="crm-menu-name">Компании</span></a>
+                        <span class="crm-menu-name">KOMPĀNIJAS</span></a>
                     <div id="crm-menu-plus-btn-company" class="crm-menu-plus-btn crm-menu-plus-btn-pro" style="display: none;"></div></div>
             </td>
             <td class="crm-menu-cell">
                 <div class="crm-menu-item-wrap" id="crm_ctrl_panel_item_my_activity_DEAL">
                     <a onclick="getEntity('deal');" class="crm-menu-item crm-menu-deal" title="Список сделок">
                         <span class="crm-menu-icon"></span>
-                        <span class="crm-menu-name">Сделки</span></a>
+                        <span class="crm-menu-name">DARĪJUMI</span></a>
                     <div id="crm-menu-plus-btn-deal" class="crm-menu-plus-btn crm-menu-plus-btn-pro" style="display: none;"></div></div>
             </td>
             <!--<td class="crm-menu-cell">-->
@@ -70,23 +70,30 @@
                 <div class="crm-menu-item-wrap" id="crm_ctrl_panel_item_my_activity_INVOICE">
                     <a onclick="getEntity('invoice');" class="crm-menu-item crm-menu-invoice" title="Список счетов">
                         <span class="crm-menu-icon"></span>
-                        <span class="crm-menu-name">Счета</span></a>
+                        <span class="crm-menu-name">RĒĶINI</span></a>
                     </div>
             </td>
             <td class="crm-menu-cell">
                 <div class="crm-menu-item-wrap" id="crm_ctrl_panel_item_my_activity_LEAD">
                     <a onclick="getEntity('lead');" class="crm-menu-item crm-menu-lead" title="Список лидов">
                         <span class="crm-menu-icon"></span>
-                        <span class="crm-menu-name">Лиды</span></a>
+                        <span class="crm-menu-name">LĪDI</span></a>
                     <div id="crm-menu-plus-btn-lead" class="crm-menu-plus-btn crm-menu-plus-btn-pro" style="display: none;"></div></div>
+            </td>
+            <td class="crm-menu-cell">
+                <div class="crm-menu-item-wrap" id="crm_ctrl_panel_item_my_activity_new">
+                    <a data-toggle="modal" data-target="#entity-add-modal"  class="crm-menu-item crm-menu-new" title="Pievienot šablonu">
+                        <span class="crm-menu-icon"></span>
+                        <span class="crm-menu-name">Pievienot</span></a>
+                    <div id="crm-menu-plus-btn-new" class="crm-menu-plus-btn crm-menu-plus-btn-pro" style="display: none;"></div></div>
             </td>
         </tr>
         </tbody>
     </table>
 
-    <a data-toggle="modal" data-target="#entity-add-modal" style="float: right;">
-        <span class="bx-button bx-button-accept">Pievienot</span>
-    </a>
+    <!--<a data-toggle="modal" data-target="#entity-add-modal" style="float: right;">-->
+        <!--<span class="bx-button bx-button-accept">Pievienot</span>-->
+    <!--</a>-->
 </div>
 
 <div class="data-container">
@@ -202,9 +209,9 @@
                         <label class="btn btn-primary">
                             <input type="radio" name="options" id="invoice" autocomplete="off"> Rēķini
                         </label>
-                        <label class="btn btn-primary">
-                            <input type="radio" name="options" id="productrow" autocomplete="off"> Produkti
-                        </label>
+                        <!--<label class="btn btn-primary">-->
+                            <!--<input type="radio" name="options" id="productrow" autocomplete="off"> Produkti-->
+                        <!--</label>-->
                         <label class="btn btn-primary">
                             <input type="radio" name="options" id="lead" autocomplete="off"> Līdi
                         </label>
