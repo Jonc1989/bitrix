@@ -62,8 +62,34 @@ function replaceMatched( field, text, crmName, key, dateFormat ){
     return text;
 }
 
-function checkProduct( key, field ){
-    var productRow = $('*:contains("{productrow:"' + key + '})'); console.log(productRow);
+function checkProduct( text, dealProductRow ){
+
+    var count = dealProductRow.length;
+    var html = $(text);
+    var output = '';
+   $.each( html.find('tr'), function (index, row) {    console.log(index, row);
+
+        $.each(dealProductRow, function (i, product) {
+            $.each(product, function (key, field) {
+                var found = $(row).text().match('{productrow:' + key + '}');
+                if( found ){
+
+                    $(row).parent().append(row.outerHTML);
+                    row.innerHTML = row.innerHTML.replace( '{productrow:' + key + '}', field);
+                }
+            });
+
+        });
+       if( row.outerHTML !== undefined ){
+           output += row.outerHTML;
+       }
+
+    });
+
+    console.log( html );
+
+    console.log( output);
+    return output;
 }
 
 
@@ -94,105 +120,16 @@ function downloadPdf( text, dataObjects, propertipes, crmName, companyData, cont
     $.each(dealData, function (i, field) {
         text =  replaceMatched( field, text, 'deal', i, dateFormat );
     });
-    console.log( dealProductRow );
-    $.each(dealProductRow, function (index, product) {
-        $.each(product, function (key, field) {
-            text =  checkProduct( key, field );
-        });
 
 
-    });
+    text = checkProduct( text, dealProductRow );
+
 
     $.each(leadData, function (i, field) {
         text =  replaceMatched( field, text, 'lead', i, field, dateFormat );
     });
-    //
-    //
-    //
-    // var bold = matchAll(text, /<span style="font-weight: bold;">(.*)<\/span>/g);console.log(bold);
-    //
-    //
-    // bold.forEach(function(b){
-    //     text = text.split(b); console.log(text)
-    //     text.forEach(function( t ){
-    //         t = t.replace( b, {
-    //             text: b, fontSize: fontSize, lineHeight: lineHeight
-    //         });
-    //     });
-    // });
-    //
-    //
-    //
-    //
-    // //text = text.split("&nbsp;"); console.log(text);
-    // //text.forEach(function( t ){
-    // //
-    // //    output.push(
-    // //        {
-    // //            text: t, fontSize: fontSize, lineHeight: lineHeight
-    // //        },
-    // //        {
-    // //            text: '.', color: 'white', lineHeight: lineHeight
-    // //        }
-    // //    );
-    // //
-    // //});
-    //
-    // var docDefinition = {
-    //     content: [
-    //         {
-    //             text: output
-    //         }
-    //
-    //     ],
-    //     pageMargins: [ left, top, right, bottom ]
-    // };
-    // pdfMake.createPdf(docDefinition).open();
-/*--------------------------------------------*/
 
 
-    //$( '#render_me').modal('show');
-    //$('#ok').empty();
-    //$('#ok').html(text);
-
-
-/*-----------------------------------------------*/
-    // var doc = new jsPDF('p','pt','a4');
-    //
-     //$(document.body).html(text);
-    // Promise.all(
-    //     [
-    //         new Promise(function (resolve)
-    //         {
-    //             html2canvas($("#print"), {
-    //                 onrendered: function(canvas) {
-    //
-    //                     $("#print").remove();
-    //                     resolve(canvas.toDataURL('image/png'));
-    //                 },
-    //             });
-    //         })
-    //     ]).then(function (ru_text) { console.log(ru_text);//window.open(url, '_blank');
-    //
-    //     doc.addImage(ru_text[0], 'JPEG', 0,0);
-    //     doc.text(0, 10, 'Non-utf-8-string' );
-    //
-    //     doc.save('filename.pdf');
-    // });
-
-    // html2canvas(document.body).then(function(canvas) {
-    //     //document.body.appendChild(canvas);
-    //     var doc = new jsPDF('p','pt','a4');
-    //     doc.addImage(canvas, 'JPEG', 40, 60);
-    //
-    //
-    //     doc.save('filename.pdf');
-    // });
-
-    // $.get( "ajax.php", { text: text } )
-    //     .done(function( data ) {
-    //         alert( "Data Loaded: " + data );
-    //     });
 
     var mywindow = window.open('', 'Document');
     mywindow.document.write('<html><head><style>@page{ margin: ' + top + 'mm ' + right + 'mm ' + bottom + 'mm ' + left + 'mm;} </style>');

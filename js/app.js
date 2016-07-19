@@ -13,6 +13,7 @@ function initDocument(fields){
     $('.dropped').remove();
     $("#document-edit-modal .modal-title").empty();
     $("#document-edit-modal .modal-title").text(fields[0].ENTITY);
+    BX24.resizeWindow(window.innerWidth, 700);
     $.each(fields[0].PROPERTY_VALUES, function( name, val ){
         if(val){
             var properties = JSON.parse(val);
@@ -376,7 +377,6 @@ function createField( fields, fieldName, method){
         $('.field').draggable({
             cursor: 'move',
             helper: "clone",
-
             stop: function(event, ui) {
                 //var tempid = ui.helper[0].innerText;
                 //var dropText;
@@ -403,12 +403,9 @@ jQuery(document).ready(function(){
     var dealFields = [], currencyFields = [], companyFields = [], dealData = [], currencyData = [], companyData = [];
     var dataArray = [];
 
-    CKEDITOR.replace( 'TextArea1' );
-    editor = CKEDITOR.instances['TextArea1'];
+    //CKEDITOR.replace( 'TextArea1' );
+    //editor = CKEDITOR.instances['TextArea1'];
 
-    CKEDITOR.editorConfig = function( config ) {
-             //config.uiColor = '#F7B42C';
-        };
     BX24.init(function(){
 
         $(document).on('click', '#save-entity', function () {
