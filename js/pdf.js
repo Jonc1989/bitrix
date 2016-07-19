@@ -64,32 +64,38 @@ function replaceMatched( field, text, crmName, key, dateFormat ){
 
 function checkProduct( text, dealProductRow ){
 
-    var count = dealProductRow.length;
     var html = $(text);
-    var output = '';
-   $.each( html.find('tr'), function (index, row) {    console.log(index, row);
-
+   $.each( html, function (index, element) {
         $.each(dealProductRow, function (i, product) {
+            var temp = false;
             $.each(product, function (key, field) {
-                var found = $(row).text().match('{productrow:' + key + '}');
+                var match = '{productrow:' + key + '}';
+                var found = $(element).text().match( match );
                 if( found ){
 
-                    $(row).parent().append(row.outerHTML);
-                    row.innerHTML = row.innerHTML.replace( '{productrow:' + key + '}', field);
+                    var tr = $(element).find('tr');
+                    $.each(tr, function ( ii, trow) {
+                        if( $(trow).text().match( match ) ){
+                            if( temp == false ){
+                                temp = trow.outerHTML;console.log(trow.outerHTML);
+                            }
+
+                        }
+                    });
+
+                    element.innerHTML = element.innerHTML.replace( match, field);
+
                 }
             });
-
+            if( temp != false ){
+                $(element).find('tbody').append(temp);
+            }
         });
-       if( row.outerHTML !== undefined ){
-           output += row.outerHTML;
-       }
 
     });
-
-    console.log( html );
-
-    console.log( output);
-    return output;
+    var x = html.map(function() { return this.outerHTML || this.nodeValue; }).get().join('');
+    console.log(x);
+    return x;
 }
 
 
