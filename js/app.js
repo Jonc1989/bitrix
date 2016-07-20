@@ -39,6 +39,7 @@ function initDocument( fields, templateName ){
 
         }else if( name == 'text' ){
             editor.setData(properties);
+
         }
     }
     });
@@ -133,7 +134,7 @@ function getEntityProperties( entity ){
                       $.each(fieldData, function (i, field) {
 
 
-                          var companyId, contactId, dealId, invoiceId, currencyId, productRowId, leadId, quoteId, userId;
+                          var companyId, contactId, dealId, invoiceId, currencyId, productRowId, leadId, quoteId, userId, quoteId;
 
                           switch (data.NAME) {
                               case 'company':
@@ -152,7 +153,7 @@ function getEntityProperties( entity ){
                                   quoteId = field.QUOTE_ID != undefined ? field.QUOTE_ID : null;
                                   leadId = field.LEAD_ID != undefined ? field.LEAD_ID : null;
                                   productRowId = field.ID != undefined ? field.ID : null;
-                                  userId = field.CREATED_BY_ID;
+                                  //userId = field.CREATED_BY_ID;
                                   break;
                               case 'invoice':
                                   companyId = field.UF_COMPANY_ID != undefined ? field.UF_COMPANY_ID : null;
@@ -167,6 +168,14 @@ function getEntityProperties( entity ){
                                   companyId = field.COMPANY_ID != undefined ? field.COMPANY_ID : null;
                                   contactId = field.CONTACT_ID != undefined ? field.CONTACT_ID : null;
                                   userId = field.CREATED_BY_ID;
+                                  break;
+                              case 'quote':
+                                  companyId = field.COMPANY_ID != undefined ? field.COMPANY_ID : null;
+                                  contactId = field.CONTACT_ID != undefined ? field.CONTACT_ID : null;
+                                  dealId = field.DEAL_ID != undefined ? field.DEAL_ID : null;
+                                  leadId = field.LEAD_ID != undefined ? field.LEAD_ID : null;
+                                  userId = field.CREATED_BY_ID;
+
                                   break;
                               default:
                                   console.log('default');
@@ -208,10 +217,16 @@ function getEntityProperties( entity ){
                                   params: {
                                       ID:  userId
                                   }
+                              },
+                              getQuote: {
+                                  method: 'crm.quote.get',
+                                  params: {
+                                      ID:  quoteId
+                                  }
                               }
                           }, function (result) {
 
-                              var companyData = {}, contactData = {}, dealData = {}, dealProductRow = {}, leadData = {}, userData = {};
+                              var companyData = {}, contactData = {}, dealData = {}, dealProductRow = {}, leadData = {}, userData = {}, quoteData;
                               if (!result.getCompany.error() ) {
                                   companyData = result.getCompany.data();
                               }
@@ -229,6 +244,9 @@ function getEntityProperties( entity ){
                               }
                               if (!result.getUser.error()) {
                                   userData = result.getUser.data()[0];
+                              }
+                              if (!result.getQuote.error()) {
+                                  quoteData = result.getQuote.data();
                               }
 
 
@@ -256,6 +274,10 @@ function getEntityProperties( entity ){
                                       name = field.TITLE;
                                       var nameSpan = $('<span />', {text: name}); nameSpan.appendTo(div);
                                       break;
+                                  case 'quote':
+                                      name = field.TITLE;
+                                      var nameSpan = $('<span />', {text: name}); nameSpan.appendTo(div);
+                                      break;
                                   default:
                                       console.log('default');
                               }
@@ -272,18 +294,10 @@ function getEntityProperties( entity ){
                               //'<td class="action" id="doc_' + i + '">Printēt</td></tr>' +
                               //'</table>');
 
-
-
-
-
-
-
-
-
-
                               div.appendTo('.data-list');
                               $('#doc_' + i + ' .action').on('click', function () {
-                                  downloadPdf( text, fieldData[i], documentProperties, data.NAME, companyData, contactData, dealData, dealProductRow, leadData, userData );
+                                  downloadPdf( text, fieldData[i], documentProperties, data.NAME, companyData,
+                                      contactData, dealData, dealProductRow, leadData, userData, quoteData );
                               });
 
 
@@ -401,7 +415,7 @@ function createField( fields, fieldName, method){
     var bool = $.grep(fields, function(e){ return e.PROPERTY == fieldName; });
 
     if( bool.length < 1 && fieldName ){
-        $('<div />', {class:"field col-md-2 " + method, text: fieldName}).data({method: method, field: fieldName }).appendTo('#field-wrap');
+        $('<div />', {class:"field col-md-2 col-sm-3 col-xs-4 " + method, text: fieldName}).data({method: method, field: fieldName }).appendTo('#field-wrap');
 
         $('.field').draggable({
             cursor: 'move',
@@ -420,12 +434,15 @@ function createField( fields, fieldName, method){
 
 jQuery(document).ready(function(){
 
-    var dealFields = [], currencyFields = [], companyFields = [], dealData = [], currencyData = [], companyData = [];
-    var dataArray = [];
-
     CKEDITOR.replace( 'TextArea1' );
     editor = CKEDITOR.instances['TextArea1'];
+    editor.config.extraPlugins = 'autogrow';
+    editor.config.autoGrow_minHeight = 250;
+    editor.config.autoGrow_maxHeight = 600;
 
+    CKEDITOR.editorConfig = function( config ) {
+        //config.uiColor = '#F7B42C';
+    };
     BX24.init(function(){
 
         $(document).on('click', '#save-entity', function () {

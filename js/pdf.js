@@ -107,7 +107,7 @@ function checkProduct( text, dealProductRow, name ){
 }
 
 
-function downloadPdf( text, dataObjects, propertipes, crmName, companyData, contactData, dealData, dealProductRow, leadData, userData ){
+function downloadPdf( text, dataObjects, propertipes, crmName, companyData, contactData, dealData, dealProductRow, leadData, userData, quoteData ){
 
     var left = Number(propertipes.left) * Number(0.353),
          top = Number(propertipes.top)* Number(0.353),
@@ -143,6 +143,10 @@ function downloadPdf( text, dataObjects, propertipes, crmName, companyData, cont
     });
 
     $.each(userData, function (i, field) {
+        text =  replaceMatched( field, text, 'user', i, field, dateFormat );
+    });
+
+    $.each(quoteData, function (i, field) {
         text =  replaceMatched( field, text, 'user', i, field, dateFormat );
     });
 

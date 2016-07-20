@@ -32,6 +32,13 @@
         <tbody>
         <tr>
             <td class="crm-menu-cell">
+                <div class="crm-menu-item-wrap" id="crm_ctrl_panel_item_my_activity_LEAD">
+                    <a onclick="getEntity('lead');" class="crm-menu-item crm-menu-lead" title="Список лидов">
+                        <span class="crm-menu-icon"></span>
+                        <span class="crm-menu-name">LĪDI</span></a>
+                    <div id="crm-menu-plus-btn-lead" class="crm-menu-plus-btn crm-menu-plus-btn-pro" style="display: none;"></div></div>
+            </td>
+            <td class="crm-menu-cell">
                 <div class="crm-menu-item-wrap" id="crm_ctrl_panel_item_my_activity_CONTACT">
                     <a onclick="getEntity('contact');" class="crm-menu-item crm-menu-contact" title="Список контактов">
                         <span class="crm-menu-icon"></span>
@@ -52,26 +59,19 @@
                         <span class="crm-menu-name">DARĪJUMI</span></a>
                     <div id="crm-menu-plus-btn-deal" class="crm-menu-plus-btn crm-menu-plus-btn-pro" style="display: none;"></div></div>
             </td>
-            <!--<td class="crm-menu-cell">-->
-                <!--<div class="crm-menu-item-wrap" id="crm_ctrl_panel_item_my_activity_QUOTE">-->
-                    <!--<a onclick="getEntity('quote');" class="crm-menu-item crm-menu-quote" title="Список предложений">-->
-                        <!--<span class="crm-menu-icon"></span>-->
-                        <!--<span class="crm-menu-name">Предложения</span></a>-->
-                    <!--</div>-->
-            <!--</td>-->
+            <td class="crm-menu-cell">
+                <div class="crm-menu-item-wrap" id="crm_ctrl_panel_item_my_activity_QUOTE">
+                    <a onclick="getEntity('quote');" class="crm-menu-item crm-menu-quote" title="Список предложений">
+                        <span class="crm-menu-icon"></span>
+                        <span class="crm-menu-name">Предложения</span></a>
+                    </div>
+            </td>
             <td class="crm-menu-cell">
                 <div class="crm-menu-item-wrap" id="crm_ctrl_panel_item_my_activity_INVOICE">
                     <a onclick="getEntity('invoice');" class="crm-menu-item crm-menu-invoice" title="Список счетов">
                         <span class="crm-menu-icon"></span>
                         <span class="crm-menu-name">RĒĶINI</span></a>
                     </div>
-            </td>
-            <td class="crm-menu-cell">
-                <div class="crm-menu-item-wrap" id="crm_ctrl_panel_item_my_activity_LEAD">
-                    <a onclick="getEntity('lead');" class="crm-menu-item crm-menu-lead" title="Список лидов">
-                        <span class="crm-menu-icon"></span>
-                        <span class="crm-menu-name">LĪDI</span></a>
-                    <div id="crm-menu-plus-btn-lead" class="crm-menu-plus-btn crm-menu-plus-btn-pro" style="display: none;"></div></div>
             </td>
             <td class="crm-menu-cell">
                 <div class="crm-menu-item-wrap" id="crm_ctrl_panel_item_my_activity_new">
@@ -105,13 +105,14 @@
                             <select id="api">
                                 <option>Izvēlieties sadaļu</option>
                                 <optgroup label="CRM">
+                                    <option value="lead">Līdi</option>
+                                    <option value="contact">Kontakti</option>
+                                    <option value="company">Kompānija</option>
                                     <option value="deal">Darījumi</option>
                                     <!--<option value="currency">Valūtas</option>-->
-                                    <option value="company">Kompānija</option>
-                                    <option value="contact">Kontakti</option>
+                                    <option value="quote">Piedāvājumi</option>
                                     <option value="invoice">Rēķini</option>
                                     <option value="productrow">Produkti</option>
-                                    <option value="lead">Līdi</option>
                                     <option value="user">Lietotājs</option>
                                 </optgroup>
                             </select>
@@ -201,9 +202,9 @@
                         <label class="btn btn-primary">
                             <input type="radio" name="options" id="invoice" autocomplete="off"> Rēķini
                         </label>
-                        <!--<label class="btn btn-primary">-->
-                            <!--<input type="radio" name="options" id="productrow" autocomplete="off"> Produkti-->
-                        <!--</label>-->
+                        <label class="btn btn-primary">
+                            <input type="radio" name="options" id="quote" autocomplete="off"> Piedāvājumi
+                        </label>
                         <label class="btn btn-primary">
                             <input type="radio" name="options" id="lead" autocomplete="off"> Līdi
                         </label>

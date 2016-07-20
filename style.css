@@ -5,7 +5,7 @@
     display: inline-block;
 }
 #document, #render_me .modal-content{
-    width: 793px!important;
+    width: 810px!important;
     //height: 1122px;
 }
 #fields{
@@ -91,7 +91,7 @@
 
 .crm-menu-table {
     border-spacing: 0;
-    max-width: 420px;
+    max-width: 680px;
     padding: 0;
     width: 100%;
 }
@@ -130,6 +130,7 @@ table {
      border-radius: 4px;
      height: 78px;
      margin-right: 5px;
+
      min-width: 70px;
      padding: 0 5px;
      position: relative;
@@ -137,8 +138,14 @@ table {
      text-decoration: none;
      vertical-align: top;
  }
+ a.crm-menu-item{
+     text-decoration: none!important;
+ }
 .crm-menu-item-active, .crm-menu-item:active, .crm-menu-item:hover {
     background-color: #D6F1FB;
+}
+.crm-menu-item-active .crm-menu-icon{
+    opacity: 1;
 }
 a {
     color: #08D;
@@ -154,6 +161,7 @@ a {
     background: url('images/crm-control-panel-sprite-12.png') no-repeat 500px 500px;
     display: block;
     height: 53px;
+    opacity: .6;
 }
 .crm-menu2-icon {
     background: url('images/app-sprite32.png') no-repeat 500px 500px;
@@ -183,6 +191,12 @@ a {
 }
 .crm-menu2-journal .crm-menu2-icon {
     background-position: center -163px;
+}
+.crm-menu-item-wrap:hover .crm-menu-icon {
+    opacity: 1;
+}
+.crm-menu-item-wrap:hover .crm-menu-name, .crm-menu-item-active .crm-menu-name {
+    color: #333;
 }
 .crm-menu-new .crm-menu-icon {
     background: url('images/new.png') no-repeat;
