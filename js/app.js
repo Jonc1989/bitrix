@@ -436,12 +436,12 @@ jQuery(document).ready(function(){
 
     CKEDITOR.replace( 'TextArea1' );
     editor = CKEDITOR.instances['TextArea1'];
-    editor.config.extraPlugins = 'autogrow';
-    editor.config.autoGrow_minHeight = 250;
-    editor.config.autoGrow_maxHeight = 600;
+
 
     CKEDITOR.editorConfig = function( config ) {
-        //config.uiColor = '#F7B42C';
+        config.extraPlugins = 'autogrow';
+        config.autoGrow_minHeight = 250;
+        config.autoGrow_maxHeight = 600;
     };
     BX24.init(function(){
 
