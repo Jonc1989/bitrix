@@ -11,7 +11,7 @@
     <script type="text/javascript" src="js/pdfmake.min.js"></script>
     <script type="text/javascript" src="js/jquery-ui-droppable-iframe-fix.js"></script>
 
-    <!--<script type="text/javascript" src="js/ckeditor/ckeditor.js"></script>-->
+    <script type="text/javascript" src="js/ckeditor/ckeditor.js"></script>
     <script type="text/javascript" src="js/vfs_fonts.js"></script>
     <script type="text/javascript" src="js/pdf.js"></script>
     <script type="text/javascript" src="js/install.js"></script>
@@ -31,13 +31,6 @@
     <table class="crm-menu-table">
         <tbody>
         <tr>
-            <!--<td class="crm-menu-cell">-->
-                <!--<div class="crm-menu-item-wrap" id="crm_ctrl_panel_item_my_activity_TASKS">-->
-                    <!--<a onclick="getEntity('task');" class="crm-menu-item crm-menu-tasks" title="Задачи">-->
-                        <!--<span class="crm-menu-icon"></span>-->
-                        <!--<span class="crm-menu-name">Задачи</span></a>-->
-                    <!--<div id="crm-menu-plus-btn-tasks"></div></div>-->
-            <!--</td>-->
             <td class="crm-menu-cell">
                 <div class="crm-menu-item-wrap" id="crm_ctrl_panel_item_my_activity_CONTACT">
                     <a onclick="getEntity('contact');" class="crm-menu-item crm-menu-contact" title="Список контактов">
@@ -91,9 +84,6 @@
         </tbody>
     </table>
 
-    <!--<a data-toggle="modal" data-target="#entity-add-modal" style="float: right;">-->
-        <!--<span class="bx-button bx-button-accept">Pievienot</span>-->
-    <!--</a>-->
 </div>
 
 <div class="data-container">
@@ -116,12 +106,13 @@
                                 <option>Izvēlieties sadaļu</option>
                                 <optgroup label="CRM">
                                     <option value="deal">Darījumi</option>
-                                    <option value="currency">Valūtas</option>
+                                    <!--<option value="currency">Valūtas</option>-->
                                     <option value="company">Kompānija</option>
                                     <option value="contact">Kontakti</option>
                                     <option value="invoice">Rēķini</option>
                                     <option value="productrow">Produkti</option>
                                     <option value="lead">Līdi</option>
+                                    <option value="user">Lietotājs</option>
                                 </optgroup>
                             </select>
                             <div>
@@ -138,7 +129,7 @@
                                     </div>
                                     <div role="tabpanel" class="tab-pane" id="profile">
 
-                                        <div class="col-md-12">
+                                        <div class="col-md-3">
                                             <div>Margins</div>
                                             <div class="input-group">
                                                 <span class="input-group-addon" id="left">Left</span>
@@ -158,7 +149,7 @@
                                             </div>
                                         </div>
 
-                                        <div><span>Datuma formāts: </span><input class="form-control date-format"></div>
+                                        <div class="col-md-3"><span>Datuma formāts: </span><input class="form-control date-format"></div>
                                     </div>
                                 </div>
                             </div>
@@ -170,8 +161,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button id="close-edit-modal" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button id="save-doc" type="button" class="btn btn-primary">Save changes</button>
+                    <button id="close-edit-modal" type="button" class="btn btn-default" data-dismiss="modal">Aizvērt</button>
+                    <button id="save-doc" type="button" class="btn btn-primary">Saglabāt</button>
                     <button id="debug" type="button" class="btn btn-default">Debug</button>
                 </div>
             </div><!-- /.modal-content -->
@@ -190,7 +181,8 @@
                 <div class="modal-body">
 
                     <div class="input-group">
-                        <input id="entity-name" type="text" class="form-control" placeholder="" style="margin-bottom: 15px;">
+                        <input id="entity-name" type="text" class="form-control" placeholder="" style="margin-bottom: 15px;"
+                               data-toggle="tooltip" data-placement="top" title="CRM sadaļa nav izvēlēta">
                     </div>
 
                     <div class="btn-group" data-toggle="buttons">
@@ -218,8 +210,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button id="close-add-entity" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button id="save-entity" type="button" class="btn btn-primary">Save changes</button>
+                    <button id="close-add-entity" type="button" class="btn btn-default" data-dismiss="modal">Aizvērt</button>
+                    <button id="save-entity" type="button" class="btn btn-primary">Pievienot</button>
                 </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->

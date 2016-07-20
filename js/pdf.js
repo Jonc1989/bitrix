@@ -62,44 +62,52 @@ function replaceMatched( field, text, crmName, key, dateFormat ){
     return text;
 }
 
-function checkProduct( text, dealProductRow ){
-
+function checkProduct( text, dealProductRow, name ){
     var html = $(text);
-   $.each( html, function (index, element) {
-        $.each(dealProductRow, function (i, product) {
-            var temp = false;
-            $.each(product, function (key, field) {
-                var match = '{productrow:' + key + '}';
-                var found = $(element).text().match( match );
-                if( found ){
+    var count = dealProductRow.length;
 
-                    var tr = $(element).find('tr');
-                    $.each(tr, function ( ii, trow) {
-                        if( $(trow).text().match( match ) ){
-                            if( temp == false ){
-                                temp = trow.outerHTML;console.log(trow.outerHTML);
+    if( count > 0 ){
+        $.each( html, function (index, element) {
+
+            $.each(dealProductRow, function (i, product) {
+                var temp = false;
+                $.each(product, function (key, field) {
+                    var match = '{' + name + ':' + key + '}';
+                    var found = $(element).text().match( match );
+                    if( found ){
+                        var tr = $(element).find('tr');
+                        $.each(tr, function ( ii, trow) {
+                            if( $(trow).text().match( match ) ){
+                                if( temp == false ){
+                                    temp = trow.outerHTML;
+                                }
                             }
-
-                        }
-                    });
-
-                    element.innerHTML = element.innerHTML.replace( match, field);
-
+                        });
+                        element.innerHTML = element.innerHTML.replace( match, field );
+                    }
+                });
+                if( temp != false && (i + 1) < count ){
+                    $(element).find('tbody').append(temp);
+                    temp = false;
                 }
             });
-            if( temp != false ){
-                $(element).find('tbody').append(temp);
+
+        });
+    }else{
+        var tr = $(html).find('tr');
+        $.each(tr, function ( x, trow) {
+            if( $(trow).text().match( '{' + name + ':' ) ){
+                $(trow).remove();
             }
         });
+    }
 
-    });
-    var x = html.map(function() { return this.outerHTML || this.nodeValue; }).get().join('');
-    console.log(x);
-    return x;
+
+    return html.map(function() { return this.outerHTML || this.nodeValue; }).get().join('');
 }
 
 
-function downloadPdf( text, dataObjects, propertipes, crmName, companyData, contactData, dealData, dealProductRow, leadData ){
+function downloadPdf( text, dataObjects, propertipes, crmName, companyData, contactData, dealData, dealProductRow, leadData, userData ){
 
     var left = Number(propertipes.left) * Number(0.353),
          top = Number(propertipes.top)* Number(0.353),
@@ -127,19 +135,19 @@ function downloadPdf( text, dataObjects, propertipes, crmName, companyData, cont
         text =  replaceMatched( field, text, 'deal', i, dateFormat );
     });
 
-
-    text = checkProduct( text, dealProductRow );
+    text = checkProduct( text, dealProductRow, 'productrow' );
 
 
     $.each(leadData, function (i, field) {
         text =  replaceMatched( field, text, 'lead', i, field, dateFormat );
     });
 
-
+    $.each(userData, function (i, field) {
+        text =  replaceMatched( field, text, 'user', i, field, dateFormat );
+    });
 
     var mywindow = window.open('', 'Document');
     mywindow.document.write('<html><head><style>@page{ margin: ' + top + 'mm ' + right + 'mm ' + bottom + 'mm ' + left + 'mm;} </style>');
-    /*optional stylesheet*/ //mywindow.document.write('<link rel="stylesheet" href="main.css" type="text/css" />');
     mywindow.document.write('</head><body >');
     mywindow.document.write(text);
     mywindow.document.write('</body></html>');

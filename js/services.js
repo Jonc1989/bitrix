@@ -1,20 +1,3 @@
-function getItems(){
-
-    return BX24.callMethod('entity.item.get', {
-            ENTITY: 'Document'
-        },
-        function(result){
-            if(result.error()){
-                console.error(result.error());
-            }
-            else {
-                return result.data();
-            }
-        });
-
-}
-
-
 function addEntity( name, data ){
     BX24.callMethod('entity.item.add', {
         ENTITY: 'Document',
@@ -22,7 +5,7 @@ function addEntity( name, data ){
         PROPERTY_VALUES: data
     },function( result ){
         if(!result.error()){
-            //console.log(result.data());
+
             saveFields( name, data );
         }
     });
@@ -43,19 +26,9 @@ function updateEntity( id, entity, name, data ){
     });
 }
 
-function deleteEntity( id, name ){
-    BX24.callMethod('entity.item.delete', {
-        ENTITY: 'Document',
-        ID: id
-    },
-        function( result ){
-            if(!result.error()){
-
-            }
-        });
+function getDomain(){
+    return BX24.getAuth();
 }
-
-
 
 function saveFields( name, data ){
     $.each( data, function( i, val ){
