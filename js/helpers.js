@@ -10,6 +10,70 @@ function sortById(a,b) {
     return a.id.substring(1) - b.id.substring(1);
 }
 
+function resizeMe(){
+    BX24.resizeWindow(window.innerWidth, $("#document-edit-modal").height());
+}
+
+function filterField( currentCRMSection, entityFields, fieldName, method ){
+    if( currentCRMSection == 'invoice' ){
+        if( method == 'productrow' ){
+            if( fieldName == 'CUSTOMIZED' || fieldName == 'DISCOUNT_PRICE' || fieldName == 'PRODUCT_NAME' || fieldName == 'PRICE' || fieldName == 'QUANTITY'
+                || fieldName == 'TAX_INCLUDED' || fieldName == 'TAX_RATE' ){
+                if( fieldName == 'TAX_INCLUDED' ){
+                    fieldName = 'VAT_INCLUDED'
+                }
+                if( fieldName == 'TAX_RATE' ){
+                    fieldName = 'VAT_RATE'
+                }
+                createField( entityFields, fieldName, method );
+            }
+        }else{
+            createField( entityFields, fieldName, method );
+        }
+    }else{
+        createField( entityFields, fieldName, method );
+    }
+}
+
+function filterCRM( crm ){
+    $('#api option').show();
+
+
+    switch (crm) {
+        case 'company':
+            $('#api option[value="deal"]').hide();
+            $('#api option[value="contact"]').hide();
+            $('#api option[value="quote"]').hide();
+            $('#api option[value="invoice"]').hide();
+            $('#api option[value="productrow"]').hide();
+            break;
+        case 'contact':
+            $('#api option[value="deal"]').hide();
+            $('#api option[value="quote"]').hide();
+            $('#api option[value="invoice"]').hide();
+            $('#api option[value="productrow"]').hide();
+            break;
+        case 'deal':
+            $('#api option[value="invoice"]').hide();
+            break;
+        case 'invoice':
+            $('#api option[value="quote"]').hide();
+            $('#api option[value="lead"]').hide();
+            break;
+        case 'lead':
+            $('#api option[value="deal"]').hide();
+            $('#api option[value="quote"]').hide();
+            $('#api option[value="invoice"]').hide();
+            break;
+        case 'quote':
+            $('#api option[value="invoice"]').hide();
+            $('#api option[value="productrow"]').hide();
+            $('#api option[value="invoice"]').hide();
+            break;
+        default:
+            console.log('default');
+    }
+}
 function checkDate( date ){
     var dates = [
         'BEGINDATE',

@@ -42,7 +42,9 @@ function replaceMatched( field, text, crmName, key, dateFormat ){
         if( typeof field === 'object' ){
             var string = '';
             $.each( field, function( i, val ){
-                string += val.VALUE + ', ';
+                if( val.VALUE !== undefined ) {
+                    string += val.VALUE + ', ';
+                }
             } );
             string.slice(0,-3);
             text = text.replace( '{' + crmName +':' + key + '}', string);
@@ -57,6 +59,7 @@ function replaceMatched( field, text, crmName, key, dateFormat ){
             }
 
         }
+
         return replaceMatched( field, text, crmName, key, dateFormat );
     }
     return text;
@@ -123,6 +126,10 @@ function downloadPdf( text, dataObjects, propertipes, crmName, companyData, cont
         //text = text.replace( '{' + crmName + ':' + i + '}', field);
     });
 
+    if( crmName == 'invoice' && dataObjects.PRODUCT_ROWS !== undefined ){
+        text = checkProduct( text, dataObjects.PRODUCT_ROWS, 'productrow' );
+    }
+
     $.each(companyData, function (i, field) {
         text =  replaceMatched( field, text, 'company', i, dateFormat );
     });
@@ -135,8 +142,8 @@ function downloadPdf( text, dataObjects, propertipes, crmName, companyData, cont
         text =  replaceMatched( field, text, 'deal', i, dateFormat );
     });
 
+    console.log(dealProductRow.length);
     text = checkProduct( text, dealProductRow, 'productrow' );
-
 
     $.each(leadData, function (i, field) {
         text =  replaceMatched( field, text, 'lead', i, field, dateFormat );

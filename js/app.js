@@ -1,13 +1,13 @@
 var entityFields = [];
-var currentSection = null;
+var currentSection = null, currentCRMSection;
 var editor;
-var deal = 'crm.deal';
-var currency = 'crm.currency';
-var company = 'crm.company';
-var contact = 'crm.contact';
-var invoice = 'crm.invoice';
-var productrow = 'crm.productrow';
-var lead = 'crm.lead';
+//var deal = 'crm.deal';
+//var currency = 'crm.currency';
+//var company = 'crm.company';
+//var contact = 'crm.contact';
+//var invoice = 'crm.invoice';
+//var productrow = 'crm.productrow';
+//var lead = 'crm.lead';
 var entityFields = [];
 
 function initDocument( fields, templateName ){
@@ -16,7 +16,8 @@ function initDocument( fields, templateName ){
     $('.dropped').remove();
     $("#document-edit-modal .modal-title").empty();
     $("#document-edit-modal .modal-title").text(templateName);
-    BX24.resizeWindow(window.innerWidth, 700);
+
+    var text = '';
     $.each(fields[0].PROPERTY_VALUES, function( name, val ){
         if(val){
             var properties = JSON.parse(val);
@@ -39,10 +40,19 @@ function initDocument( fields, templateName ){
 
         }else if( name == 'text' ){
             editor.setData(properties);
+            text = properties;
+            CKEDITOR.config.extraPlugins = 'autogrow';
+            CKEDITOR.config.autoGrow_minHeight = 300;
+            CKEDITOR.config.autoGrow_maxHeight = 1000;
 
         }
     }
     });
+    if( text == '' ){
+        editor.setData('');
+    }
+    resizeMe();
+    filterCRM( fields[0].NAME )
 }
 function initDroppable($elements) {
     $elements.droppable({
@@ -50,7 +60,7 @@ function initDroppable($elements) {
         iframeFix: true,
         iframeScroll: true,
         drop: function(event, ui) {
-            var tempid = ui.draggable.text();
+            var tempid = ui.draggable.data().field;
             var dropText;
             dropText = " {" + ui.draggable.data().method + ":" + tempid + "} ";
 
@@ -70,21 +80,10 @@ function editDoc( name, templateName ){
                 ENTITY: name
             }
         }
-        //getEntityItemProperties: {
-        //    method: 'entity.item.property.get',
-        //    params: {
-        //        ENTITY: name
-        //    }
-        //}
     }, function (result) {
-
-        //if (!result.getEntityItemProperties.error()) {
-        //    entityFields = result.getEntityItemProperties.data();
-        //}
-
         if (!result.getEntityItem.error()) {
-            $("#document-edit-modal").modal('show');
-            initDocument( result.getEntityItem.data(), templateName );
+                $("#document-edit-modal").modal('show');
+                initDocument( result.getEntityItem.data(), templateName );
         }
     });
 }
@@ -123,7 +122,7 @@ function getEntityProperties( entity ){
                   getFields: {
                       method: 'crm.' + data.NAME + '.list',
                       params: {
-                          //SELECT: keys
+                          SELECT: [ "ID" ]
                       }
                   }
               },function (result) {
@@ -134,175 +133,195 @@ function getEntityProperties( entity ){
                       $.each(fieldData, function (i, field) {
 
 
-                          var companyId, contactId, dealId, invoiceId, currencyId, productRowId, leadId, quoteId, userId, quoteId;
+                          BX24.callMethod(
+                              "crm." + data.NAME + ".get",
+                              { id: field.ID },
+                              function(result) {
+                                  if (!result.error()) {
 
-                          switch (data.NAME) {
-                              case 'company':
-                                  currencyId = field.CURRENCY_ID != undefined ? field.CURRENCY_ID : null;
-                                  leadId = field.LEAD_ID != undefined ? d.LEAD_ID : null;
-                                  userId = field.CREATED_BY_ID;
-                                  break;
-                              case 'contact':
-                                  companyId = field.COMPANY_ID != undefined ? field.COMPANY_ID : null;
-                                  leadId = field.LEAD_ID != undefined ? field.LEAD_ID : null;
-                                  userId = field.CREATED_BY_ID;
-                                  break;
-                              case 'deal':
-                                  companyId = field.COMPANY_ID != undefined ? field.COMPANY_ID : null;
-                                  contactId = field.CONTACT_ID != undefined ? field.CONTACT_ID : null;
-                                  quoteId = field.QUOTE_ID != undefined ? field.QUOTE_ID : null;
-                                  leadId = field.LEAD_ID != undefined ? field.LEAD_ID : null;
-                                  productRowId = field.ID != undefined ? field.ID : null;
-                                  //userId = field.CREATED_BY_ID;
-                                  break;
-                              case 'invoice':
-                                  companyId = field.UF_COMPANY_ID != undefined ? field.UF_COMPANY_ID : null;
-                                  contactId = field.UF_CONTACT_ID != undefined ? field.UF_CONTACT_ID : null;
-                                  dealId = field.UF_DEAL_ID != undefined ? field.UF_DEAL_ID : null;
-                                  userId = field.RESPONSIBLE_ID;
-                                  break;
-                              case 'currency':
+                                      var crmData = result.data();
 
-                                  break;
-                              case 'lead':
-                                  companyId = field.COMPANY_ID != undefined ? field.COMPANY_ID : null;
-                                  contactId = field.CONTACT_ID != undefined ? field.CONTACT_ID : null;
-                                  userId = field.CREATED_BY_ID;
-                                  break;
-                              case 'quote':
-                                  companyId = field.COMPANY_ID != undefined ? field.COMPANY_ID : null;
-                                  contactId = field.CONTACT_ID != undefined ? field.CONTACT_ID : null;
-                                  dealId = field.DEAL_ID != undefined ? field.DEAL_ID : null;
-                                  leadId = field.LEAD_ID != undefined ? field.LEAD_ID : null;
-                                  userId = field.CREATED_BY_ID;
+                                  var companyId, contactId, dealId, invoiceId, currencyId, productRowId, leadId, quoteId, userId;
 
-                                  break;
-                              default:
-                                  console.log('default');
-                          }
+                                  switch (data.NAME) {
+                                      case 'company':
+                                          leadId = crmData.LEAD_ID != undefined ? crmData.LEAD_ID : null;
+                                          userId = crmData.CREATED_BY_ID;
+                                          break;
+                                      case 'contact':
+                                          companyId = crmData.COMPANY_ID != undefined ? crmData.COMPANY_ID : null;
+                                          leadId = crmData.LEAD_ID != undefined ? crmData.LEAD_ID : null;
+                                          userId = crmData.CREATED_BY_ID;
+                                          break;
+                                      case 'deal':
+                                          companyId = crmData.COMPANY_ID != undefined ? crmData.COMPANY_ID : null;
+                                          contactId = crmData.CONTACT_ID != undefined ? crmData.CONTACT_ID : null;
+                                          quoteId = crmData.QUOTE_ID != undefined ? crmData.QUOTE_ID : null;
+                                          leadId = crmData.LEAD_ID != undefined ? crmData.LEAD_ID : null;
+                                          productRowId = crmData.ID != undefined ? crmData.ID : null;
+                                          //userId = field.CREATED_BY_ID;
+                                          break;
+                                      case 'invoice':
+                                          companyId = crmData.UF_COMPANY_ID != undefined ? crmData.UF_COMPANY_ID : null;
+                                          contactId = crmData.UF_CONTACT_ID != undefined ? crmData.UF_CONTACT_ID : null;
+                                          dealId = crmData.UF_DEAL_ID != undefined ? crmData.UF_DEAL_ID : null;
+                                          userId = crmData.RESPONSIBLE_ID;
+                                          break;
+                                      case 'currency':
 
+                                          break;
+                                      case 'lead':
+                                          companyId = crmData.COMPANY_ID != undefined ? crmData.COMPANY_ID : null;
+                                          contactId = crmData.CONTACT_ID != undefined ? crmData.CONTACT_ID : null;
+                                          productRowId = crmData.ID != undefined ? crmData.ID : null;
+                                          userId = crmData.CREATED_BY_ID;
+                                          break;
+                                      case 'quote':
+                                          companyId = crmData.COMPANY_ID != undefined ? crmData.COMPANY_ID : null;
+                                          contactId = crmData.CONTACT_ID != undefined ? crmData.CONTACT_ID : null;
+                                          dealId = crmData.DEAL_ID != undefined ? crmData.DEAL_ID : null;
+                                          leadId = crmData.LEAD_ID != undefined ? crmData.LEAD_ID : null;
+                                          userId = crmData.CREATED_BY_ID;
 
-                          BX24.callBatch({
-                              getCompany: {
-                                  method: 'crm.company.get',
-                                  params: {
-                                      ID: companyId
+                                          break;
+                                      default:
+                                          console.log('default');
                                   }
-                              }, getContact: {
-                                  method: 'crm.contact.get',
-                                  params: {
-                                      ID: contactId
-                                  }
-                              },
-                              getDeal: {
-                                  method: 'crm.deal.get',
-                                  params: {
-                                      ID: dealId
-                                  }
-                              },
-                              get_deal_productRow: {
-                                  method: 'crm.deal.productrows.get',
-                                  params: {
-                                      ID:  productRowId != null ? productRowId : '$result[getDeal][ID]'
-                                  }
-                              },
-                              getLead: {
-                                  method: 'crm.lead.get',
-                                  params: {
-                                      ID:  leadId
-                                  }
-                              },
-                              getUser: {
-                                  method: 'user.get',
-                                  params: {
-                                      ID:  userId
-                                  }
-                              },
-                              getQuote: {
-                                  method: 'crm.quote.get',
-                                  params: {
-                                      ID:  quoteId
-                                  }
-                              }
-                          }, function (result) {
-
-                              var companyData = {}, contactData = {}, dealData = {}, dealProductRow = {}, leadData = {}, userData = {}, quoteData;
-                              if (!result.getCompany.error() ) {
-                                  companyData = result.getCompany.data();
-                              }
-                              if (!result.getContact.error()) {
-                                  contactData = result.getContact.data();
-                              }
-                              if (!result.getDeal.error()) {
-                                  dealData = result.getDeal.data();
-                              }
-                              if (!result.get_deal_productRow.error()) {
-                                  dealProductRow = result.get_deal_productRow.data();
-                              }
-                              if (!result.getLead.error()) {
-                                  leadData = result.getLead.data();
-                              }
-                              if (!result.getUser.error()) {
-                                  userData = result.getUser.data()[0];
-                              }
-                              if (!result.getQuote.error()) {
-                                  quoteData = result.getQuote.data();
-                              }
 
 
-                              var div = $('<div class="col-lg-12 col-md-12 list-item" id="doc_' + i + '"/>', {text: i});
-                              var span = $('<span />', {text: i}); span.appendTo(div);
-                              var name = '';
-                              switch (data.NAME) {
-                                  case 'company':
-                                      name = field.TITLE;
-                                      var nameSpan = $('<span />', {text: name}); nameSpan.appendTo(div);
-                                      break;
-                                  case 'contact':
-                                      name = field.NAME + ' ' + field.LAST_NAME;
-                                      var nameSpan = $('<span />', {text: name}); nameSpan.appendTo(div);
-                                      break;
-                                  case 'deal':
-                                      name = field.TITLE;
-                                      var nameSpan = $('<span />', {text: name}); nameSpan.appendTo(div);
-                                      break;
-                                  case 'invoice':
-                                      name = field.ORDER_TOPIC;
-                                      var nameSpan = $('<span />', {text: name}); nameSpan.appendTo(div);
-                                      break;
-                                  case 'lead':
-                                      name = field.TITLE;
-                                      var nameSpan = $('<span />', {text: name}); nameSpan.appendTo(div);
-                                      break;
-                                  case 'quote':
-                                      name = field.TITLE;
-                                      var nameSpan = $('<span />', {text: name}); nameSpan.appendTo(div);
-                                      break;
-                                  default:
-                                      console.log('default');
-                              }
+                                  BX24.callBatch({
+                                      getCompany: {
+                                          method: 'crm.company.get',
+                                          params: {
+                                              ID: companyId
+                                          }
+                                      }, getContact: {
+                                          method: 'crm.contact.get',
+                                          params: {
+                                              ID: contactId
+                                          }
+                                      },
+                                      getDeal: {
+                                          method: 'crm.deal.get',
+                                          params: {
+                                              ID: dealId
+                                          }
+                                      },
+                                      get_deal_productRow: {
+                                          method: 'crm.' + data.NAME + '.productrows.get',
+                                          params: {
+                                              ID: productRowId //!= null ? productRowId : '$result[getDeal][ID]'
+                                          }
+                                      },
+                                      getLead: {
+                                          method: 'crm.lead.get',
+                                          params: {
+                                              ID: leadId
+                                          }
+                                      },
+                                      getUser: {
+                                          method: 'user.get',
+                                          params: {
+                                              ID: userId
+                                          }
+                                      },
+                                      getQuote: {
+                                          method: 'crm.quote.get',
+                                          params: {
+                                              ID: quoteId
+                                          }
+                                      }
+                                  }, function (result) {
 
-                              var print = $( '<span />', {text: 'Printēt', class: 'action'}); print.appendTo(div);
+                                      var companyData = {}, contactData = {}, dealData = {}, dealProductRow = {}, leadData = {}, userData = {}, quoteData;
+                                      if (!result.getCompany.error()) {
+                                          companyData = result.getCompany.data();
+                                      }
+                                      if (!result.getContact.error()) {
+                                          contactData = result.getContact.data();
+                                      }
+                                      if (!result.getDeal.error()) {
+                                          dealData = result.getDeal.data();
+                                      }
+                                      if (!result.get_deal_productRow.error()) {
+                                          dealProductRow = result.get_deal_productRow.data();
+                                      }
+                                      if (!result.getLead.error()) {
+                                          leadData = result.getLead.data();
+                                      }
+                                      if (!result.getUser.error()) {
+                                          userData = result.getUser.data()[0];
+                                      }
+                                      if (!result.getQuote.error()) {
+                                          quoteData = result.getQuote.data();
+                                      }
 
 
+                                      var div = $('<div class="col-lg-12 col-md-12 list-item" id="doc_' + crmData.ID + '"/>', {text: crmData.ID});
+                                      var span = $('<span />', {text: crmData.ID});
+                                      span.appendTo(div);
+                                      var name = '';
+                                      switch (data.NAME) {
+                                          case 'company':
+                                              name = crmData.TITLE;
+                                              var nameSpan = $('<span />', {text: name});
+                                              nameSpan.appendTo(div);
+                                              break;
+                                          case 'contact':
+                                              name = crmData.NAME + ' ' + crmData.LAST_NAME;
+                                              var nameSpan = $('<span />', {text: name});
+                                              nameSpan.appendTo(div);
+                                              break;
+                                          case 'deal':
+                                              name = crmData.TITLE;
+                                              var nameSpan = $('<span />', {text: name});
+                                              nameSpan.appendTo(div);
+                                              break;
+                                          case 'invoice':
+                                              name = crmData.ORDER_TOPIC;
+                                              var nameSpan = $('<span />', {text: name});
+                                              nameSpan.appendTo(div);
+                                              break;
+                                          case 'lead':
+                                              name = crmData.TITLE;
+                                              var nameSpan = $('<span />', {text: name});
+                                              nameSpan.appendTo(div);
+                                              break;
+                                          case 'quote':
+                                              name = crmData.TITLE;
+                                              var nameSpan = $('<span />', {text: name});
+                                              nameSpan.appendTo(div);
+                                              break;
+                                          default:
+                                              console.log('default');
+                                      }
 
-                              //$('.data-list').append('<table>' +
-                              //'<tr><th>ID</th><th>Nosaukums</th><th>Darbība</th></tr>' +
-                              //'<tr class="list-item">' +
-                              //'<td><a target="_blank" href="' + window.location.protocol + '//' + me.domain + '/crm/invoice/show/' + val.ID + '/">' + val.ID + '</a></td>' +
-                              //'<td class="name-cell"></td>' +
-                              //'<td class="action" id="doc_' + i + '">Printēt</td></tr>' +
-                              //'</table>');
+                                      var print = $('<span />', {text: 'Printēt', class: 'action'});
+                                      print.appendTo(div);
 
-                              div.appendTo('.data-list');
-                              $('#doc_' + i + ' .action').on('click', function () {
-                                  downloadPdf( text, fieldData[i], documentProperties, data.NAME, companyData,
-                                      contactData, dealData, dealProductRow, leadData, userData, quoteData );
+
+                                      //$('.data-list').append('<table>' +
+                                      //'<tr><th>ID</th><th>Nosaukums</th><th>Darbība</th></tr>' +
+                                      //'<tr class="list-item">' +
+                                      //'<td><a target="_blank" href="' + window.location.protocol + '//' + me.domain + '/crm/invoice/show/' + val.ID + '/">' + val.ID + '</a></td>' +
+                                      //'<td class="name-cell"></td>' +
+                                      //'<td class="action" id="doc_' + i + '">Printēt</td></tr>' +
+                                      //'</table>');
+
+                                      div.appendTo('.data-list');
+                                      $('#doc_' + crmData.ID + ' .action').on('click', function () {
+                                          downloadPdf(text, crmData, documentProperties, data.NAME, companyData,
+                                              contactData, dealData, dealProductRow, leadData, userData, quoteData);
+                                      });
+
+
+                                  });
+
+
+                                }
                               });
 
-
-                          });
-                      });
+                      }); //-----------------
                   }
               });
             }
@@ -343,7 +362,7 @@ function getEntity( name ){
                                 getEntityProperties( val.ENTITY );
                             });
                             $('#edit_' + val.ENTITY).on('click', function () {
-                                editDoc( val.ENTITY, templateName );currentSection = val.ENTITY;
+                                editDoc( val.ENTITY, templateName );currentSection = val.ENTITY; currentCRMSection = val.NAME;
                             });
                         });
                     }
@@ -415,7 +434,7 @@ function createField( fields, fieldName, method){
     var bool = $.grep(fields, function(e){ return e.PROPERTY == fieldName; });
 
     if( bool.length < 1 && fieldName ){
-        $('<div />', {class:"field col-md-2 col-sm-3 col-xs-4 " + method, text: fieldName}).data({method: method, field: fieldName }).appendTo('#field-wrap');
+        $('<div />', {class:"field col-md-2 col-sm-3 col-xs-4 " + method, text: translate( method, fieldName) }).data({method: method, field: fieldName }).appendTo('#field-wrap');
 
         $('.field').draggable({
             cursor: 'move',
@@ -436,13 +455,8 @@ jQuery(document).ready(function(){
 
     CKEDITOR.replace( 'TextArea1' );
     editor = CKEDITOR.instances['TextArea1'];
+    CKEDITOR.config.height = 500;
 
-
-    CKEDITOR.editorConfig = function( config ) {
-        config.extraPlugins = 'autogrow';
-        config.autoGrow_minHeight = 250;
-        config.autoGrow_maxHeight = 600;
-    };
     BX24.init(function(){
 
         $(document).on('click', '#save-entity', function () {
@@ -498,16 +512,19 @@ jQuery(document).ready(function(){
                         if(!result.error()) {
                             $.each(result.data(), function(fieldName, e){
                                 if( fieldName == 'COMPANY_ID' || fieldName == 'CONTACT_ID' || fieldName == 'UF_DEAL_ID' ||
-                                    fieldName == 'QUOTE_ID' || fieldName == 'LEAD_ID' || fieldName == 'PRODUCT_ID' || fieldName == 'UF_DEPARTMENT' ){
+                                    fieldName == 'QUOTE_ID' || fieldName == 'LEAD_ID' || fieldName == 'PRODUCT_ID' || fieldName == 'UF_DEPARTMENT' ||
+                                    fieldName == 'INVOICE_PROPERTIES' ){
 
                                 }else{
-                                    createField( entityFields, fieldName, method );
+                                    filterField( currentCRMSection, entityFields, fieldName, method )
                                 }
                             });
                         }
+                        resizeMe();
                     }
                 );
             }
+
         });
     });
 
