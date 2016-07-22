@@ -112,17 +112,18 @@ function statusFilter( crmName, status, key, value ){
             D: 'Atteikts'
         }
     };
-
-    if( crmName == 'invoice' ){
-        if( crm[crmName][key] !== undefined ){
-            if( Object.keys(crm[crmName][key]) == value ){
-                value = crm[crmName][key];
+    if( checkStatus( key ) != -1 ){
+        if( crmName == 'invoice' ){
+            if( crm[crmName][key] !== undefined ){
+                if( Object.keys(crm[crmName][key]) == value ){
+                    value = crm[crmName][key];
+                }
             }
-        }
-    }else{
-        if( crm[crmName][status.ENTITY_ID] !== undefined ){
-            if( status.STATUS_ID == value ){
-                value = status.NAME;
+        }else{
+            if( crm[crmName][status.ENTITY_ID] !== undefined ){
+                if( status.STATUS_ID == value ){
+                    value = status.NAME;
+                }
             }
         }
     }
@@ -130,6 +131,18 @@ function statusFilter( crmName, status, key, value ){
 
 }
 
+function checkStatus( status ){
+    var statuses = [
+        'EMPLOYEES',
+        'INDUSTRY',
+        'COMPANY_TYPE',
+        'SOURCE_ID',
+        'STATUS_ID',
+        'TYPE_ID',
+        'STAGE_ID',
+    ];
+    return $.inArray( status, statuses );
+}
 function checkDate( date ){
     var dates = [
         'BEGINDATE',

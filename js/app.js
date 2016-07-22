@@ -137,7 +137,7 @@ function getEntityProperties( entity ){
                   }
               },function (result) {
                   if (!result.getFields.error()) {
-                      $('.data-list').empty();
+                      $('.list-item').remove();
                       var fieldData = result.getFields.data();
 
                       $.each(fieldData, function (i, field) {
@@ -246,75 +246,52 @@ function getEntityProperties( entity ){
                                       var companyData = {}, contactData = {}, dealData = {}, dealProductRow = {}, leadData = {}, userData = {}, quoteData;
                                       if (!result.getCompany.error()) {
                                           companyData = result.getCompany.data();
+                                          if(result.getCompany.more()){
+                                              result.getCompany.next();
+                                          }
                                       }
                                       if (!result.getContact.error()) {
                                           contactData = result.getContact.data();
+                                          if(result.getContact.more()){
+                                              result.getContact.next();
+                                          }
                                       }
                                       if (!result.getDeal.error()) {
                                           dealData = result.getDeal.data();
+                                          if(result.getDeal.more()){
+                                              result.getDeal.next();
+                                          }
                                       }
                                       if (!result.get_deal_productRow.error()) {
                                           dealProductRow = result.get_deal_productRow.data();
+                                          if(result.get_deal_productRow.more()){
+                                              result.get_deal_productRow.next();
+                                          }
                                       }
                                       if (!result.getLead.error()) {
                                           leadData = result.getLead.data();
+                                          if(result.getLead.more()){
+                                              result.getLead.next();
+                                          }
                                       }
                                       if (!result.getUser.error()) {
                                           userData = result.getUser.data()[0];
+                                          if(result.getUser.more()){
+                                              result.getUser.next();
+                                          }
                                       }
                                       if (!result.getQuote.error()) {
                                           quoteData = result.getQuote.data();
+                                          if(result.getQuote.more()){
+                                              result.getQuote.next();
+                                          }
                                       }
-
-
-                                      var div = $('<div class="col-lg-12 col-md-12 list-item" id="doc_' + crmData.ID + '"/>', {text: crmData.ID});
-                                      var span = $('<span />', {text: crmData.ID});
-                                      span.appendTo(div);
-                                      var name = '';
-                                      switch (data.NAME) {
-                                          case 'company':
-                                              name = crmData.TITLE;
-                                              var nameSpan = $('<span />', {text: name});
-                                              nameSpan.appendTo(div);
-                                              break;
-                                          case 'contact':
-                                              name = crmData.NAME + ' ' + crmData.LAST_NAME;
-                                              var nameSpan = $('<span />', {text: name});
-                                              nameSpan.appendTo(div);
-                                              break;
-                                          case 'deal':
-                                              name = crmData.TITLE;
-                                              var nameSpan = $('<span />', {text: name});
-                                              nameSpan.appendTo(div);
-                                              break;
-                                          case 'invoice':
-                                              name = crmData.ORDER_TOPIC;
-                                              var nameSpan = $('<span />', {text: name});
-                                              nameSpan.appendTo(div);
-                                              break;
-                                          case 'lead':
-                                              name = crmData.TITLE;
-                                              var nameSpan = $('<span />', {text: name});
-                                              nameSpan.appendTo(div);
-                                              break;
-                                          case 'quote':
-                                              name = crmData.TITLE;
-                                              var nameSpan = $('<span />', {text: name});
-                                              nameSpan.appendTo(div);
-                                              break;
-                                          default:
-                                              console.log('default');
-                                      }
-
-                                      var print = $('<span />', {text: 'Printēt', class: 'action'});
-                                      print.appendTo(div);
 
 
                                       statuses.forEach(function( status){
                                           $.each(crmData, function( key, value ){
                                               if( status.STATUS_ID == value ){
                                                 crmData[key] = statusFilter( data.NAME, status, key, value );
-                                                console.log(crmData[key]);
                                               }
                                           });
 
@@ -353,17 +330,53 @@ function getEntityProperties( entity ){
                                               }
                                           });
                                       })
+                                      $('.id-cell').text('ID');
+                                      $('.data-grid').append(
+                                      '<tr class="list-item">' +
+                                      '<td><a target="_blank" href="' + window.location.protocol + '//' + me.domain + '/crm/' + data.NAME + '/show/' + crmData.ID + '/">' + crmData.ID + '</a></td>' +
+                                      '<td class="name-cell_' + crmData.ID + '"></td>' +
+                                      '<td class="print" id="doc_' + crmData.ID + '">Printēt</td></tr>'
+                                      );
 
-                                      //$('.data-list').append('<table>' +
-                                      //'<tr><th>ID</th><th>Nosaukums</th><th>Darbība</th></tr>' +
-                                      //'<tr class="list-item">' +
-                                      //'<td><a target="_blank" href="' + window.location.protocol + '//' + me.domain + '/crm/invoice/show/' + val.ID + '/">' + val.ID + '</a></td>' +
-                                      //'<td class="name-cell"></td>' +
-                                      //'<td class="action" id="doc_' + i + '">Printēt</td></tr>' +
-                                      //'</table>');
 
-                                      div.appendTo('.data-list');
-                                      $('#doc_' + crmData.ID + ' .action').on('click', function () {
+                                      var name = '';
+                                      switch (data.NAME) {
+                                          case 'company':
+                                              name = crmData.TITLE;
+                                              var nameSpan = $('<span />', {text: name});
+                                              nameSpan.appendTo('.name-cell_' + crmData.ID);
+                                              break;
+                                          case 'contact':
+                                              name = crmData.NAME + ' ' + crmData.LAST_NAME;
+                                              var nameSpan = $('<span />', {text: name});
+                                              nameSpan.appendTo('.name-cell_' + crmData.ID);
+                                              break;
+                                          case 'deal':
+                                              name = crmData.TITLE;
+                                              var nameSpan = $('<span />', {text: name});
+                                              nameSpan.appendTo('.name-cell_' + crmData.ID);
+                                              break;
+                                          case 'invoice':
+                                              name = crmData.ORDER_TOPIC;
+                                              var nameSpan = $('<span />', {text: name});
+                                              nameSpan.appendTo('.name-cell_' + crmData.ID);
+                                              break;
+                                          case 'lead':
+                                              name = crmData.TITLE;
+                                              var nameSpan = $('<span />', {text: name});
+                                              nameSpan.appendTo('.name-cell_' + crmData.ID);
+                                              break;
+                                          case 'quote':
+                                              name = crmData.TITLE;
+                                              var nameSpan = $('<span />', {text: name});
+                                              nameSpan.appendTo('.name-cell_' + crmData.ID);
+                                              break;
+                                          default:
+                                              console.log('default');
+                                      }
+
+
+                                      $('#doc_' + crmData.ID ).on('click', function () {
                                           downloadPdf(text, crmData, documentProperties, data.NAME, companyData,
                                               contactData, dealData, dealProductRow, leadData, userData, quoteData);
                                       });
@@ -376,6 +389,9 @@ function getEntityProperties( entity ){
                               });
 
                       });
+                      if(result.getFields.more()){
+                          result.getFields.next();
+                      }
                   }
               });
             }
@@ -386,7 +402,7 @@ function getEntityProperties( entity ){
 }
 
 function getEntity( name ){
-    $('.data-list').empty();
+    $('.list-item').remove();
     BX24.callMethod('entity.get',
         {},
         function (result) {
@@ -406,11 +422,17 @@ function getEntity( name ){
                                 }
                             });
 
-                            var div = $('<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 list-item" id="' + val.ENTITY + '"/>');
-                            $('<span />', {text: templateName, class: 'entity-name' }).appendTo(div);
-                            $('<span />', {text: 'Saraksts', id: 'list_' + val.ENTITY, class: 'list_entity' }).appendTo(div);
-                            $('<span />', {text: 'Rediģēt', id: 'edit_' + val.ENTITY, class: 'edit_entity' }).appendTo(div);
-                            div.appendTo('.data-list');
+                            $('.id-cell').empty();
+                            $('.data-grid').append(
+                            '<tr class="list-item">' +
+                            '<td></td>' +
+                            '<td class="name-cell">' + templateName + '</td>' +
+                            '<td>' +
+                            '<span class="edit_entity" id="edit_' + val.ENTITY + '">Rediģēt</span>' +
+                            '<span class="list_entity" id="list_' + val.ENTITY + '">Saraksts</span>' +
+                            '</td>' +
+                            '</tr>'
+                            );
 
                             $('#list_' + val.ENTITY).on('click', function () {
                                 getEntityProperties( val.ENTITY );
@@ -507,6 +529,10 @@ function createField( fields, fieldName, method){
 
 jQuery(document).ready(function(){
 
+    $( window ).resize(function() {
+        resizeMe();
+    });
+
     CKEDITOR.replace( 'TextArea1' );
     editor = CKEDITOR.instances['TextArea1'];
     CKEDITOR.config.height = 500;
@@ -515,7 +541,7 @@ jQuery(document).ready(function(){
     BX24.init(function(){
 
         $(document).on('click', '#save-entity', function () {
-            $('#entity-name').removeClass('red');
+
             var id = $('input[type="radio"]:checked').attr('id');
             if( id ){
                 BX24.callBatch({
@@ -543,12 +569,10 @@ jQuery(document).ready(function(){
                         }
                     },function (result) {
                         $("#entity-add-modal #close-add-entity").click();
-                    $('#entity-name').removeClass('red');
                         getEntity(id);
                     });
             }else{
-                $('#entity-name').tooltip()
-                $('#entity-name').addClass('red');
+                $('#crm-entity').tooltip()
             }
         });
 
@@ -567,7 +591,7 @@ jQuery(document).ready(function(){
                         if(!result.error()) {
                             $.each(result.data(), function(fieldName, e){
                                 if( fieldName == 'COMPANY_ID' || fieldName == 'CONTACT_ID' || fieldName == 'UF_DEAL_ID' || fieldName == 'OWNER_TYPE' ||
-                                    fieldName == 'QUOTE_ID' || fieldName == 'LEAD_ID' || fieldName == 'PRODUCT_ID' || fieldName == 'UF_DEPARTMENT' ||
+                                    fieldName == 'QUOTE_ID' || fieldName == 'LEAD_ID' || fieldName == 'PRODUCT_ID' || fieldName == 'UF_DEPARTMENT' || fieldName == 'PR_LOCATION' ||
                                     fieldName == 'INVOICE_PROPERTIES' || fieldName == 'ASSIGNED_BY_ID' || fieldName == 'MODIFY_BY_ID' || fieldName == 'IM' ){
 
                                 }else{
@@ -611,10 +635,8 @@ jQuery(document).ready(function(){
         $('.crm-menu-item').removeClass('crm-menu-item-active');
         $(this).addClass('crm-menu-item-active');
     });
-    $('#debug').click(function(){
 
-
+    $('#setting-tabs a').click(function (e) {
+        setTimeout(resizeMe, 500);
     })
-
-
 });

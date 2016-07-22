@@ -5,7 +5,7 @@
     display: inline-block;
 }
 #document, #render_me .modal-content{
-    width: 810px!important;
+    width: 810px;
     //height: 1122px;
 }
 #fields{
@@ -48,8 +48,12 @@
 .entity-name, .list_entity, .edit_entity{
     padding: 5px;
 }
-.list_entity, .edit_entity{
-    float: right;
+.list_entity, .edit_entity, .print{
+    cursor: pointer;
+    border-radius: 5px;
+}
+.list_entity:hover, .edit_entity:hover, .print:hover{
+    background-color: rgba(119, 118, 118, 0.14);
 }
 .list-item{
     border-bottom: 1px solid rgba(128, 128, 128, 0.18);
@@ -60,7 +64,7 @@
 }
 #field-wrap{
     margin-top: 30px;
-    min-height: 100px;
+    //min-height: 100px;
 }
 #entity-add-modal{
     width: 600px;
@@ -83,6 +87,7 @@
     margin-right: 30px;
     float: right;
 }
+
 .data-list span{
     padding-right: 10px;
     padding-left: 10px;
@@ -207,6 +212,8 @@ a {
     width: 100%;
     height: 100%;
 }
-.style-buttons{
-
+@media (max-width: 1250px){
+    #document-edit-modal, #document{
+        width: 100%;
+    }
 }

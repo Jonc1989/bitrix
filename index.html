@@ -90,6 +90,14 @@
 <div class="data-container">
     <div class="data-list"></div>
 
+    <table class="data-grid table-condensed table-hover table">
+        <tr>
+            <td class="bx-table-td id-cell" style="width: 55px;"></td>
+            <td class="bx-table-td">Nosaukums</td>
+            <td class="bx-table-td" style="width: 200px;">Darbība</td>
+        </tr>
+    </table>
+
     <div class="modal fade" id="document-edit-modal" tabindex="-1" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -119,7 +127,7 @@
                             </select>
                             <div>
                                 <!-- Nav tabs -->
-                                <ul class="nav nav-tabs" role="tablist">
+                                <ul id="setting-tabs" class="nav nav-tabs" role="tablist">
                                     <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">CRM lauki</a></li>
                                     <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Dokumenta uzstādījumi</a></li>
                                 </ul>
@@ -131,7 +139,7 @@
                                     </div>
                                     <div role="tabpanel" class="tab-pane" id="profile">
 
-                                        <div class="col-md-3">
+                                        <div class="col-md-3 col-sm-4 col-xs-6">
                                             <div>Margins</div>
                                             <div class="input-group">
                                                 <span class="input-group-addon" id="left">Left</span>
@@ -151,7 +159,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-md-3"><span>Datuma formāts: </span><input class="form-control date-format"></div>
+                                        <div class="col-md-3 col-sm-4 col-xs-6"><span>Datuma formāts: </span><input class="form-control date-format"></div>
                                     </div>
                                 </div>
                             </div>
@@ -165,7 +173,6 @@
                 <div class="modal-footer">
                     <button id="close-edit-modal" type="button" class="btn btn-default" data-dismiss="modal">Aizvērt</button>
                     <button id="save-doc" type="button" class="btn btn-primary">Saglabāt</button>
-                    <button id="debug" type="button" class="btn btn-default">Debug</button>
                 </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
@@ -183,32 +190,32 @@
                 <div class="modal-body">
 
                     <div class="input-group">
-                        <input id="entity-name" type="text" class="form-control" placeholder="" style="margin-bottom: 15px;"
-                               data-toggle="tooltip" data-placement="top" title="CRM sadaļa nav izvēlēta">
+                        <input id="entity-name" type="text" class="form-control" placeholder="" style="margin-bottom: 15px;">
                     </div>
-
-                    <div class="btn-group" data-toggle="buttons">
-                        <label class="btn btn-primary">
-                            <input type="radio" name="options" id="deal" autocomplete="off"> Darījumi
-                        </label>
-                        <!--<label class="btn btn-primary">-->
-                            <!--<input type="radio" name="options" id="currency" autocomplete="off"> Valūtas-->
-                        <!--</label>-->
-                        <label class="btn btn-primary">
-                            <input type="radio" name="options" id="company" autocomplete="off"> Kompānijas
-                        </label>
-                        <label class="btn btn-primary">
-                            <input type="radio" name="options" id="contact" autocomplete="off"> Kontakti
-                        </label>
-                        <label class="btn btn-primary">
-                            <input type="radio" name="options" id="invoice" autocomplete="off"> Rēķini
-                        </label>
-                        <label class="btn btn-primary">
-                            <input type="radio" name="options" id="quote" autocomplete="off"> Piedāvājumi
-                        </label>
-                        <label class="btn btn-primary">
-                            <input type="radio" name="options" id="lead" autocomplete="off"> Līdi
-                        </label>
+                    <div id="crm-entity" data-toggle="tooltip" data-placement="top" title="CRM sadaļa nav izvēlēta">
+                        <div class="btn-group" data-toggle="buttons">
+                            <label class="btn btn-primary">
+                                <input type="radio" name="options" id="deal" autocomplete="off"> Darījumi
+                            </label>
+                            <!--<label class="btn btn-primary">-->
+                                <!--<input type="radio" name="options" id="currency" autocomplete="off"> Valūtas-->
+                            <!--</label>-->
+                            <label class="btn btn-primary">
+                                <input type="radio" name="options" id="company" autocomplete="off"> Kompānijas
+                            </label>
+                            <label class="btn btn-primary">
+                                <input type="radio" name="options" id="contact" autocomplete="off"> Kontakti
+                            </label>
+                            <label class="btn btn-primary">
+                                <input type="radio" name="options" id="invoice" autocomplete="off"> Rēķini
+                            </label>
+                            <label class="btn btn-primary">
+                                <input type="radio" name="options" id="quote" autocomplete="off"> Piedāvājumi
+                            </label>
+                            <label class="btn btn-primary">
+                                <input type="radio" name="options" id="lead" autocomplete="off"> Līdi
+                            </label>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
