@@ -1,4 +1,4 @@
-function translate( crm, name){
+function translate( crm, name ){
 
     var translations = {
         lead: {
@@ -54,7 +54,7 @@ function translate( crm, name){
             LAST_NAME: 'Uzvārds',
             PHOTO: 'Foto',
             BIRTHDATE: 'Dzimšanas datums',
-            TYPE_ID: 'Tipa ID',
+            TYPE_ID: 'Tips',
             SOURCE_ID: 'Avots',
             SOURCE_DESCRIPTION: 'Avota apraksts',
             POST: 'Amats',
@@ -111,7 +111,7 @@ function translate( crm, name){
             REG_ADDRESS_COUNTRY_CODE: 'Jur. adr. valsts kods',
             BANKING_DETAILS: 'Bankas detaļas',
             INDUSTRY: 'Industrija',
-            EMPLOYEES: 'Darbinieki',
+            EMPLOYEES: 'Darbinieku skaits',
             CURRENCY_ID: 'Valūtas kods',
             REVENUE: 'Ieņēmumi',
             OPENED: 'Atvēra?',
@@ -137,7 +137,7 @@ function translate( crm, name){
         deal: {
             ID: 'ID',
             TITLE: 'Nosaukums',
-            TYPE_ID: 'Tipa ID',
+            TYPE_ID: 'Tips',
             STAGE_ID: 'Stadijas ID',
             PROBABILITY: 'Varbūtība',
             CURRENCY_ID: 'Valūtas kods',
@@ -189,7 +189,7 @@ function translate( crm, name){
             LOCATION_ID: 'Atrašanās ID',
             OPENED: 'Atvērts?',
             OPPORTUNITY: 'Peļņas iespēja',
-            PERSON_TYPE_ID: 'Personas tipa ID',
+            PERSON_TYPE_ID: 'Personas tips',
             QUOTE_NUMBER: 'Piedāvājuma numurs',
             STATUS_ID: 'Statusa ID',
             TAX_VALUE: 'PVN Summa',
@@ -217,7 +217,7 @@ function translate( crm, name){
             PAY_VOUCHER_DATE: 'Apmaksas kvīts datums',
             PAY_VOUCHER_NUM:  'Apmaksas kvīts numurs',
             PAYED: 'Apmaksāts',
-            PERSON_TYPE_ID: 'Personas tipa ID',
+            PERSON_TYPE_ID: 'Personas tips',
             PRICE: 'Summa',
             REASON_MARKED: 'Marķējuma iemesls',
             RESPONSIBLE_EMAIL: 'Atbildīgā epasts',
@@ -242,7 +242,7 @@ function translate( crm, name){
             CUSTOMIZED: 'Pielāgots',
             DISCOUNT_RATE: 'Atlaide %',
             DISCOUNT_SUM: 'Atlaides summa',
-            DISCOUNT_TYPE_ID: 'Atlaides tipa ID',
+            DISCOUNT_TYPE_ID: 'Atlaides tips',
             ID: 'ID',
             MEASURE_CODE: 'Mērvienības kods',
             MEASURE_NAME: 'Mērvienība',
@@ -261,41 +261,41 @@ function translate( crm, name){
         },
 
         user: {
-            ACTIVE                :                "Aktīvs",
-            EMAIL                :                "Epasts",
-            ID                :                "ID",
-            LAST_NAME                :                "Uzvārds",
-            NAME                :                "Vārds",
-            PERSONAL_BIRTHDAY                :                "Dzimšanas datums",
-            PERSONAL_CITY                :                "Pilsēta",
-            PERSONAL_COUNTRY                :                "Valsts",
-            PERSONAL_FAX                :                "Fakss",
-            PERSONAL_GENDER                :                "Dzimums",
-            PERSONAL_ICQ                :                "ICQ",
-            PERSONAL_MOBILE                :                "Personīgais mobīlais nr.",
-            PERSONAL_PAGER                :                "Peidžeris",
-            PERSONAL_PHONE                :                "Personīgais telefons",
-            PERSONAL_PHOTO                :                "Foto"
-            PERSONAL_PROFESSION                :                "Profesija"
-            PERSONAL_STATE                :                "Novads"
-            PERSONAL_STREET                :                "Iela"
-            PERSONAL_WWW                :                "Mājaslapa"
-            PERSONAL_ZIP                :                "Pasta indekss"
-            SECOND_NAME                :                "Otrs vārds"
-            UF_DEPARTMENT                :                "Apakšnodaļa"
-            UF_DISTRICT                :                "Rajons"
-            UF_FACEBOOK                :                "Facebook"
-            UF_INTERESTS                :                "Intereses"
-            UF_LINKEDIN                :                "LinkedIn"
-            UF_PHONE_INNER                :                "Telefons"
-            UF_SKILLS                :                "Prasmes"
-            UF_SKYPE                :                "Skype"
-            UF_TWITTER                :                "Twitter"
-            UF_WEB_SITES                :                "Citas mājaslapas"
-            UF_XING                :                "Xing"
-            WORK_COMPANY                :                "Uzņēmums"
-            WORK_PHONE                :                "Uzņēmuma telefons"
-            WORK_POSITION                :                "Pozīcija"
+            ACTIVE: "Aktīvs",
+            EMAIL: "Epasts",
+            ID: "ID",
+            LAST_NAME: "Uzvārds",
+            NAME: "Vārds",
+            PERSONAL_BIRTHDAY: "Dzimšanas datums",
+            PERSONAL_CITY: "Pilsēta",
+            PERSONAL_COUNTRY: "Valsts",
+            PERSONAL_FAX: "Fakss",
+            PERSONAL_GENDER: "Dzimums",
+            PERSONAL_ICQ: "ICQ",
+            PERSONAL_MOBILE: "Personīgais mobīlais nr.",
+            PERSONAL_PAGER: "Peidžeris",
+            PERSONAL_PHONE: "Personīgais telefons",
+            PERSONAL_PHOTO: "Foto",
+            PERSONAL_PROFESSION: "Profesija",
+            PERSONAL_STATE: "Novads",
+            PERSONAL_STREET: "Iela",
+            PERSONAL_WWW: "Mājaslapa",
+            PERSONAL_ZIP: "Pasta indekss",
+            SECOND_NAME: "Otrs vārds",
+            UF_DEPARTMENT: "Apakšnodaļa",
+            UF_DISTRICT: "Rajons",
+            UF_FACEBOOK: "Facebook",
+            UF_INTERESTS: "Intereses",
+            UF_LINKEDIN: "LinkedIn",
+            UF_PHONE_INNER: "Telefons",
+            UF_SKILLS: "Prasmes",
+            UF_SKYPE: "Skype",
+            UF_TWITTER: "Twitter",
+            UF_WEB_SITES: "Citas mājaslapas",
+            UF_XING: "Xing",
+            WORK_COMPANY: "Uzņēmums",
+            WORK_PHONE: "Uzņēmuma telefons",
+            WORK_POSITION: "Pozīcija"
         }
     };
 

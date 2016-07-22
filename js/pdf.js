@@ -51,7 +51,7 @@ function replaceMatched( field, text, crmName, key, dateFormat ){
         }else if( field.constructor === Array ){
 
         }else{
-            if( checkDate( key ) != -1 ){
+            if( checkDate( key ) != -1 && field != '' ){
                 var date = formatDateString( field, dateFormat );
                 text = text.replace( '{' + crmName +':' + key + '}', date );
             }else{
@@ -142,8 +142,9 @@ function downloadPdf( text, dataObjects, propertipes, crmName, companyData, cont
         text =  replaceMatched( field, text, 'deal', i, dateFormat );
     });
 
-    console.log(dealProductRow.length);
-    text = checkProduct( text, dealProductRow, 'productrow' );
+    if(dealProductRow.length !== undefined ){
+        text = checkProduct( text, dealProductRow, 'productrow' );
+    }
 
     $.each(leadData, function (i, field) {
         text =  replaceMatched( field, text, 'lead', i, field, dateFormat );

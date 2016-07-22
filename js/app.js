@@ -97,9 +97,19 @@ function getEntityProperties( entity ){
             params: {
                 ENTITY: entity
             }
+        },
+        getStatuses: {
+            method: 'crm.status.list',
+            params: {
+                order: {"SORT": "ASC"}
+            }
         }
     }, function (result) {
 
+        var statuses = [];
+        if (!result.getStatuses.error() ) {
+            statuses = result.getStatuses.data();
+        }
         if (!result.getEntityProps.error() ) {
 
                 var data = result.getEntityProps.data()[0];
@@ -159,7 +169,7 @@ function getEntityProperties( entity ){
                                           quoteId = crmData.QUOTE_ID != undefined ? crmData.QUOTE_ID : null;
                                           leadId = crmData.LEAD_ID != undefined ? crmData.LEAD_ID : null;
                                           productRowId = crmData.ID != undefined ? crmData.ID : null;
-                                          //userId = field.CREATED_BY_ID;
+                                          userId = crmData.CREATED_BY_ID;
                                           break;
                                       case 'invoice':
                                           companyId = crmData.UF_COMPANY_ID != undefined ? crmData.UF_COMPANY_ID : null;
@@ -300,6 +310,50 @@ function getEntityProperties( entity ){
                                       print.appendTo(div);
 
 
+                                      statuses.forEach(function( status){
+                                          $.each(crmData, function( key, value ){
+                                              if( status.STATUS_ID == value ){
+                                                crmData[key] = statusFilter( data.NAME, status, key, value );
+                                                console.log(crmData[key]);
+                                              }
+                                          });
+
+                                          $.each(companyData, function( key, value ){
+                                              if( status.STATUS_ID == value ){
+                                                  companyData[key] = status.NAME;
+                                                  companyData[key] = statusFilter( 'company', status, key, value );
+                                              }
+                                          });
+
+                                          $.each(contactData, function( key, value ){
+                                              if( status.STATUS_ID == value ){
+                                                  contactData[key] = status.NAME;
+                                                  companyData[key] = statusFilter( 'contact', status, key, value );
+                                              }
+                                          });
+
+                                          $.each(dealData, function( key, value ){
+                                              if( status.STATUS_ID == value ){
+                                                  dealData[key] = status.NAME;
+                                                  companyData[key] = statusFilter( 'deal', status, key, value );
+                                              }
+                                          });
+
+                                          $.each(leadData, function( key, value ){
+                                              if( status.STATUS_ID == value ){
+                                                  leadData[key] = status.NAME;
+                                                  companyData[key] = statusFilter( 'lead', status, key, value );
+                                              }
+                                          });
+
+                                          $.each(quoteData, function( key, value ){
+                                              if( status.STATUS_ID == value ){
+                                                  quoteData[key] = status.NAME;
+                                                  companyData[key] = statusFilter( 'quote', status, key, value );
+                                              }
+                                          });
+                                      })
+
                                       //$('.data-list').append('<table>' +
                                       //'<tr><th>ID</th><th>Nosaukums</th><th>Darbība</th></tr>' +
                                       //'<tr class="list-item">' +
@@ -321,7 +375,7 @@ function getEntityProperties( entity ){
                                 }
                               });
 
-                      }); //-----------------
+                      });
                   }
               });
             }
@@ -457,6 +511,7 @@ jQuery(document).ready(function(){
     editor = CKEDITOR.instances['TextArea1'];
     CKEDITOR.config.height = 500;
 
+
     BX24.init(function(){
 
         $(document).on('click', '#save-entity', function () {
@@ -511,9 +566,9 @@ jQuery(document).ready(function(){
                     function(result) {
                         if(!result.error()) {
                             $.each(result.data(), function(fieldName, e){
-                                if( fieldName == 'COMPANY_ID' || fieldName == 'CONTACT_ID' || fieldName == 'UF_DEAL_ID' ||
+                                if( fieldName == 'COMPANY_ID' || fieldName == 'CONTACT_ID' || fieldName == 'UF_DEAL_ID' || fieldName == 'OWNER_TYPE' ||
                                     fieldName == 'QUOTE_ID' || fieldName == 'LEAD_ID' || fieldName == 'PRODUCT_ID' || fieldName == 'UF_DEPARTMENT' ||
-                                    fieldName == 'INVOICE_PROPERTIES' ){
+                                    fieldName == 'INVOICE_PROPERTIES' || fieldName == 'ASSIGNED_BY_ID' || fieldName == 'MODIFY_BY_ID' || fieldName == 'IM' ){
 
                                 }else{
                                     filterField( currentCRMSection, entityFields, fieldName, method )

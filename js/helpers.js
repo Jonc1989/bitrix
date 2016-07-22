@@ -59,6 +59,7 @@ function filterCRM( crm ){
         case 'invoice':
             $('#api option[value="quote"]').hide();
             $('#api option[value="lead"]').hide();
+            $('#api option[value="user"]').hide();
             break;
         case 'lead':
             $('#api option[value="deal"]').hide();
@@ -74,6 +75,61 @@ function filterCRM( crm ){
             console.log('default');
     }
 }
+
+function statusFilter( crmName, status, key, value ){
+    var crm = {
+        lead: {
+            SOURCE: '',
+            STATUS: ''
+        },
+
+        contact: {
+            SOURCE: '',
+            CONTACT_TYPE: ''
+        },
+
+        company: {
+            COMPANY_TYPE: '',
+            EMPLOYEES: '',
+            INDUSTRY: ''
+        },
+
+        deal: {
+            DEAL_TYPE: '',
+            DEAL_STAGE: '',
+            DEAL_STATE: ''
+        },
+
+        quote: {
+            QUOTE_STATUS: ''
+        },
+
+        invoice: {
+            N: 'Melnraksts',
+            S: 'Nosūtīts',
+            A: 'Apstiprināts',
+            P: 'Apmaksāts',
+            D: 'Atteikts'
+        }
+    };
+
+    if( crmName == 'invoice' ){
+        if( crm[crmName][key] !== undefined ){
+            if( Object.keys(crm[crmName][key]) == value ){
+                value = crm[crmName][key];
+            }
+        }
+    }else{
+        if( crm[crmName][status.ENTITY_ID] !== undefined ){
+            if( status.STATUS_ID == value ){
+                value = status.NAME;
+            }
+        }
+    }
+    return value;
+
+}
+
 function checkDate( date ){
     var dates = [
         'BEGINDATE',
