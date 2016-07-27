@@ -243,7 +243,7 @@ function getEntityProperties( entity ){
                                       }
                                   }, function (result) {
 
-                                      var companyData = {}, contactData = {}, dealData = {}, dealProductRow = {}, leadData = {}, userData = {}, quoteData;
+                                      var companyData = {}, contactData = {}, dealData = {}, dealProductRow = {}, leadData = {}, userData = {}, quoteData = {};
                                       if (!result.getCompany.error()) {
                                           companyData = result.getCompany.data();
                                           if(result.getCompany.more()){
@@ -297,39 +297,40 @@ function getEntityProperties( entity ){
 
                                           $.each(companyData, function( key, value ){
                                               if( status.STATUS_ID == value ){
-                                                  companyData[key] = status.NAME;
+                                                  //companyData[key] = status.NAME;
                                                   companyData[key] = statusFilter( 'company', status, key, value );
                                               }
                                           });
 
                                           $.each(contactData, function( key, value ){
                                               if( status.STATUS_ID == value ){
-                                                  contactData[key] = status.NAME;
-                                                  companyData[key] = statusFilter( 'contact', status, key, value );
+                                                  //contactData[key] = status.NAME;
+                                                  contactData[key] = statusFilter( 'contact', status, key, value );
                                               }
                                           });
 
                                           $.each(dealData, function( key, value ){
                                               if( status.STATUS_ID == value ){
-                                                  dealData[key] = status.NAME;
-                                                  companyData[key] = statusFilter( 'deal', status, key, value );
+                                                  //dealData[key] = status.NAME;
+                                                  dealData[key] = statusFilter( 'deal', status, key, value );
                                               }
                                           });
 
                                           $.each(leadData, function( key, value ){
                                               if( status.STATUS_ID == value ){
-                                                  leadData[key] = status.NAME;
-                                                  companyData[key] = statusFilter( 'lead', status, key, value );
+                                                  //leadData[key] = status.NAME;
+                                                  leadData[key] = statusFilter( 'lead', status, key, value );
                                               }
                                           });
 
                                           $.each(quoteData, function( key, value ){
                                               if( status.STATUS_ID == value ){
-                                                  quoteData[key] = status.NAME;
-                                                  companyData[key] = statusFilter( 'quote', status, key, value );
+                                                  //quoteData[key] = status.NAME;
+                                                  quoteData[key] = statusFilter( 'quote', status, key, value );
                                               }
                                           });
-                                      })
+                                      });
+                                      
                                       $('.id-cell').text('ID');
                                       $('.data-grid').append(
                                       '<tr class="list-item">' +
@@ -533,9 +534,9 @@ jQuery(document).ready(function(){
         resizeMe();
     });
 
-    CKEDITOR.replace( 'TextArea1' );
-    editor = CKEDITOR.instances['TextArea1'];
-    CKEDITOR.config.height = 500;
+    // CKEDITOR.replace( 'TextArea1' );
+    // editor = CKEDITOR.instances['TextArea1'];
+    // CKEDITOR.config.height = 500;
 
 
     BX24.init(function(){

@@ -61,10 +61,21 @@ function replaceMatched( field, text, crmName, key, dateFormat ){
         }
 
         return replaceMatched( field, text, crmName, key, dateFormat );
+    }else{
+        text = text.replace( '{' + crmName +':' + key + '}', '');
     }
     return text;
 }
 
+function deleteEmptyFields( text, regex ) {
+
+    var match = text.match(regex);
+    if( match ){
+        text = text.replace( regex, '' );
+        return deleteEmptyFields( text, regex );
+    }
+    return text;
+}
 function checkProduct( text, dealProductRow, name ){
     var html = $(text);
     var count = dealProductRow.length;
@@ -123,40 +134,73 @@ function downloadPdf( text, dataObjects, propertipes, crmName, companyData, cont
 
     $.each(dataObjects, function (i, field) {
         text =  replaceMatched( field, text, crmName, i, dateFormat );
-        //text = text.replace( '{' + crmName + ':' + i + '}', field);
     });
+
+
 
     if( crmName == 'invoice' && dataObjects.PRODUCT_ROWS !== undefined ){
         text = checkProduct( text, dataObjects.PRODUCT_ROWS, 'productrow' );
     }
 
-    $.each(companyData, function (i, field) {
-        text =  replaceMatched( field, text, 'company', i, dateFormat );
-    });
+    if(Object.keys(companyData) !== undefined && Object.keys(companyData).length > 0 ||
+        companyData !== undefined && companyData.length > 0 ){
+        $.each(companyData, function (i, field) {
+            text =  replaceMatched( field, text, 'company', i, dateFormat );
+        });
+    }else{
+        text = deleteEmptyFields( text, /{company:\w+((\_\w+)?)+}/ );
+    }
 
-    $.each(contactData, function (i, field) {
-        text =  replaceMatched( field, text, 'contact', i, dateFormat );
-    });
+    if(Object.keys(contactData) !== undefined && Object.keys(contactData).length > 0 ||
+        contactData !== undefined && contactData.length > 0 ){
+        $.each(contactData, function (i, field) {
+            text =  replaceMatched( field, text, 'contact', i, dateFormat );
+        });
+    }else{
+        text = deleteEmptyFields( text, /{contact:\w+((\_\w+)?)+}/ );
+    }
 
-    $.each(dealData, function (i, field) {
-        text =  replaceMatched( field, text, 'deal', i, dateFormat );
-    });
+    if(Object.keys(dealData) !== undefined && Object.keys(dealData).length > 0 ||
+        dealData !== undefined && dealData.length > 0 ){
+        $.each(dealData, function (i, field) {
+            text =  replaceMatched( field, text, 'deal', i, dateFormat );
+        });
+    }else{
+        text = deleteEmptyFields( text, /{deal:\w+((\_\w+)?)+}/ );
+    }
 
     if(dealProductRow.length !== undefined ){
         text = checkProduct( text, dealProductRow, 'productrow' );
     }
 
-    $.each(leadData, function (i, field) {
-        text =  replaceMatched( field, text, 'lead', i, field, dateFormat );
-    });
+    if(Object.keys(leadData) !== undefined && Object.keys(leadData).length > 0 ||
+        leadData !== undefined && leadData.length > 0 ){
+        $.each(leadData, function (i, field) {
+            text =  replaceMatched( field, text, 'lead', i, dateFormat );
+        });
+    }else{
+        text = deleteEmptyFields( text, /{lead:\w+((\_\w+)?)+}/ );
+    }
 
-    $.each(userData, function (i, field) {
-        text =  replaceMatched( field, text, 'user', i, field, dateFormat );
-    });
+    if(Object.keys(userData) !== undefined && Object.keys(userData).length > 0 ||
+        userData !== undefined && userData.length > 0 ){
+        $.each(userData, function (i, field) {
+            text =  replaceMatched( field, text, 'user', i, dateFormat );
+        });
+    }else{
+        text = deleteEmptyFields( text, /{user:\w+((\_\w+)?)+}/ );
+    }
 
-    $.each(quoteData, function (i, field) {
-        text =  replaceMatched( field, text, 'user', i, field, dateFormat );
-    });
+
+
+    if(Object.keys(quoteData) !== undefined && Object.keys(quoteData).length > 0 ||
+        quoteData !== undefined && quoteData.length > 0 ){
+        $.each(quoteData, function (i, field) {
+            text =  replaceMatched( field, text, 'quote', i, dateFormat );
+        });
+    }else{
+        text = deleteEmptyFields( text, /{quote:\w+((\_\w+)?)+}/ );
+    }
 
     var mywindow = window.open('', 'Document');
     mywindow.document.write('<html><head><style>@page{ margin: ' + top + 'mm ' + right + 'mm ' + bottom + 'mm ' + left + 'mm;} </style>');

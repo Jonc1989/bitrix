@@ -24,6 +24,10 @@
 
 #api{
     float: right;
+    margin-right: 5px;
+    margin-top: 5px;
+    border-radius: 5px;
+    outline: 0;
 }
 #entity-add-modal .btn {
     display: inline-block;

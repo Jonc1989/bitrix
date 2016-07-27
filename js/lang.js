@@ -257,7 +257,9 @@ function translate( crm, name ){
             QUANTITY: 'Daudzums',
             SORT: 'SORT',
             TAX_INCLUDED: 'PVN iekļauts',
-            TAX_RATE: 'PVN likme'
+            TAX_RATE: 'PVN likme',
+            VAT_INCLUDED: 'PVN iekļauts',
+            VAT_RATE: 'PVN likme'
         },
 
         user: {
