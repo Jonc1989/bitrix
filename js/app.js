@@ -516,13 +516,13 @@ function createField( fields, fieldName, method){
         $('.field').draggable({
             cursor: 'move',
             helper: "clone",
-            iframeFix: true,
-            start: function () {
-                $("iframe").css('z-index', '-1');
-            },
-            stop: function () {
-                $("iframe").css('z-index', '0');
-            }
+            //iframeFix: true,
+            // start: function () {
+            //     $("iframe").css('z-index', '-1');
+            // },
+            // stop: function () {
+            //     $("iframe").css('z-index', '0');
+            // }
         }).css('z-index', 1);
     }
 
@@ -534,9 +534,10 @@ jQuery(document).ready(function(){
         resizeMe();
     });
 
-    // CKEDITOR.replace( 'TextArea1' );
-    // editor = CKEDITOR.instances['TextArea1'];
-    // CKEDITOR.config.height = 500;
+    CKEDITOR.replace( 'TextArea1' );
+    editor = CKEDITOR.instances['TextArea1'];
+    CKEDITOR.config.height = 500;
+    
 
 
     BX24.init(function(){
@@ -639,5 +640,7 @@ jQuery(document).ready(function(){
 
     $('#setting-tabs a').click(function (e) {
         setTimeout(resizeMe, 500);
-    })
+    });
+
+    
 });
