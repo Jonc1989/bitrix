@@ -11,7 +11,7 @@ function sortById(a,b) {
 }
 
 function resizeMe(){
-    BX24.resizeWindow(window.innerWidth, $("#document-edit-modal").height());
+    BX24.resizeWindow(window.innerWidth, $(".template-wrap").height());
 }
 
 function filterField( currentCRMSection, entityFields, fieldName, method ){

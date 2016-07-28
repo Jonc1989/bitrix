@@ -1,6 +1,7 @@
 var entityFields = [];
 var currentSection = null, currentCRMSection;
 var editor;
+var back = null;
 //var deal = 'crm.deal';
 //var currency = 'crm.currency';
 //var company = 'crm.company';
@@ -82,7 +83,12 @@ function editDoc( name, templateName ){
         }
     }, function (result) {
         if (!result.getEntityItem.error()) {
-                $("#document-edit-modal").modal('show');
+                //$("#document-edit-modal").modal('show');
+                $('.data-grid').hide();
+                $('.list-item').remove();
+
+
+                $('.template-wrap').removeClass('hidden');
                 initDocument( result.getEntityItem.data(), templateName );
         }
     });
@@ -403,7 +409,11 @@ function getEntityProperties( entity ){
 }
 
 function getEntity( name ){
+    back = null;
+    $('.template-wrap').addClass('hidden');
+    $('.data-grid').show();
     $('.list-item').remove();
+
     BX24.callMethod('entity.get',
         {},
         function (result) {
@@ -437,10 +447,13 @@ function getEntity( name ){
 
                             $('#list_' + val.ENTITY).on('click', function () {
                                 getEntityProperties( val.ENTITY );
+                                back = 'getEntity("' + name + '")';
                             });
                             $('#edit_' + val.ENTITY).on('click', function () {
                                 editDoc( val.ENTITY, templateName );currentSection = val.ENTITY; currentCRMSection = val.NAME;
+                                back = 'getEntity("' + name + '")';
                             });
+
                         });
                     }
                 });
@@ -493,7 +506,13 @@ function sync( name, fields ){
                                         if (xhr.readyState == 4 && xhr.status == 200) {
                                             response = JSON.parse(xhr.response);
                                             if(response.result){
-                                                $("#document-edit-modal #close-edit-modal").click()
+                                                //$("#document-edit-modal #close-edit-modal").click()
+
+                                                 $('.data-grid').show();
+                                                    getEntity( entity.NAME );
+
+
+                                                $('.template-wrap').addClass('hidden');
                                             }
                                         }
                                     };
@@ -528,15 +547,21 @@ function createField( fields, fieldName, method){
 
 }
 
+function goBack() { console.log(back)
+    if( back != null ){
+        eval( back );
+    }
+}
 jQuery(document).ready(function(){
 
     $( window ).resize(function() {
         resizeMe();
     });
+    $('.data-grid').hide();
 
-    CKEDITOR.replace( 'TextArea1' );
-    editor = CKEDITOR.instances['TextArea1'];
-    CKEDITOR.config.height = 500;
+    // CKEDITOR.replace( 'TextArea1' );
+    // editor = CKEDITOR.instances['TextArea1'];
+    // CKEDITOR.config.height = 500;
     
 
 
@@ -642,5 +667,13 @@ jQuery(document).ready(function(){
         setTimeout(resizeMe, 500);
     });
 
-    
+    $('#close-edit-modal').click(function () {
+        getEntity( currentCRMSection );
+    })
+
+    $('#back').click(function(){
+        goBack();
+    })
+
+
 });

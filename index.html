@@ -11,7 +11,7 @@
     <script type="text/javascript" src="js/pdfmake.min.js"></script>
     <!--<script type="text/javascript" src="js/jquery-ui-droppable-iframe-fix.js"></script>-->
 
-    <script type="text/javascript" src="js/ckeditor/ckeditor.js"></script>
+    <!--<script type="text/javascript" src="js/ckeditor/ckeditor.js"></script>-->
     <script type="text/javascript" src="js/vfs_fonts.js"></script>
     <script type="text/javascript" src="js/pdf.js"></script>
     <script type="text/javascript" src="js/install.js"></script>
@@ -81,6 +81,13 @@
                         <span class="crm-menu-name">Pievienot</span></a>
                     <div id="crm-menu-plus-btn-new" class="crm-menu-plus-btn crm-menu-plus-btn-pro" style="display: none;"></div></div>
             </td>
+            <td class="crm-menu-cell ">
+                <div class="">
+                    <a id="back"  class="crm-menu-item crm-menu-back">
+                        <span class="crm-menu-icon"></span>
+                        <span class="crm-menu-name">Atpakaļ</span></a>
+                </div>
+            </td>
         </tr>
         </tbody>
     </table>
@@ -109,72 +116,72 @@
 
 
 
-                    <div class="col-md-12">
-                        <div id="fields" class="">
-                            <select id="api">
-                                <option>Izvēlieties sadaļu</option>
-                                <optgroup label="CRM">
-                                    <option value="lead">Līdi</option>
-                                    <option value="contact">Kontakti</option>
-                                    <option value="company">Kompānija</option>
-                                    <option value="deal">Darījumi</option>
-                                    <!--<option value="currency">Valūtas</option>-->
-                                    <option value="quote">Piedāvājumi</option>
-                                    <option value="invoice">Rēķini</option>
-                                    <option value="productrow">Produkti</option>
-                                    <option value="user">Lietotājs</option>
-                                </optgroup>
-                            </select>
-                            <div>
-                                <!-- Nav tabs -->
-                                <ul id="setting-tabs" class="nav nav-tabs" role="tablist">
-                                    <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">CRM lauki</a></li>
-                                    <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Dokumenta uzstādījumi</a></li>
-                                </ul>
+                    <!--<div class="col-md-12">-->
+                        <!--<div id="fields" class="">-->
+                            <!--<select id="api">-->
+                                <!--<option>Izvēlieties sadaļu</option>-->
+                                <!--<optgroup label="CRM">-->
+                                    <!--<option value="lead">Līdi</option>-->
+                                    <!--<option value="contact">Kontakti</option>-->
+                                    <!--<option value="company">Kompānija</option>-->
+                                    <!--<option value="deal">Darījumi</option>-->
+                                    <!--&lt;!&ndash;<option value="currency">Valūtas</option>&ndash;&gt;-->
+                                    <!--<option value="quote">Piedāvājumi</option>-->
+                                    <!--<option value="invoice">Rēķini</option>-->
+                                    <!--<option value="productrow">Produkti</option>-->
+                                    <!--<option value="user">Lietotājs</option>-->
+                                <!--</optgroup>-->
+                            <!--</select>-->
+                            <!--<div>-->
+                                <!--&lt;!&ndash; Nav tabs &ndash;&gt;-->
+                                <!--<ul id="setting-tabs" class="nav nav-tabs" role="tablist">-->
+                                    <!--<li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">CRM lauki</a></li>-->
+                                    <!--<li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Dokumenta uzstādījumi</a></li>-->
+                                <!--</ul>-->
 
-                                <!-- Tab panes -->
-                                <div class="tab-content">
-                                    <div role="tabpanel" class="tab-pane active" id="home">
-                                        <div id="field-wrap" class="col-md-12"></div>
-                                    </div>
-                                    <div role="tabpanel" class="tab-pane" id="profile">
+                                <!--&lt;!&ndash; Tab panes &ndash;&gt;-->
+                                <!--<div class="tab-content">-->
+                                    <!--<div role="tabpanel" class="tab-pane active" id="home">-->
+                                        <!--<div id="field-wrap" class="col-md-12"></div>-->
+                                    <!--</div>-->
+                                    <!--<div role="tabpanel" class="tab-pane" id="profile">-->
 
-                                        <div class="col-md-3 col-sm-4 col-xs-6" style="margin-top: 10px;margin-bottom: 10px;">
-                                            <div>Margins</div>
-                                            <div class="input-group">
-                                                <span class="input-group-addon" id="left">Left</span>
-                                                <input class="margin-left margins form-control" type="text" class="form-control" placeholder="40" aria-describedby="left">
-                                            </div>
-                                            <div class="input-group">
-                                                <span class="input-group-addon" id="top">Top</span>
-                                                <input class="margin-top margins form-control" type="text" class="form-control" placeholder="60" aria-describedby="top">
-                                            </div>
-                                            <div class="input-group">
-                                                <span class="input-group-addon" id="right">Right</span>
-                                                <input class="margin-right margins form-control" type="text" class="form-control" placeholder="40" aria-describedby="right">
-                                            </div>
-                                            <div class="input-group">
-                                                <span class="input-group-addon" id="bottom">Bottom</span>
-                                                <input class="margin-bottom margins form-control" type="text" class="form-control" placeholder="60" aria-describedby="bottom">
-                                            </div>
-                                        </div>
+                                        <!--<div class="col-md-3 col-sm-4 col-xs-6" style="margin-top: 10px;margin-bottom: 10px;">-->
+                                            <!--<div>Margins</div>-->
+                                            <!--<div class="input-group">-->
+                                                <!--<span class="input-group-addon" id="left">Left</span>-->
+                                                <!--<input class="margin-left margins form-control" type="text" class="form-control" placeholder="40" aria-describedby="left">-->
+                                            <!--</div>-->
+                                            <!--<div class="input-group">-->
+                                                <!--<span class="input-group-addon" id="top">Top</span>-->
+                                                <!--<input class="margin-top margins form-control" type="text" class="form-control" placeholder="60" aria-describedby="top">-->
+                                            <!--</div>-->
+                                            <!--<div class="input-group">-->
+                                                <!--<span class="input-group-addon" id="right">Right</span>-->
+                                                <!--<input class="margin-right margins form-control" type="text" class="form-control" placeholder="40" aria-describedby="right">-->
+                                            <!--</div>-->
+                                            <!--<div class="input-group">-->
+                                                <!--<span class="input-group-addon" id="bottom">Bottom</span>-->
+                                                <!--<input class="margin-bottom margins form-control" type="text" class="form-control" placeholder="60" aria-describedby="bottom">-->
+                                            <!--</div>-->
+                                        <!--</div>-->
 
-                                        <div class="col-md-3 col-sm-4 col-xs-6" style="margin-top: 10px;margin-bottom: 10px;">
-                                            <span>Datuma formāts: </span><input class="form-control date-format">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                                        <!--<div class="col-md-3 col-sm-4 col-xs-6" style="margin-top: 10px;margin-bottom: 10px;">-->
+                                            <!--<span>Datuma formāts: </span><input class="form-control date-format">-->
+                                        <!--</div>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
 
-                        <div id="document" class="">
-                            <textarea id="TextArea1" name="S1" class="ui-droppable" wrap="hard"></textarea>
-                        </div>
-                    </div>
+                        <!--<div id="document" class="">-->
+                            <!--<textarea id="TextArea1" name="S1" class="ui-droppable" wrap="hard"></textarea>-->
+                        <!--</div>-->
+                    <!--</div>-->
                 </div>
                 <div class="modal-footer">
-                    <button id="close-edit-modal" type="button" class="btn btn-default" data-dismiss="modal">Aizvērt</button>
-                    <button id="save-doc" type="button" class="btn btn-primary">Saglabāt</button>
+                    <!--<button id="close-edit-modal" type="button" class="btn btn-default" data-dismiss="modal">Aizvērt</button>-->
+                    <!--<button id="save-doc" type="button" class="btn btn-primary">Saglabāt</button>-->
                 </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
@@ -227,6 +234,74 @@
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
+
+
+
+    <!------------------------------------------------------------------------------------>
+    <div class="col-md-12 hidden template-wrap">
+        <div id="fields" class="">
+            <select id="api">
+                <option>Izvēlieties sadaļu</option>
+                <optgroup label="CRM">
+                    <option value="lead">Līdi</option>
+                    <option value="contact">Kontakti</option>
+                    <option value="company">Kompānija</option>
+                    <option value="deal">Darījumi</option>
+                    <!--<option value="currency">Valūtas</option>-->
+                    <option value="quote">Piedāvājumi</option>
+                    <option value="invoice">Rēķini</option>
+                    <option value="productrow">Produkti</option>
+                    <option value="user">Lietotājs</option>
+                </optgroup>
+            </select>
+            <div>
+                <!-- Nav tabs -->
+                <ul id="setting-tabs" class="nav nav-tabs" role="tablist">
+                    <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">CRM lauki</a></li>
+                    <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Dokumenta uzstādījumi</a></li>
+                </ul>
+
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="home">
+                        <div id="field-wrap" class="col-md-12"></div>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="profile">
+
+                        <div class="col-md-3 col-sm-4 col-xs-6" style="margin-top: 10px;margin-bottom: 10px;">
+                            <div>Margins</div>
+                            <div class="input-group">
+                                <span class="input-group-addon" id="left">Left</span>
+                                <input class="margin-left margins form-control" type="text" class="form-control" placeholder="40" aria-describedby="left">
+                            </div>
+                            <div class="input-group">
+                                <span class="input-group-addon" id="top">Top</span>
+                                <input class="margin-top margins form-control" type="text" class="form-control" placeholder="60" aria-describedby="top">
+                            </div>
+                            <div class="input-group">
+                                <span class="input-group-addon" id="right">Right</span>
+                                <input class="margin-right margins form-control" type="text" class="form-control" placeholder="40" aria-describedby="right">
+                            </div>
+                            <div class="input-group">
+                                <span class="input-group-addon" id="bottom">Bottom</span>
+                                <input class="margin-bottom margins form-control" type="text" class="form-control" placeholder="60" aria-describedby="bottom">
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 col-sm-4 col-xs-6" style="margin-top: 10px;margin-bottom: 10px;">
+                            <span>Datuma formāts: </span><input class="form-control date-format">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="document" class="">
+            <textarea id="TextArea1" name="S1" class="ui-droppable" wrap="hard"></textarea>
+            <button id="close-edit-modal" type="button" class="btn btn-default" data-dismiss="modal">Aizvērt</button>
+            <button id="save-doc" type="button" class="btn btn-primary">Saglabāt</button>
+        </div>
+    </div>
 
 </div>
 
