@@ -243,6 +243,7 @@ function translate( crm, name ){
             DISCOUNT_RATE: 'Atlaide %',
             DISCOUNT_SUM: 'Atlaides summa',
             DISCOUNT_TYPE_ID: 'Atlaides tips',
+            DISCOUNT_PRICE: 'Atlaides summa',
             ID: 'ID',
             MEASURE_CODE: 'Mērvienības kods',
             MEASURE_NAME: 'Mērvienība',

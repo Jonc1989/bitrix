@@ -535,13 +535,13 @@ function createField( fields, fieldName, method){
         $('.field').draggable({
             cursor: 'move',
             helper: "clone",
-            //iframeFix: true,
-            // start: function () {
-            //     $("iframe").css('z-index', '-1');
-            // },
-            // stop: function () {
-            //     $("iframe").css('z-index', '0');
-            // }
+            iframeFix: true,
+            start: function () {
+                $("iframe").css('z-index', '-1');
+            },
+            stop: function () {
+                $("iframe").css('z-index', '0');
+            }
         }).css('z-index', 1);
     }
 
@@ -658,7 +658,7 @@ jQuery(document).ready(function(){
 
     });
 
-    $('.crm-menu-item').click(function(){
+    $('.crm-menu-item').not('#back').not('.crm-menu-new').click(function(){
         $('.crm-menu-item').removeClass('crm-menu-item-active');
         $(this).addClass('crm-menu-item-active');
     });

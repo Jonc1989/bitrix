@@ -1,7 +1,6 @@
 
 #document, #fields{
     vertical-align: top;
-    border: 1px solid black;
     display: inline-block;
 }
 #document, #render_me .modal-content, #fields{
@@ -210,12 +209,18 @@ a {
     background-position: center 14px;
     background-size: 50% 60%;
 }
-#back .crm-menu-icon {
+.crm-menu-back .crm-menu-icon {
     background: url('images/back.png') no-repeat center center;
     display: block;
     height: 53px;
     opacity: .6;
     background-size: 50% 60%;
+}
+.crm-menu-back:hover .crm-menu-name{
+    color: #333;
+}
+.crm-menu-back:hover  .crm-menu-icon {
+    opacity: 1;
 }
 #TextArea1{
     width: 100%;
@@ -228,4 +233,5 @@ a {
 /*}*/
 #close-edit-modal, #save-doc{
     margin: 5px;
+    float: right;
 }
