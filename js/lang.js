@@ -241,9 +241,9 @@ function translate( crm, name ){
         productrow: {
             CUSTOMIZED: 'Pielāgots',
             DISCOUNT_RATE: 'Atlaide %',
-            DISCOUNT_SUM: 'Atlaides summa',
+            DISCOUNT_SUM: 'Atlaide',
             DISCOUNT_TYPE_ID: 'Atlaides tips',
-            DISCOUNT_PRICE: 'Atlaides summa',
+            DISCOUNT_PRICE: 'Atlaide',
             ID: 'ID',
             MEASURE_CODE: 'Mērvienības kods',
             MEASURE_NAME: 'Mērvienība',
@@ -260,7 +260,12 @@ function translate( crm, name ){
             TAX_INCLUDED: 'PVN iekļauts',
             TAX_RATE: 'PVN likme',
             VAT_INCLUDED: 'PVN iekļauts',
-            VAT_RATE: 'PVN likme'
+            VAT_RATE: 'PVN likme',
+            SUM: 'Summa',
+            DISCOUNT_PRICE_ALL: 'Atlaides summa',
+            PRICE_EXCLUSIVE_ALL: 'Summa bez nodokļa',
+            TAX_SUM: 'Nodokļu summa',
+            SUM_ALL: 'Summa kopā'
         },
 
         user: {
@@ -299,6 +304,16 @@ function translate( crm, name ){
             WORK_COMPANY: "Uzņēmums",
             WORK_PHONE: "Uzņēmuma telefons",
             WORK_POSITION: "Pozīcija"
+        },
+
+        MyCompany: {
+            FIZ_ADDRESS: 'Fiziskā adrese',
+            JUR_ADDRESS: 'Juridiskā adrese',
+            REG_NR: 'Reģistrācijas numurs',
+            PVN_NR: 'PVN numurs',
+            BANK_DETAILS: 'Bankas detaļas',
+            BANK_ACCOUNT_NR: 'Konta numurs',
+            SWIFT: 'SWIFT numurs'
         }
     };
 

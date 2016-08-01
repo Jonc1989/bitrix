@@ -92,6 +92,8 @@ function checkProduct( text, dealProductRow, name ){
                         var tr = $(element).find('tr');
                         $.each(tr, function ( ii, trow) {
                             if( $(trow).text().match( match ) ){
+
+
                                 if( temp == false ){
                                     temp = trow.outerHTML;
                                 }
@@ -121,7 +123,7 @@ function checkProduct( text, dealProductRow, name ){
 }
 
 
-function downloadPdf( text, dataObjects, propertipes, crmName, companyData, contactData, dealData, dealProductRow, leadData, userData, quoteData ){
+function downloadPdf( text, dataObjects, propertipes, crmName, companyData, contactData, dealData, dealProductRow, leadData, userData, quoteData, myCompanyData ){
 
     var left = Number(propertipes.left) * Number(0.353),
          top = Number(propertipes.top)* Number(0.353),
@@ -139,6 +141,21 @@ function downloadPdf( text, dataObjects, propertipes, crmName, companyData, cont
 
 
     if( crmName == 'invoice' && dataObjects.PRODUCT_ROWS !== undefined ){
+
+        $.each( dataObjects.PRODUCT_ROWS, function(i, val){
+
+            var summa = (Number(val.PRICE) + Number(val.DISCOUNT_PRICE) ) * Number(val.QUANTITY); 
+            var atlaidesSumma = (Number(val.DISCOUNT_PRICE) * Number(val.QUANTITY)); 
+            var summaBezNodokļa = Number(val.PRICE) * Number(val.QUANTITY);
+            var nodokļuSumma = Number(summaBezNodokļa) * Number( val.VAT_RATE );
+            var summaKopa = Number(summaBezNodokļa) + Number(nodokļuSumma);
+
+            dataObjects.PRODUCT_ROWS[i].SUM = summa.toFixed(2);
+            dataObjects.PRODUCT_ROWS[i].DISCOUNT_PRICE_ALL = atlaidesSumma.toFixed(2);
+            dataObjects.PRODUCT_ROWS[i].PRICE_EXCLUSIVE_ALL = summaBezNodokļa.toFixed(2);
+            dataObjects.PRODUCT_ROWS[i].TAX_SUM = nodokļuSumma.toFixed(2);
+            dataObjects.PRODUCT_ROWS[i].SUM_ALL = summaKopa.toFixed(2);
+        });
         text = checkProduct( text, dataObjects.PRODUCT_ROWS, 'productrow' );
     }
 
@@ -170,6 +187,22 @@ function downloadPdf( text, dataObjects, propertipes, crmName, companyData, cont
     }
 
     if(dealProductRow.length !== undefined ){
+
+        $.each( dealProductRow, function(i, val){
+            var summa = (Number(val.PRICE_NETTO) * Number(val.QUANTITY));
+            var atlaidesSumma = (Number(val.DISCOUNT_SUM) * Number(val.QUANTITY));
+            var summaBezNodokļa = (Number(val.PRICE_EXCLUSIVE) * Number(val.QUANTITY));
+            var nodokļuSumma = Number(summaBezNodokļa) * Number( val.TAX_RATE / 100 );
+            var summaKopa = Number(summaBezNodokļa) + Number(nodokļuSumma);
+
+            dealProductRow[i].SUM = summa.toFixed(2);
+            dealProductRow[i].DISCOUNT_PRICE_ALL = atlaidesSumma.toFixed(2);
+            dealProductRow[i].PRICE_EXCLUSIVE_ALL = summaBezNodokļa.toFixed(2);
+            dealProductRow[i].TAX_SUM = nodokļuSumma.toFixed(2);
+            dealProductRow[i].SUM_ALL = summaKopa.toFixed(2);
+        });
+
+
         text = checkProduct( text, dealProductRow, 'productrow' );
     }
 
@@ -202,6 +235,13 @@ function downloadPdf( text, dataObjects, propertipes, crmName, companyData, cont
         text = deleteEmptyFields( text, /{quote:\w+((\_\w+)?)+}/ );
     }
 
+    if( myCompanyData[0].PROPERTY_VALUES !== undefined ||  myCompanyData[0].PROPERTY_VALUES != null ){
+        $.each(myCompanyData[0].PROPERTY_VALUES, function (i, field) {
+            text =  replaceMatched( field, text, 'MyCompany', i, dateFormat );
+        });
+    }else{
+        text = deleteEmptyFields( text, /{MyCompany:\w+((\_\w+)?)+}/ );
+    }
     var mywindow = window.open('', 'Document');
     mywindow.document.write('<html><head><style>@page{ margin: ' + top + 'mm ' + right + 'mm ' + bottom + 'mm ' + left + 'mm;} </style>');
     mywindow.document.write('</head><body >');

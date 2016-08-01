@@ -246,10 +246,16 @@ function getEntityProperties( entity ){
                                           params: {
                                               ID: quoteId
                                           }
+                                      },
+                                      getMyCompany: {
+                                          method: 'entity.item.get',
+                                          params: {
+                                              ENTITY: 'MyCompany'
+                                          }
                                       }
                                   }, function (result) {
 
-                                      var companyData = {}, contactData = {}, dealData = {}, dealProductRow = {}, leadData = {}, userData = {}, quoteData = {};
+                                      var companyData = {}, contactData = {}, dealData = {}, dealProductRow = {}, leadData = {}, userData = {}, quoteData = {}, myCompanyData = {};
                                       if (!result.getCompany.error()) {
                                           companyData = result.getCompany.data();
                                           if(result.getCompany.more()){
@@ -292,7 +298,9 @@ function getEntityProperties( entity ){
                                               result.getQuote.next();
                                           }
                                       }
-
+                                      if (!result.getMyCompany.error()) {
+                                          myCompanyData = result.getMyCompany.data();
+                                      }
 
                                       statuses.forEach(function( status){
                                           $.each(crmData, function( key, value ){
@@ -385,7 +393,8 @@ function getEntityProperties( entity ){
 
                                       $('#doc_' + crmData.ID ).on('click', function () {
                                           downloadPdf(text, crmData, documentProperties, data.NAME, companyData,
-                                              contactData, dealData, dealProductRow, leadData, userData, quoteData);
+                                              contactData, dealData, dealProductRow, leadData, userData, quoteData,
+                                              myCompanyData );
                                       });
 
 
@@ -547,27 +556,91 @@ function createField( fields, fieldName, method){
 
 }
 
-function goBack() { console.log(back)
+function goBack() {
     if( back != null ){
         eval( back );
     }
 }
-jQuery(document).ready(function(){
 
+function companyData(){
+    return BX24.callMethod('entity.item.get',
+        {ENTITY: 'MyCompany'},
+        function(result)
+        {
+            if(result.error()){
+                console.error(result.error());
+            }
+            else{
+                //$('#companyModal').on('shown.bs.modal', function (e) {
+                    initFormData( result.data() );
+                //});
+
+            }
+        });
+}
+function initFormData( data ){
+    $('#company_name').val( data[0].NAME );
+    $('#company_address').val( data[0].PROPERTY_VALUES.JUR_ADDRESS );
+    $('#company_fiz_address').val( data[0].PROPERTY_VALUES.FIZ_ADDRESS );
+    $('#reg_nr').val( data[0].PROPERTY_VALUES.REG_NR );
+    $('#pvn_nr').val( data[0].PROPERTY_VALUES.PVN_NR );
+    $('#bank_properties').val( data[0].PROPERTY_VALUES.BANK_DETAILS );
+    $('#bank_account').val( data[0].PROPERTY_VALUES.BANK_ACCOUNT_NR );
+    $('#swift').val( data[0].PROPERTY_VALUES.SWIFT );
+//    $('#company-edit-form').validator();
+    $('#save-company').on('click', function (e) {
+        e.preventDefault();
+        saveFormData( data[0].ID );
+
+    })
+}
+
+function saveFormData( id ){
+    BX24.callMethod('entity.item.update', {
+            ENTITY: 'MyCompany',
+            NAME: $('#company_name').val(),
+            ID: id,
+            PROPERTY_VALUES: {
+                JUR_ADDRESS: $('#company_address').val(),
+                FIZ_ADDRESS: $('#company_fiz_address').val(),
+                REG_NR: $('#reg_nr').val(),
+                PVN_NR: $('#pvn_nr').val(),
+                BANK_DETAILS: $('#bank_properties').val(),
+                BANK_ACCOUNT_NR: $('#bank_account').val(),
+                SWIFT: $('#swift').val()
+            }
+        },
+        function(result)
+        {
+            if(result.error())
+                console.error(result.error(), 'Kluda');
+            else{
+                //$("#companyModal .close").click();
+                $('#companyModal').modal('hide');
+            }
+
+
+        }
+    );
+}
+jQuery(document).ready(function(){
+    BX24.install(function(){
+        install();
+    });
     $( window ).resize(function() {
         resizeMe();
     });
     $('.data-grid').hide();
 
-    // CKEDITOR.replace( 'TextArea1' );
-    // editor = CKEDITOR.instances['TextArea1'];
-    // CKEDITOR.config.height = 500;
+    CKEDITOR.replace( 'TextArea1' );
+    editor = CKEDITOR.instances['TextArea1'];
+    CKEDITOR.config.height = 500;
     
 
 
-    BX24.init(function(){
+    BX24.init(function(){console.log('gdh');
 
-        $(document).on('click', '#save-entity', function () {
+        $(document).on('click', '#save-entity', function (e) {
 
             var id = $('input[type="radio"]:checked').attr('id');
             if( id ){
@@ -594,7 +667,7 @@ jQuery(document).ready(function(){
 
                             }
                         }
-                    },function (result) {
+                    },function (result) { console.log(result);
                         $("#entity-add-modal #close-add-entity").click();
                         getEntity(id);
                     });
@@ -607,24 +680,49 @@ jQuery(document).ready(function(){
 
         $('#api').on('change', function(){
             $('.field').remove(':not(.dropped)');
-            var method = $(this).val();
+            var method = $(this).val(), params = {};
             var methodString = '';
-            ( method == 'user' ) ? methodString = method + '.fields' : methodString = 'crm.' + method +'.fields';
+            //( method == 'user' ) ? methodString = method + '.fields' : methodString = 'crm.' + method +'.fields';
+            if( method == 'user' ){
+                methodString = method + '.fields';
+            }else if( method == 'MyCompany'){
+                methodString = 'entity.item.property.get';
+                params = {ENTITY: 'MyCompany'};
+            }else{
+                methodString = 'crm.' + method +'.fields';
+            }
             if (method.length > 0) {
                 BX24.callMethod(
                     methodString,
-                    {},
+                    params,
                     function(result) {
                         if(!result.error()) {
                             $.each(result.data(), function(fieldName, e){
-                                if( fieldName == 'COMPANY_ID' || fieldName == 'CONTACT_ID' || fieldName == 'UF_DEAL_ID' || fieldName == 'OWNER_TYPE' ||
-                                    fieldName == 'QUOTE_ID' || fieldName == 'LEAD_ID' || fieldName == 'PRODUCT_ID' || fieldName == 'UF_DEPARTMENT' || fieldName == 'PR_LOCATION' ||
-                                    fieldName == 'INVOICE_PROPERTIES' || fieldName == 'ASSIGNED_BY_ID' || fieldName == 'MODIFY_BY_ID' || fieldName == 'IM' ){
+                                
 
+                                if( method == 'MyCompany'){
+                                    //$.each(e, function( i, val ){ console.log( i, val )
+                                        filterField( currentCRMSection, entityFields, e.PROPERTY, method );
+                                    //});
                                 }else{
-                                    filterField( currentCRMSection, entityFields, fieldName, method )
+                                    if( fieldName == 'COMPANY_ID' || fieldName == 'CONTACT_ID' || fieldName == 'UF_DEAL_ID' || fieldName == 'OWNER_TYPE' ||
+                                        fieldName == 'QUOTE_ID' || fieldName == 'LEAD_ID' || fieldName == 'PRODUCT_ID' || fieldName == 'UF_DEPARTMENT' || fieldName == 'PR_LOCATION' ||
+                                        fieldName == 'INVOICE_PROPERTIES' || fieldName == 'ASSIGNED_BY_ID' || fieldName == 'MODIFY_BY_ID' || fieldName == 'IM' ){
+
+                                    }else{
+                                        filterField( currentCRMSection, entityFields, fieldName, method )
+                                    }
                                 }
                             });
+
+                            if( currentCRMSection == 'invoice' && method == 'productrow' || currentCRMSection == 'deal' && method == 'productrow' ){
+                                filterField( currentCRMSection, entityFields, 'SUM', method );
+                                filterField( currentCRMSection, entityFields, 'DISCOUNT_PRICE_ALL', method );
+                                filterField( currentCRMSection, entityFields, 'PRICE_EXCLUSIVE_ALL', method );
+                                filterField( currentCRMSection, entityFields, 'TAX_SUM', method );
+                                filterField( currentCRMSection, entityFields, 'SUM_ALL', method );
+                            }
+
                         }
                         resizeMe();
                     }
@@ -673,7 +771,14 @@ jQuery(document).ready(function(){
 
     $('#back').click(function(){
         goBack();
-    })
+    });
 
+    $('#companyModal').on('shown.bs.modal', function (e) {
+        companyData();
+    });
+
+    $('#entity-add-modal').on('shown.bs.modal', function () {
+        $('#entity-name').focus()
+    });
 
 });

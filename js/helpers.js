@@ -15,14 +15,15 @@ function resizeMe(){
 }
 
 function filterField( currentCRMSection, entityFields, fieldName, method ){
-    console.log( currentCRMSection );
-    console.log( entityFields );
-    console.log( fieldName );
-    console.log( method );
+    // console.log( currentCRMSection );
+    // console.log( entityFields );
+    // console.log( fieldName );
+    // console.log( method );
     if( currentCRMSection == 'invoice' ){
         if( method == 'productrow' ){
             if( fieldName == 'CUSTOMIZED' || fieldName == 'DISCOUNT_PRICE' || fieldName == 'DISCOUNT_SUM' || fieldName == 'PRODUCT_NAME' || fieldName == 'PRICE' || fieldName == 'QUANTITY'
-                || fieldName == 'TAX_INCLUDED' || fieldName == 'TAX_RATE' ){
+                || fieldName == 'TAX_INCLUDED' || fieldName == 'TAX_RATE' || fieldName == 'SUM' || fieldName == 'DISCOUNT_PRICE_ALL' || fieldName == 'PRICE_EXCLUSIVE_ALL'
+                || fieldName == 'TAX_SUM' || fieldName == 'SUM_ALL'){
                 if( fieldName == 'TAX_INCLUDED' ){
                     fieldName = 'VAT_INCLUDED'
                 }
