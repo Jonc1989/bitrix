@@ -97,7 +97,7 @@
 
 .crm-menu-table {
     border-spacing: 0;
-    max-width: 680px;
+    max-width: 900px;
     padding: 0;
     width: 100%;
 }
@@ -234,4 +234,23 @@ a {
 #close-edit-modal, #save-doc{
     margin: 5px;
     float: right;
+}
+.my-company-settings{
+    text-align: center;
+}
+a.my-company-settings {
+    text-decoration: none;
+}
+.my-company-wrap{
+    margin-left: 50px;
+}
+#settings .crm-menu-icon{
+    background-position: center -1409px;
+}
+#settings .crm-menu-name{
+    cursor: pointer;
+    text-decoration: none;
+}
+#companyModal .modal-dialog{
+    max-width: 600px;
 }

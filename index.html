@@ -10,8 +10,9 @@
     <script type="text/javascript" src="js/moment.js"></script>
     <script type="text/javascript" src="js/pdfmake.min.js"></script>
     <script type="text/javascript" src="js/jquery-ui-droppable-iframe-fix.js"></script>
+    <script type="text/javascript" src="js/value.js"></script>
 
-    <!--<script type="text/javascript" src="js/ckeditor/ckeditor.js"></script>-->
+    <script type="text/javascript" src="js/ckeditor/ckeditor.js"></script>
     <script type="text/javascript" src="js/vfs_fonts.js"></script>
     <script type="text/javascript" src="js/pdf.js"></script>
     <script type="text/javascript" src="js/install.js"></script>
@@ -32,6 +33,13 @@
     <table class="crm-menu-table">
         <tbody>
         <tr>
+            <td class="crm-menu-cell ">
+                <div class="">
+                    <a id="back"  class="crm-menu-item crm-menu-back">
+                        <span class="crm-menu-icon"></span>
+                        <span class="crm-menu-name">Atpakaļ</span></a>
+                </div>
+            </td>
             <td class="crm-menu-cell">
                 <div class="crm-menu-item-wrap" id="crm_ctrl_panel_item_my_activity_LEAD">
                     <a onclick="getEntity('lead');" class="crm-menu-item crm-menu-lead" title="Список лидов">
@@ -76,16 +84,16 @@
             </td>
             <td class="crm-menu-cell">
                 <div class="crm-menu-item-wrap" id="crm_ctrl_panel_item_my_activity_new">
-                    <a data-toggle="modal" data-target="#entity-add-modal"  class="crm-menu-item crm-menu-new" title="Pievienot šablonu">
+                    <a data-toggle="modal" data-target="#entity-add-modal"  class="crm-menu-item crm-menu-new">
                         <span class="crm-menu-icon"></span>
                         <span class="crm-menu-name">Pievienot</span></a>
                     <div id="crm-menu-plus-btn-new" class="crm-menu-plus-btn crm-menu-plus-btn-pro" style="display: none;"></div></div>
             </td>
             <td class="crm-menu-cell ">
-                <div class="">
-                    <a id="back"  class="crm-menu-item crm-menu-back">
+                <div class="my-company-wrap">
+                    <a data-toggle="modal" data-target="#companyModal" id="settings"  class="my-company-settings">
                         <span class="crm-menu-icon"></span>
-                        <span class="crm-menu-name">Atpakaļ</span></a>
+                        <span class="crm-menu-name">Mana kompānija</span></a>
                 </div>
             </td>
         </tr>
@@ -105,87 +113,6 @@
         </tr>
     </table>
 
-    <div class="modal fade" id="document-edit-modal" tabindex="-1" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title"></h4>
-                </div>
-                <div class="modal-body col-md-12">
-
-
-
-                    <!--<div class="col-md-12">-->
-                        <!--<div id="fields" class="">-->
-                            <!--<select id="api">-->
-                                <!--<option>Izvēlieties sadaļu</option>-->
-                                <!--<optgroup label="CRM">-->
-                                    <!--<option value="lead">Līdi</option>-->
-                                    <!--<option value="contact">Kontakti</option>-->
-                                    <!--<option value="company">Kompānija</option>-->
-                                    <!--<option value="deal">Darījumi</option>-->
-                                    <!--&lt;!&ndash;<option value="currency">Valūtas</option>&ndash;&gt;-->
-                                    <!--<option value="quote">Piedāvājumi</option>-->
-                                    <!--<option value="invoice">Rēķini</option>-->
-                                    <!--<option value="productrow">Produkti</option>-->
-                                    <!--<option value="user">Lietotājs</option>-->
-                                <!--</optgroup>-->
-                            <!--</select>-->
-                            <!--<div>-->
-                                <!--&lt;!&ndash; Nav tabs &ndash;&gt;-->
-                                <!--<ul id="setting-tabs" class="nav nav-tabs" role="tablist">-->
-                                    <!--<li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">CRM lauki</a></li>-->
-                                    <!--<li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Dokumenta uzstādījumi</a></li>-->
-                                <!--</ul>-->
-
-                                <!--&lt;!&ndash; Tab panes &ndash;&gt;-->
-                                <!--<div class="tab-content">-->
-                                    <!--<div role="tabpanel" class="tab-pane active" id="home">-->
-                                        <!--<div id="field-wrap" class="col-md-12"></div>-->
-                                    <!--</div>-->
-                                    <!--<div role="tabpanel" class="tab-pane" id="profile">-->
-
-                                        <!--<div class="col-md-3 col-sm-4 col-xs-6" style="margin-top: 10px;margin-bottom: 10px;">-->
-                                            <!--<div>Margins</div>-->
-                                            <!--<div class="input-group">-->
-                                                <!--<span class="input-group-addon" id="left">Left</span>-->
-                                                <!--<input class="margin-left margins form-control" type="text" class="form-control" placeholder="40" aria-describedby="left">-->
-                                            <!--</div>-->
-                                            <!--<div class="input-group">-->
-                                                <!--<span class="input-group-addon" id="top">Top</span>-->
-                                                <!--<input class="margin-top margins form-control" type="text" class="form-control" placeholder="60" aria-describedby="top">-->
-                                            <!--</div>-->
-                                            <!--<div class="input-group">-->
-                                                <!--<span class="input-group-addon" id="right">Right</span>-->
-                                                <!--<input class="margin-right margins form-control" type="text" class="form-control" placeholder="40" aria-describedby="right">-->
-                                            <!--</div>-->
-                                            <!--<div class="input-group">-->
-                                                <!--<span class="input-group-addon" id="bottom">Bottom</span>-->
-                                                <!--<input class="margin-bottom margins form-control" type="text" class="form-control" placeholder="60" aria-describedby="bottom">-->
-                                            <!--</div>-->
-                                        <!--</div>-->
-
-                                        <!--<div class="col-md-3 col-sm-4 col-xs-6" style="margin-top: 10px;margin-bottom: 10px;">-->
-                                            <!--<span>Datuma formāts: </span><input class="form-control date-format">-->
-                                        <!--</div>-->
-                                    <!--</div>-->
-                                <!--</div>-->
-                            <!--</div>-->
-                        <!--</div>-->
-
-                        <!--<div id="document" class="">-->
-                            <!--<textarea id="TextArea1" name="S1" class="ui-droppable" wrap="hard"></textarea>-->
-                        <!--</div>-->
-                    <!--</div>-->
-                </div>
-                <div class="modal-footer">
-                    <!--<button id="close-edit-modal" type="button" class="btn btn-default" data-dismiss="modal">Aizvērt</button>-->
-                    <!--<button id="save-doc" type="button" class="btn btn-primary">Saglabāt</button>-->
-                </div>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
 
 
 
@@ -245,13 +172,13 @@
                 <optgroup label="CRM">
                     <option value="lead">Līdi</option>
                     <option value="contact">Kontakti</option>
-                    <option value="company">Kompānija</option>
+                    <option value="company">Kompānijas</option>
                     <option value="deal">Darījumi</option>
-                    <!--<option value="currency">Valūtas</option>-->
                     <option value="quote">Piedāvājumi</option>
                     <option value="invoice">Rēķini</option>
                     <option value="productrow">Produkti</option>
                     <option value="user">Lietotājs</option>
+                    <option value="MyCompany">Mana kompānija</option>
                 </optgroup>
             </select>
             <div>
@@ -303,6 +230,57 @@
         </div>
     </div>
 
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="companyModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <form id="company-edit-form">
+                    <div class="form-group">
+                        <label for="company_name">Nosaukums</label>
+                        <input type="text" class="form-control" id="company_name" name="company_name">
+                    </div>
+                    <div class="form-group">
+                        <label for="company_address">Juridiskā adrese</label>
+                        <input type="text" class="form-control" id="company_address" name="company_address">
+                    </div>
+                    <div class="form-group">
+                        <label for="company_address">Deklarētā adrese</label>
+                        <input type="text" class="form-control" id="company_fiz_address" name="company_fiz_address">
+                    </div>
+                    <div class="form-group">
+                        <label for="reg_nr">Reg. nr.</label>
+                        <input type="text" class="form-control" name="reg_nr" id="reg_nr" pattern="^[0-9]{11}$">
+                    </div>
+                    <div class="form-group">
+                        <label for="pvn_nr">PVN. nr</label>
+                        <input type="text" class="form-control" id="pvn_nr" name="pvn_nr" pattern="^(LV)[0-9]{11}$">
+                    </div>
+                    <div class="form-group">
+                        <label for="bank_properties">Norēķinu rekvizīti</label>
+                        <input type="text" class="form-control" id="bank_properties" name="bank_properties">
+                    </div>
+                    <div class="form-group">
+                        <label for="bank_account">Konts</label>
+                        <input type="text" class="form-control" id="bank_account" name="bank_account" pattern="^[0-9A-Z]{1,}$">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="swift">SWIFT</label>
+                        <input type="text" class="form-control" id="swift" name="swift" pattern="^[0-9A-Z]{1,}$">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" id="save-company">Saglabāt</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Aizvērt</button>
+
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 
 </body>

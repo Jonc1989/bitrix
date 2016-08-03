@@ -35,8 +35,39 @@ function matchAll(str, regex) {
     }
     return res;
 }
+function addCurrency( summa, currencyName ) {
+    var sumArr = summa.split(".");
+    var sum = 0, cents = '';
+    if( sumArr.length == 1 ){
+        sum = capitalizeFirstLetter( toWords( sumArr[0] ) ) + currencyName.toLowerCase();
+    }else if( sumArr.length == 2  ){
+        if( sumArr[0] != 0){
+            if( sumArr[1] == '01'){
+                cents = cutFirstNull( sumArr[1] ) + ' cents';
+            }else{
+                cents = cutFirstNull( sumArr[1] ) + ' centi';
+            }
 
+            sum = capitalizeFirstLetter( toWords( sumArr[0] ) ) + currencyName.toLowerCase() + ' ' + cents;
+        }else{
+            if( sumArr[1] == '00'){
+                sum = '0 centi';
+            }else{
+                if( sumArr[1] == '01'){
+                    sum = ' 1 cents';
+                }else
+                    sum = sumArr[1] + ' centi';
+            }
+
+        }
+
+    }else if( sumArr.length == 0 ){
+        sum = '';
+    }
+    return sum;
+}
 function replaceMatched( field, text, crmName, key, dateFormat ){
+
     var found = text.match('{' + crmName +':' + key + '}');
     if( found ){
         if( typeof field === 'object' ){
@@ -48,8 +79,9 @@ function replaceMatched( field, text, crmName, key, dateFormat ){
             } );
             string.slice(0,-3);
             text = text.replace( '{' + crmName +':' + key + '}', string);
-        }else if( field.constructor === Array ){
+        }else if( crmName == 'byWords' ){
 
+            text = text.replace( '{' + crmName +':' + key + '}', addCurrency( field, 'Eiro' ) );
         }else{
             if( checkDate( key ) != -1 && field != '' ){
                 var date = formatDateString( field, dateFormat );
@@ -136,6 +168,7 @@ function downloadPdf( text, dataObjects, propertipes, crmName, companyData, cont
 
     $.each(dataObjects, function (i, field) {
         text =  replaceMatched( field, text, crmName, i, dateFormat );
+        text =  replaceMatched( field, text, 'byWords', i, dateFormat );
     });
 
 
@@ -181,6 +214,7 @@ function downloadPdf( text, dataObjects, propertipes, crmName, companyData, cont
         dealData !== undefined && dealData.length > 0 ){
         $.each(dealData, function (i, field) {
             text =  replaceMatched( field, text, 'deal', i, dateFormat );
+            text =  replaceMatched( field, text, 'byWords', i, dateFormat );
         });
     }else{
         text = deleteEmptyFields( text, /{deal:\w+((\_\w+)?)+}/ );
@@ -210,6 +244,7 @@ function downloadPdf( text, dataObjects, propertipes, crmName, companyData, cont
         leadData !== undefined && leadData.length > 0 ){
         $.each(leadData, function (i, field) {
             text =  replaceMatched( field, text, 'lead', i, dateFormat );
+            text =  replaceMatched( field, text, 'byWords', i, dateFormat );
         });
     }else{
         text = deleteEmptyFields( text, /{lead:\w+((\_\w+)?)+}/ );
@@ -230,6 +265,7 @@ function downloadPdf( text, dataObjects, propertipes, crmName, companyData, cont
         quoteData !== undefined && quoteData.length > 0 ){
         $.each(quoteData, function (i, field) {
             text =  replaceMatched( field, text, 'quote', i, dateFormat );
+            text =  replaceMatched( field, text, 'byWords', i, dateFormat );
         });
     }else{
         text = deleteEmptyFields( text, /{quote:\w+((\_\w+)?)+}/ );
@@ -243,7 +279,7 @@ function downloadPdf( text, dataObjects, propertipes, crmName, companyData, cont
         text = deleteEmptyFields( text, /{MyCompany:\w+((\_\w+)?)+}/ );
     }
     var mywindow = window.open('', 'Document');
-    mywindow.document.write('<html><head><style>@page{ margin: ' + top + 'mm ' + right + 'mm ' + bottom + 'mm ' + left + 'mm;} </style>');
+    mywindow.document.write('<html><head><style>@page{ margin: ' + top + 'mm ' + right + 'mm ' + bottom + 'mm ' + left + 'mm;}@media screen {table{border-collapse: collapse;}} @media print{table{border-collapse: collapse;}} </style>');
     mywindow.document.write('</head><body >');
     mywindow.document.write(text);
     mywindow.document.write('</body></html>');

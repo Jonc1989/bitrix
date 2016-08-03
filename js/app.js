@@ -53,7 +53,14 @@ function initDocument( fields, templateName ){
         editor.setData('');
     }
     resizeMe();
-    filterCRM( fields[0].NAME )
+    filterCRM( fields[0].NAME );
+    $('#api option[value=' + currentCRMSection +']').attr('selected','selected');
+
+    $('.field').remove(':not(.dropped)');
+    var method = currentCRMSection, params = {};
+    var methodString = 'crm.' + method +'.fields';
+
+    getField( methodString, params, method )
 }
 function initDroppable($elements) {
     $elements.droppable({
@@ -83,7 +90,6 @@ function editDoc( name, templateName ){
         }
     }, function (result) {
         if (!result.getEntityItem.error()) {
-                //$("#document-edit-modal").modal('show');
                 $('.data-grid').hide();
                 $('.list-item').remove();
 
@@ -311,35 +317,30 @@ function getEntityProperties( entity ){
 
                                           $.each(companyData, function( key, value ){
                                               if( status.STATUS_ID == value ){
-                                                  //companyData[key] = status.NAME;
                                                   companyData[key] = statusFilter( 'company', status, key, value );
                                               }
                                           });
 
                                           $.each(contactData, function( key, value ){
                                               if( status.STATUS_ID == value ){
-                                                  //contactData[key] = status.NAME;
                                                   contactData[key] = statusFilter( 'contact', status, key, value );
                                               }
                                           });
 
                                           $.each(dealData, function( key, value ){
                                               if( status.STATUS_ID == value ){
-                                                  //dealData[key] = status.NAME;
                                                   dealData[key] = statusFilter( 'deal', status, key, value );
                                               }
                                           });
 
                                           $.each(leadData, function( key, value ){
                                               if( status.STATUS_ID == value ){
-                                                  //leadData[key] = status.NAME;
                                                   leadData[key] = statusFilter( 'lead', status, key, value );
                                               }
                                           });
 
                                           $.each(quoteData, function( key, value ){
                                               if( status.STATUS_ID == value ){
-                                                  //quoteData[key] = status.NAME;
                                                   quoteData[key] = statusFilter( 'quote', status, key, value );
                                               }
                                           });
@@ -426,7 +427,7 @@ function getEntity( name ){
     BX24.callMethod('entity.get',
         {},
         function (result) {
-    var templateName = '';
+            var templateName = '';
             if(result.error())
                 console.error(result.error());
             else
@@ -435,7 +436,7 @@ function getEntity( name ){
                     if( val.NAME == name ){
 
                         BX24.callMethod('entity.item.property.get', {ENTITY: val.ENTITY}, function(r){
-                            entityFields = r.data();
+                            entityFields = r.data(); console.log(entityFields);
                             entityFields.forEach(function( entity ){
                                 if( entity.PROPERTY == 'templateName' ){
                                     templateName = entity.NAME;
@@ -450,6 +451,7 @@ function getEntity( name ){
                             '<td>' +
                             '<span class="edit_entity" id="edit_' + val.ENTITY + '">Rediģēt</span>' +
                             '<span class="list_entity" id="list_' + val.ENTITY + '">Saraksts</span>' +
+                            '<span class="delete_entity" id="delete_' + val.ENTITY + '">Dzēst</span>' +
                             '</td>' +
                             '</tr>'
                             );
@@ -462,7 +464,10 @@ function getEntity( name ){
                                 editDoc( val.ENTITY, templateName );currentSection = val.ENTITY; currentCRMSection = val.NAME;
                                 back = 'getEntity("' + name + '")';
                             });
-
+                            $('#delete_' + val.ENTITY).on('click', function () {
+                                deleteEntity( val.ENTITY, val.ID );
+                                back = 'getEntity("' + name + '")';
+                            });
                         });
                     }
                 });
@@ -515,7 +520,6 @@ function sync( name, fields ){
                                         if (xhr.readyState == 4 && xhr.status == 200) {
                                             response = JSON.parse(xhr.response);
                                             if(response.result){
-                                                //$("#document-edit-modal #close-edit-modal").click()
 
                                                  $('.data-grid').show();
                                                     getEntity( entity.NAME );
@@ -533,27 +537,72 @@ function sync( name, fields ){
     }
 });
 }
+function getField( methodString, params, method ){
+    BX24.callMethod(
+        methodString,
+        params,
+        function(result) {
+            if(!result.error()) {
+                $.each(result.data(), function(fieldName, e){
 
-function createField( fields, fieldName, method){
 
-    var bool = $.grep(fields, function(e){ return e.PROPERTY == fieldName; });
+                    if( method == 'MyCompany'){
+                        filterField( currentCRMSection, e.PROPERTY, method );
+                    }else{
+                        if( fieldName == 'COMPANY_ID' || fieldName == 'CONTACT_ID' || fieldName == 'UF_DEAL_ID' || fieldName == 'OWNER_TYPE' ||
+                            fieldName == 'QUOTE_ID' || fieldName == 'LEAD_ID' || fieldName == 'PRODUCT_ID' || fieldName == 'UF_DEPARTMENT' || fieldName == 'PR_LOCATION' ||
+                            fieldName == 'INVOICE_PROPERTIES' || fieldName == 'ASSIGNED_BY_ID' || fieldName == 'MODIFY_BY_ID' || fieldName == 'IM' ){
 
-    if( bool.length < 1 && fieldName ){
-        $('<div />', {class:"field col-md-2 col-sm-3 col-xs-4 " + method, text: translate( method, fieldName) }).data({method: method, field: fieldName }).appendTo('#field-wrap');
+                        }else{
+                            filterField( currentCRMSection, fieldName, method )
+                        }
+                    }
+                });
 
-        $('.field').draggable({
-            cursor: 'move',
-            helper: "clone",
-            iframeFix: true,
-            start: function () {
-                $("iframe").css('z-index', '-1');
-            },
-            stop: function () {
-                $("iframe").css('z-index', '0');
+                if( currentCRMSection == 'invoice' && method == 'productrow' || currentCRMSection == 'deal' && method == 'productrow' || currentCRMSection == 'lead' && method == 'productrow' ){
+                    filterField( currentCRMSection, 'SUM', method );
+                    filterField( currentCRMSection, 'DISCOUNT_PRICE_ALL', method );
+                    filterField( currentCRMSection, 'PRICE_EXCLUSIVE_ALL', method );
+                    filterField( currentCRMSection, 'TAX_SUM', method );
+                    filterField( currentCRMSection, 'SUM_ALL', method );
+                }
+                switch (method) {
+                    case 'deal':
+                        filterField( currentCRMSection, 'OPPORTUNITY', 'byWords' );
+                        break;
+                    case 'invoice':
+                        filterField( currentCRMSection, 'PRICE', 'byWords' );
+                        break;
+                    case 'lead':
+                        filterField( currentCRMSection, 'OPPORTUNITY', 'byWords' );
+                        break;
+                    case 'quote':
+                        filterField( currentCRMSection, 'OPPORTUNITY', 'byWords' );
+                        break;
+                    default:
+                        console.log('default');
+                }
+
             }
-        }).css('z-index', 1);
-    }
+            resizeMe();
+        }
+    );
+}
+function createField( fieldName, method ){
 
+    $('<div />', {class:"field col-md-2 col-sm-3 col-xs-4 " + method, text: translate( method, fieldName) }).data({method: method, field: fieldName }).appendTo('#field-wrap');
+
+    $('.field').draggable({
+        cursor: 'move',
+        helper: "clone",
+        iframeFix: true,
+        start: function () {
+            $("iframe").css('z-index', '-1');
+        },
+        stop: function () {
+            $("iframe").css('z-index', '0');
+        }
+    }).css('z-index', 1);
 }
 
 function goBack() {
@@ -571,10 +620,7 @@ function companyData(){
                 console.error(result.error());
             }
             else{
-                //$('#companyModal').on('shown.bs.modal', function (e) {
-                    initFormData( result.data() );
-                //});
-
+                initFormData( result.data() );
             }
         });
 }
@@ -615,7 +661,6 @@ function saveFormData( id ){
             if(result.error())
                 console.error(result.error(), 'Kluda');
             else{
-                //$("#companyModal .close").click();
                 $('#companyModal').modal('hide');
             }
 
@@ -638,7 +683,7 @@ jQuery(document).ready(function(){
     
 
 
-    BX24.init(function(){console.log('gdh');
+    BX24.init(function(){
 
         $(document).on('click', '#save-entity', function (e) {
 
@@ -669,6 +714,7 @@ jQuery(document).ready(function(){
                         }
                     },function (result) { console.log(result);
                         $("#entity-add-modal #close-add-entity").click();
+                        $('#entity-name').val('');
                         getEntity(id);
                     });
             }else{
@@ -682,7 +728,6 @@ jQuery(document).ready(function(){
             $('.field').remove(':not(.dropped)');
             var method = $(this).val(), params = {};
             var methodString = '';
-            //( method == 'user' ) ? methodString = method + '.fields' : methodString = 'crm.' + method +'.fields';
             if( method == 'user' ){
                 methodString = method + '.fields';
             }else if( method == 'MyCompany'){
@@ -692,41 +737,7 @@ jQuery(document).ready(function(){
                 methodString = 'crm.' + method +'.fields';
             }
             if (method.length > 0) {
-                BX24.callMethod(
-                    methodString,
-                    params,
-                    function(result) {
-                        if(!result.error()) {
-                            $.each(result.data(), function(fieldName, e){
-                                
-
-                                if( method == 'MyCompany'){
-                                    //$.each(e, function( i, val ){ console.log( i, val )
-                                        filterField( currentCRMSection, entityFields, e.PROPERTY, method );
-                                    //});
-                                }else{
-                                    if( fieldName == 'COMPANY_ID' || fieldName == 'CONTACT_ID' || fieldName == 'UF_DEAL_ID' || fieldName == 'OWNER_TYPE' ||
-                                        fieldName == 'QUOTE_ID' || fieldName == 'LEAD_ID' || fieldName == 'PRODUCT_ID' || fieldName == 'UF_DEPARTMENT' || fieldName == 'PR_LOCATION' ||
-                                        fieldName == 'INVOICE_PROPERTIES' || fieldName == 'ASSIGNED_BY_ID' || fieldName == 'MODIFY_BY_ID' || fieldName == 'IM' ){
-
-                                    }else{
-                                        filterField( currentCRMSection, entityFields, fieldName, method )
-                                    }
-                                }
-                            });
-
-                            if( currentCRMSection == 'invoice' && method == 'productrow' || currentCRMSection == 'deal' && method == 'productrow' ){
-                                filterField( currentCRMSection, entityFields, 'SUM', method );
-                                filterField( currentCRMSection, entityFields, 'DISCOUNT_PRICE_ALL', method );
-                                filterField( currentCRMSection, entityFields, 'PRICE_EXCLUSIVE_ALL', method );
-                                filterField( currentCRMSection, entityFields, 'TAX_SUM', method );
-                                filterField( currentCRMSection, entityFields, 'SUM_ALL', method );
-                            }
-
-                        }
-                        resizeMe();
-                    }
-                );
+                getField( methodString, params, method )
             }
 
         });

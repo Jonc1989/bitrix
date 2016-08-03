@@ -14,7 +14,7 @@ function resizeMe(){
     BX24.resizeWindow(window.innerWidth, $(".template-wrap").height());
 }
 
-function filterField( currentCRMSection, entityFields, fieldName, method ){
+function filterField( currentCRMSection, fieldName, method ){
     // console.log( currentCRMSection );
     // console.log( entityFields );
     // console.log( fieldName );
@@ -33,13 +33,13 @@ function filterField( currentCRMSection, entityFields, fieldName, method ){
                 if( fieldName == 'DISCOUNT_SUM' ){
                     fieldName = 'DISCOUNT_PRICE'
                 }
-                createField( entityFields, fieldName, method );
+                createField( fieldName, method );
             }
         }else{
-            createField( entityFields, fieldName, method );
+            createField( fieldName, method );
         }
     }else{
-        createField( entityFields, fieldName, method );
+        createField( fieldName, method );
     }
 }
 
@@ -190,5 +190,14 @@ function format() {
             sel.addRange(range);
         }
     }
+}
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
 
+function cutFirstNull(string) {
+    if( string.charAt(0)== 0 ){
+        return string.slice(1);
+    }
+    return string;
 }

@@ -59,3 +59,11 @@ function deleteField( name, field ){
             }
         });
 }
+function deleteEntity( name, id ){
+    BX24.callMethod('entity.item.delete', {
+        ENTITY: name,
+        ID: id
+    },function (result) {
+        console.log(result);
+    });
+}

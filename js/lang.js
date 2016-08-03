@@ -314,6 +314,11 @@ function translate( crm, name ){
             BANK_DETAILS: 'Bankas detaļas',
             BANK_ACCOUNT_NR: 'Konta numurs',
             SWIFT: 'SWIFT numurs'
+        },
+        
+        byWords: {
+            OPPORTUNITY: 'Summa vārdiem',
+            PRICE: 'Summa vārdiem'
         }
     };
 
