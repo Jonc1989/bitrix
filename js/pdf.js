@@ -176,13 +176,14 @@ function downloadPdf( text, dataObjects, propertipes, crmName, companyData, cont
     if( crmName == 'invoice' && dataObjects.PRODUCT_ROWS !== undefined ){
 
         $.each( dataObjects.PRODUCT_ROWS, function(i, val){
-
+            var cena = Number(val.PRICE) + Number(val.DISCOUNT_PRICE);
             var summa = (Number(val.PRICE) + Number(val.DISCOUNT_PRICE) ) * Number(val.QUANTITY); 
             var atlaidesSumma = (Number(val.DISCOUNT_PRICE) * Number(val.QUANTITY)); 
             var summaBezNodokļa = Number(val.PRICE) * Number(val.QUANTITY);
             var nodokļuSumma = Number(summaBezNodokļa) * Number( val.VAT_RATE );
             var summaKopa = Number(summaBezNodokļa) + Number(nodokļuSumma);
 
+            dataObjects.PRODUCT_ROWS[i].PRICE = cena.toFixed(2);
             dataObjects.PRODUCT_ROWS[i].SUM = summa.toFixed(2);
             dataObjects.PRODUCT_ROWS[i].DISCOUNT_PRICE_ALL = atlaidesSumma.toFixed(2);
             dataObjects.PRODUCT_ROWS[i].PRICE_EXCLUSIVE_ALL = summaBezNodokļa.toFixed(2);

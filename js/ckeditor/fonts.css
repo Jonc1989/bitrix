@@ -1,0 +1,5 @@
+@font-face {
+    font-family: "Roboto";
+    /*src: url( ../fonts/font.eot );*/
+    src: local("js/ckeditor/fonts/Roboto-Regular.ttf"); /*non-IE*/
+}

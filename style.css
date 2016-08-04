@@ -46,14 +46,14 @@
 .modal-dialog {
     width: 100%;
 }
-.entity-name, .list_entity, .edit_entity{
+.entity-name, .list_entity, .edit_entity, .delete_entity{
     padding: 5px;
 }
-.list_entity, .edit_entity, .print{
+.list_entity, .edit_entity, .print, .delete_entity{
     cursor: pointer;
     border-radius: 5px;
 }
-.list_entity:hover, .edit_entity:hover, .print:hover{
+.list_entity:hover, .edit_entity:hover, .print:hover, .delete_entity:hover{
     background-color: rgba(119, 118, 118, 0.14);
 }
 .list-item{

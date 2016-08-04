@@ -2,14 +2,8 @@ var entityFields = [];
 var currentSection = null, currentCRMSection;
 var editor;
 var back = null;
-//var deal = 'crm.deal';
-//var currency = 'crm.currency';
-//var company = 'crm.company';
-//var contact = 'crm.contact';
-//var invoice = 'crm.invoice';
-//var productrow = 'crm.productrow';
-//var lead = 'crm.lead';
 var entityFields = [];
+var editorOpen = false;
 
 function initDocument( fields, templateName ){
 
@@ -60,7 +54,8 @@ function initDocument( fields, templateName ){
     var method = currentCRMSection, params = {};
     var methodString = 'crm.' + method +'.fields';
 
-    getField( methodString, params, method )
+    getField( methodString, params, method );
+    editorOpen = true;
 }
 function initDroppable($elements) {
     $elements.droppable({
@@ -427,7 +422,7 @@ function getEntity( name ){
     BX24.callMethod('entity.get',
         {},
         function (result) {
-            var templateName = '';
+        var templateName = '';
             if(result.error())
                 console.error(result.error());
             else
@@ -435,39 +430,46 @@ function getEntity( name ){
                 $.each(result.data(), function(i, val){
                     if( val.NAME == name ){
 
-                        BX24.callMethod('entity.item.property.get', {ENTITY: val.ENTITY}, function(r){
-                            entityFields = r.data(); console.log(entityFields);
-                            entityFields.forEach(function( entity ){
-                                if( entity.PROPERTY == 'templateName' ){
-                                    templateName = entity.NAME;
+                        BX24.callMethod('entity.item.get', {ENTITY: val.ENTITY}, function(r){
+                            var data = r.data();
+                            if( data.length > 0 ){
+                                if( data[0].PROPERTY_VALUES !== undefined ){
+
+
+                                    entityFields = data[0].PROPERTY_VALUES;
+                                    $.each(entityFields, function( index, value ){
+                                        if( index == 'templateName' ){
+                                            templateName = data[0].ENTITY;
+                                        }
+                                    });
+
+                                    $('.id-cell').empty();
+                                    $('.data-grid').append(
+                                    '<tr class="list-item" id="template-' + data[0].ID + '">' +
+                                    '<td></td>' +
+                                    '<td class="name-cell">' + templateName + '</td>' +
+                                    '<td>' +
+                                    '<span class="edit_entity" id="edit_' + val.ENTITY + '">Rediģēt</span>' +
+                                    '<span class="list_entity" id="list_' + val.ENTITY + '">Saraksts</span>' +
+                                    '<span class="delete_entity" id="delete_' + val.ENTITY + '">Dzēst</span>' +
+                                    '</td>' +
+                                    '</tr>'
+                                    );
+
+                                    $('#list_' + val.ENTITY).on('click', function () {
+                                        getEntityProperties( val.ENTITY );
+                                        back = 'getEntity("' + name + '")';
+                                    });
+                                    $('#edit_' + val.ENTITY).on('click', function () {
+                                        editDoc( val.ENTITY, templateName );currentSection = val.ENTITY; currentCRMSection = val.NAME;
+                                        back = 'getEntity("' + name + '")';
+                                    });
+                                    $('#delete_' + val.ENTITY).on('click', function () {
+                                        deleteEntity( val.ENTITY, data[0].ID );                $('#template-' + data[0].ID ).fadeOut();
+                                        back = 'getEntity("' + name + '")';
+                                    });
                                 }
-                            });
-
-                            $('.id-cell').empty();
-                            $('.data-grid').append(
-                            '<tr class="list-item">' +
-                            '<td></td>' +
-                            '<td class="name-cell">' + templateName + '</td>' +
-                            '<td>' +
-                            '<span class="edit_entity" id="edit_' + val.ENTITY + '">Rediģēt</span>' +
-                            '<span class="list_entity" id="list_' + val.ENTITY + '">Saraksts</span>' +
-                            '<span class="delete_entity" id="delete_' + val.ENTITY + '">Dzēst</span>' +
-                            '</td>' +
-                            '</tr>'
-                            );
-
-                            $('#list_' + val.ENTITY).on('click', function () {
-                                getEntityProperties( val.ENTITY );
-                                back = 'getEntity("' + name + '")';
-                            });
-                            $('#edit_' + val.ENTITY).on('click', function () {
-                                editDoc( val.ENTITY, templateName );currentSection = val.ENTITY; currentCRMSection = val.NAME;
-                                back = 'getEntity("' + name + '")';
-                            });
-                            $('#delete_' + val.ENTITY).on('click', function () {
-                                deleteEntity( val.ENTITY, val.ID );
-                                back = 'getEntity("' + name + '")';
-                            });
+                            }
                         });
                     }
                 });
@@ -551,7 +553,7 @@ function getField( methodString, params, method ){
                     }else{
                         if( fieldName == 'COMPANY_ID' || fieldName == 'CONTACT_ID' || fieldName == 'UF_DEAL_ID' || fieldName == 'OWNER_TYPE' ||
                             fieldName == 'QUOTE_ID' || fieldName == 'LEAD_ID' || fieldName == 'PRODUCT_ID' || fieldName == 'UF_DEPARTMENT' || fieldName == 'PR_LOCATION' ||
-                            fieldName == 'INVOICE_PROPERTIES' || fieldName == 'ASSIGNED_BY_ID' || fieldName == 'MODIFY_BY_ID' || fieldName == 'IM' ){
+                            fieldName == 'INVOICE_PROPERTIES' || fieldName == 'PRODUCT_ROWS' || fieldName == 'ASSIGNED_BY_ID' || fieldName == 'MODIFY_BY_ID' || fieldName == 'IM' ){
 
                         }else{
                             filterField( currentCRMSection, fieldName, method )
@@ -712,10 +714,15 @@ jQuery(document).ready(function(){
 
                             }
                         }
-                    },function (result) { console.log(result);
+                    },function (result) {
                         $("#entity-add-modal #close-add-entity").click();
                         $('#entity-name').val('');
-                        getEntity(id);
+
+                        if( editorOpen || currentCRMSection != id ){
+
+                        }else{
+                            getEntity(id);
+                        }
                     });
             }else{
                 $('#crm-entity').tooltip()
@@ -752,7 +759,7 @@ jQuery(document).ready(function(){
         }
 
         PROPERTY_VALUES['text'] = CKEDITOR.instances['TextArea1'].getData();
-        PROPERTY_VALUES['templateName'] = $('#document-edit-modal .modal-title').val();
+        PROPERTY_VALUES['templateName'] = $('#document').val();
         PROPERTY_VALUES['docProperties'] = {
             left: ( $('.margin-left').val() != '') ? $('.margin-left').val() : 40 ,
             top: ($('.margin-top').val() != '') ? $('.margin-top').val() : 60 ,
@@ -764,7 +771,7 @@ jQuery(document).ready(function(){
         };
 
         sync( currentSection, PROPERTY_VALUES );
-
+        editorOpen = false;
     });
 
     $('.crm-menu-item').not('#back').not('.crm-menu-new').click(function(){
@@ -777,10 +784,12 @@ jQuery(document).ready(function(){
     });
 
     $('#close-edit-modal').click(function () {
+        editorOpen = false;
         getEntity( currentCRMSection );
-    })
+    });
 
     $('#back').click(function(){
+        if( editorOpen == true ){ areYouSurePrompt() }
         goBack();
     });
 
@@ -791,5 +800,12 @@ jQuery(document).ready(function(){
     $('#entity-add-modal').on('shown.bs.modal', function () {
         $('#entity-name').focus()
     });
+
+    function areYouSurePrompt() {
+        if ( editorOpen ) {
+            return 'You have unsaved changes. Are you sure you want to leave this page?';
+        }
+    }
+    //$(window).on('beforeunload', areYouSurePrompt);
 
 });
