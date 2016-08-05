@@ -15,10 +15,6 @@ function resizeMe(){
 }
 
 function filterField( currentCRMSection, fieldName, method ){
-    // console.log( currentCRMSection );
-    // console.log( entityFields );
-    // console.log( fieldName );
-    // console.log( method );
     if( currentCRMSection == 'invoice' ){
         if( method == 'productrow' ){
             if( fieldName == 'CUSTOMIZED' || fieldName == 'DISCOUNT_PRICE' || fieldName == 'DISCOUNT_SUM' || fieldName == 'PRODUCT_NAME' || fieldName == 'PRICE' || fieldName == 'QUANTITY'
@@ -200,4 +196,30 @@ function cutFirstNull(string) {
         return string.slice(1);
     }
     return string;
+}
+
+function dateString(val){
+    var array = ['janvāris', 'februāris', 'marts', 'aprīlis', 'maijs', 'jūnijs', 'jūlijs', 'augusts', 'septembris', 'oktobris', 'novembris', 'decembris'];
+    return array[ (val - 1)];
+}
+
+function createField( fieldName, method ){
+    $('<div />', {class:"field col-md-2 col-sm-3 col-xs-4 " + method, text: translate( method, fieldName) }).data({method: method, field: fieldName }).appendTo('#field-wrap');
+}
+
+function initDraggable(){
+
+    $('<div />', {class:"field col-md-2 col-sm-3 col-xs-4 date", text: translate( 'date', 'CURRENT_DATE') }).data({method: 'date', field: 'CURRENT_DATE' }).appendTo('#extra-field-wrap');
+    
+    $('.field').draggable({
+        cursor: 'move',
+        helper: "clone",
+        iframeFix: true,
+        start: function () {
+            $("iframe").css('z-index', '-1');
+        },
+        stop: function () {
+            $("iframe").css('z-index', '0');
+        }
+    }).css('z-index', 1);
 }

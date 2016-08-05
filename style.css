@@ -67,6 +67,10 @@
     margin-top: 30px;
     //min-height: 100px;
 }
+#extra-field-wrap{
+    border-top: #dddddd 1px solid;
+}
+
 #entity-add-modal{
     width: 600px;
     margin: 0 auto;

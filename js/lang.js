@@ -319,6 +319,10 @@ function translate( crm, name ){
         byWords: {
             OPPORTUNITY: 'Summa vārdiem',
             PRICE: 'Summa vārdiem'
+        },
+        
+        date: {
+            CURRENT_DATE: 'Šodienas datums'
         }
     };
 

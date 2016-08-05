@@ -35,5 +35,15 @@ CKEDITOR.editorConfig = function( config ) {
 
 	// Simplify the dialog windows.
 	config.removeDialogTabs = 'image:advanced;link:advanced';
+
+	config.mathJaxLib = '//cdn.mathjax.org/mathjax/2.6-latest/MathJax.js?config=TeX-AMS_HTML';
+
+	config.extraPlugins = 'lineutils';
+	config.extraPlugins = 'widget';
+	config.extraPlugins = 'filetools';
+	config.extraPlugins = 'notificationaggregator';
+	config.extraPlugins = 'notification';
+	config.extraPlugins = 'uploadwidget';
 	config.extraPlugins = 'uploadimage';
+	config.uploadUrl = 'js/upload.js';
 };

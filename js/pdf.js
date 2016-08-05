@@ -154,7 +154,19 @@ function checkProduct( text, dealProductRow, name ){
     return html.map(function() { return this.outerHTML || this.nodeValue; }).get().join('');
 }
 
+function getDateString( date ){
+    var dd = date.getDate().toString();
+    var mm = (date.getMonth()+1).toString(); //January is 0!
+    var yyyy = date.getFullYear().toString();
+    var datums = yyyy + ". gada " + dd + ". " + dateString( mm );
+    return datums;
+}
 
+function currentDate() {
+    var today = new Date();
+    var datums = getDateString( today );
+    return datums;
+}
 function downloadPdf( text, dataObjects, propertipes, crmName, companyData, contactData, dealData, dealProductRow, leadData, userData, quoteData, myCompanyData ){
 
     var left = Number(propertipes.left) * Number(0.353),
@@ -165,6 +177,7 @@ function downloadPdf( text, dataObjects, propertipes, crmName, companyData, cont
          fontSize = Number(propertipes.fontSize),
          dateFormat = propertipes.dateFormat;
 
+    text =  replaceMatched( currentDate, text, 'date', 'CURRENT_DATE', dateFormat );
 
     $.each(dataObjects, function (i, field) {
         text =  replaceMatched( field, text, crmName, i, dateFormat );
@@ -183,12 +196,16 @@ function downloadPdf( text, dataObjects, propertipes, crmName, companyData, cont
             var nodokļuSumma = Number(summaBezNodokļa) * Number( val.VAT_RATE );
             var summaKopa = Number(summaBezNodokļa) + Number(nodokļuSumma);
 
+            Number(0.1800) * Number(100) + '%'
+
             dataObjects.PRODUCT_ROWS[i].PRICE = cena.toFixed(2);
             dataObjects.PRODUCT_ROWS[i].SUM = summa.toFixed(2);
             dataObjects.PRODUCT_ROWS[i].DISCOUNT_PRICE_ALL = atlaidesSumma.toFixed(2);
             dataObjects.PRODUCT_ROWS[i].PRICE_EXCLUSIVE_ALL = summaBezNodokļa.toFixed(2);
             dataObjects.PRODUCT_ROWS[i].TAX_SUM = nodokļuSumma.toFixed(2);
             dataObjects.PRODUCT_ROWS[i].SUM_ALL = summaKopa.toFixed(2);
+            dataObjects.PRODUCT_ROWS[i].VAT_RATE = Number((Number( val.VAT_RATE ) * Number(100)));
+            dataObjects.PRODUCT_ROWS[i].QUANTITY = Number(dataObjects.PRODUCT_ROWS[i].QUANTITY);
         });
         text = checkProduct( text, dataObjects.PRODUCT_ROWS, 'productrow' );
     }

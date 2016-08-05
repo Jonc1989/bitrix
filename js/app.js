@@ -587,25 +587,12 @@ function getField( methodString, params, method ){
 
             }
             resizeMe();
+
+            initDraggable();
         }
     );
 }
-function createField( fieldName, method ){
 
-    $('<div />', {class:"field col-md-2 col-sm-3 col-xs-4 " + method, text: translate( method, fieldName) }).data({method: method, field: fieldName }).appendTo('#field-wrap');
-
-    $('.field').draggable({
-        cursor: 'move',
-        helper: "clone",
-        iframeFix: true,
-        start: function () {
-            $("iframe").css('z-index', '-1');
-        },
-        stop: function () {
-            $("iframe").css('z-index', '0');
-        }
-    }).css('z-index', 1);
-}
 
 function goBack() {
     if( back != null ){
@@ -682,6 +669,29 @@ jQuery(document).ready(function(){
     CKEDITOR.replace( 'TextArea1' );
     editor = CKEDITOR.instances['TextArea1'];
     CKEDITOR.config.height = 500;
+
+
+    CKEDITOR.on( 'dialogDefinition', function( ev ) {
+
+        var dialogName = ev.data.name;
+        var dialogDefinition = ev.data.definition;
+        var infoTab = dialogDefinition.getContents( 'info' );
+
+        if(dialogName == 'image'){
+            infoTab.add({
+                type: 'html',
+                html: '<input type="file"><br><img src="" height="200" alt="Image preview...">'
+            });
+        }
+
+        dialogDefinition.onOk = function(){
+            previewFile();
+        }
+
+    });
+    
+    
+    
     
 
 
@@ -809,3 +819,26 @@ jQuery(document).ready(function(){
     //$(window).on('beforeunload', areYouSurePrompt);
 
 });
+
+function previewFile() {
+    var preview = document.querySelector('img');
+    var file    = document.querySelector('input[type=file]').files[0];
+    var reader  = new FileReader();
+
+    reader.addEventListener("load", function () {
+        insertImage(reader.result)
+
+    }, false);
+
+    if (file) {
+        reader.readAsDataURL(file);
+    }
+}
+function insertImage(href) {
+    var elem = CKEDITOR.instances['TextArea1'].document.createElement('img', {
+        attributes: {
+            src: href
+        }
+    });
+    CKEDITOR.instances['TextArea1'].insertElement(elem);
+}
