@@ -35,7 +35,14 @@ function filterField( currentCRMSection, fieldName, method ){
             createField( fieldName, method );
         }
     }else{
-        createField( fieldName, method );
+        if( method == 'company' ){
+            if( fieldName != 'LOGO' ){
+                createField( fieldName, method );
+            }
+        }else{
+            createField( fieldName, method );
+        }
+
     }
 }
 

@@ -1,16 +1,17 @@
 var entityFields = [];
-var currentSection = null, currentCRMSection;
+var currentSection = null, currentCRMSection, templateName;
 var editor;
 var back = null;
 var entityFields = [];
 var editorOpen = false;
+var entityToAdd = null;
 
 function initDocument( fields, templateName ){
 
     initDroppable( $('#cke_TextArea1') );
     $('.dropped').remove();
-    $("#document-edit-modal .modal-title").empty();
-    $("#document-edit-modal .modal-title").text(templateName);
+    // $("#document-edit-modal .modal-title").empty();
+    // $("#document-edit-modal .modal-title").text(templateName);
 
     var text = '';
     $.each(fields[0].PROPERTY_VALUES, function( name, val ){
@@ -40,15 +41,18 @@ function initDocument( fields, templateName ){
             CKEDITOR.config.autoGrow_minHeight = 300;
             CKEDITOR.config.autoGrow_maxHeight = 1000;
 
+        }else if( name == 'templateName' ){
+            $('.template-wrap').attr('name', val )
         }
+
     }
     });
     if( text == '' ){
         editor.setData('');
     }
     resizeMe();
-    filterCRM( fields[0].NAME );
-    $('#api option[value=' + currentCRMSection +']').attr('selected','selected');
+    filterCRM( fields[0].NAME ); console.log( fields[0].NAME )
+    $('#api option[value=' + currentCRMSection +']').attr('selected','selected');console.log( currentCRMSection )
 
     $('.field').remove(':not(.dropped)');
     var method = currentCRMSection, params = {};
@@ -415,6 +419,7 @@ function getEntityProperties( entity ){
 
 function getEntity( name ){
     back = null;
+    Active( false );
     $('.template-wrap').addClass('hidden');
     $('.data-grid').show();
     $('.list-item').remove();
@@ -422,7 +427,7 @@ function getEntity( name ){
     BX24.callMethod('entity.get',
         {},
         function (result) {
-        var templateName = '';
+        templateName = '';
             if(result.error())
                 console.error(result.error());
             else
@@ -439,7 +444,7 @@ function getEntity( name ){
                                     entityFields = data[0].PROPERTY_VALUES;
                                     $.each(entityFields, function( index, value ){
                                         if( index == 'templateName' ){
-                                            templateName = data[0].ENTITY;
+                                            templateName = JSON.parse(value);
                                         }
                                     });
 
@@ -459,14 +464,17 @@ function getEntity( name ){
                                     $('#list_' + val.ENTITY).on('click', function () {
                                         getEntityProperties( val.ENTITY );
                                         back = 'getEntity("' + name + '")';
+                                        Active( true );
                                     });
                                     $('#edit_' + val.ENTITY).on('click', function () {
                                         editDoc( val.ENTITY, templateName );currentSection = val.ENTITY; currentCRMSection = val.NAME;
                                         back = 'getEntity("' + name + '")';
+                                        Active( true );
                                     });
                                     $('#delete_' + val.ENTITY).on('click', function () {
                                         deleteEntity( val.ENTITY, data[0].ID );                $('#template-' + data[0].ID ).fadeOut();
-                                        back = 'getEntity("' + name + '")';
+                                        //back = 'getEntity("' + name + '")';
+                                        //Active( true );
                                     });
                                 }
                             }
@@ -592,7 +600,14 @@ function getField( methodString, params, method ){
         }
     );
 }
+function Active( bool ) {
+    if( bool ){
+        $('.crm-menu-back').parent().removeClass('inactive' );
+    }else{
+        $('.crm-menu-back').parent().addClass('inactive' );
+    }
 
+}
 
 function goBack() {
     if( back != null ){
@@ -657,7 +672,12 @@ function saveFormData( id ){
         }
     );
 }
+function addNewTemplate( entity ) {
+    entityToAdd = entity;
+    $('#entity-add-modal').modal('show');
+}
 jQuery(document).ready(function(){
+    Active( false );
     BX24.install(function(){
         install();
     });
@@ -673,21 +693,37 @@ jQuery(document).ready(function(){
 
     CKEDITOR.on( 'dialogDefinition', function( ev ) {
 
-        var dialogName = ev.data.name;
-        var dialogDefinition = ev.data.definition;
-        var infoTab = dialogDefinition.getContents( 'info' );
 
+        var dialogName = ev.data.name;
         if(dialogName == 'image'){
+
+            var dialogDefinition = ev.data.definition;
+            var infoTab = dialogDefinition.getContents( 'Upload' );
+            console.log(dialogDefinition);
+            infoTab.elements[0].style="display: none;";
+            //infoTab.remove( 'upload' );
+            infoTab.remove( "uploadButton" );
+
             infoTab.add({
                 type: 'html',
-                html: '<input type="file"><br><img src="" height="200" alt="Image preview...">'
+                html: '<input id="my-img-upload" type="file" onchange="showPreview(this.files)"><br>' +
+                '<label style="margin-right: 5px;margin-top: 10px;" for="img-width">Width</label>' +
+                '<input type="text" id="img-width" class="cke_dialog_ui_input_text" style="width: 60px;"><br>' +
+                '<label  style="margin-right: 5px;" for="img-height">Height</label>' +
+                '<input type="text" id="img-height" class="cke_dialog_ui_input_text" style="width: 60px;"><br>' +
+                '<img style="max-width: 300px;max-height: 300px;margin-top: 10px;" src="" id="img-preview">'
             });
         }
 
         dialogDefinition.onOk = function(){
-            previewFile();
-        }
-
+            previewFile( );
+            setTimeout(function () {
+                $('#img-width').val(''),
+                    $('#img-height').val(''),
+                    $('#img-preview').attr('src', ''),
+                    $('#my-img-upload').val('');
+            }, 500 );
+        };
     });
     
     
@@ -700,19 +736,19 @@ jQuery(document).ready(function(){
         $(document).on('click', '#save-entity', function (e) {
 
             var id = $('input[type="radio"]:checked').attr('id');
-            if( id ){
+            if( entityToAdd != '' ){
                 BX24.callBatch({
                         addEntity: {
                             method: 'entity.add',
                             params: {
-                                'ENTITY': $('#entity-name').val(), 'NAME': id, 'ACCESS': {U1: 'W', AU: 'R'}
+                                'ENTITY': $('#entity-name').val(), 'NAME': entityToAdd, 'ACCESS': {U1: 'W', AU: 'R'}
                             }
                         },
                         addEntityItem: {
                             method: 'entity.item.add',
                             params: {
                                 ENTITY: $('#entity-name').val(),
-                                NAME: id
+                                NAME: entityToAdd
                             }
                         },
                         addEntityItemProperty:{
@@ -723,15 +759,26 @@ jQuery(document).ready(function(){
                                 NAME: $('#entity-name').val(), TYPE: 'S'
 
                             }
+                        },
+                        addTemplateName: {
+                            method: 'entity.item.update',
+                            params: {
+                                ENTITY: $('#entity-name').val(),
+                                ID: '$result[addEntityItem]',
+                                PROPERTY_VALUES: {
+                                    'templateName': JSON.stringify($('#entity-name').val())
+                                }
+                            }
                         }
                     },function (result) {
                         $("#entity-add-modal #close-add-entity").click();
                         $('#entity-name').val('');
 
-                        if( editorOpen || currentCRMSection != id ){
+                        if( currentCRMSection == entityToAdd ){
+                            if( !editorOpen ){
+                                getEntity(entityToAdd);
+                            }
 
-                        }else{
-                            getEntity(id);
                         }
                     });
             }else{
@@ -769,7 +816,7 @@ jQuery(document).ready(function(){
         }
 
         PROPERTY_VALUES['text'] = CKEDITOR.instances['TextArea1'].getData();
-        PROPERTY_VALUES['templateName'] = $('#document').val();
+        PROPERTY_VALUES['templateName'] = JSON.stringify( $('.template-wrap').attr('name' ) );
         PROPERTY_VALUES['docProperties'] = {
             left: ( $('.margin-left').val() != '') ? $('.margin-left').val() : 40 ,
             top: ($('.margin-top').val() != '') ? $('.margin-top').val() : 60 ,
@@ -820,8 +867,21 @@ jQuery(document).ready(function(){
 
 });
 
-function previewFile() {
-    var preview = document.querySelector('img');
+function  showPreview( files )  {
+    var reader  = new FileReader();
+
+    reader.addEventListener("load", function () {
+        $('#img-preview').attr('src', reader.result);
+
+    }, false);
+
+    if (files) {
+        reader.readAsDataURL(files[0]);
+    }
+}
+
+function  previewFile( ) {
+
     var file    = document.querySelector('input[type=file]').files[0];
     var reader  = new FileReader();
 
@@ -837,8 +897,13 @@ function previewFile() {
 function insertImage(href) {
     var elem = CKEDITOR.instances['TextArea1'].document.createElement('img', {
         attributes: {
-            src: href
+            src: href,
+            width: $('#img-width').val(),
+            height: $('#img-height').val()
         }
     });
+
+    $('#img-preview').attr('src', href );
+
     CKEDITOR.instances['TextArea1'].insertElement(elem);
 }

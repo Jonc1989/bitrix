@@ -226,6 +226,18 @@ a {
 .crm-menu-back:hover  .crm-menu-icon {
     opacity: 1;
 }
+.inactive .crm-menu-back .crm-menu-icon, .inactive .crm-menu-back:hover .crm-menu-icon {
+    opacity: .3;
+}
+.inactive .crm-menu-item-active, .inactive .crm-menu-item:active, .inactive .crm-menu-item:hover {
+    background-color: transparent;
+}
+.inactive .crm-menu-back:hover .crm-menu-name, .inactive .crm-menu-back .crm-menu-name{
+    color: #B2B2B2;
+}
+.inactive .crm-menu-item{
+    cursor: default;
+}
 #TextArea1{
     width: 100%;
     height: 100%;
@@ -257,4 +269,47 @@ a.my-company-settings {
 }
 #companyModal .modal-dialog{
     max-width: 600px;
+}
+.margin-wrap{
+    display: inline-block;
+}
+.margins{
+    width: 60px;
+}
+.crm-menu-back .crm-menu-icon, .crm-menu-back .crm-menu-name{
+    -webkit-transition: all .3s ease-out;
+    -moz-transition: all .3s ease-out;
+    -ms-transition: all .3s ease-out;
+    -o-transition: all .3s ease-out;
+    transition: all .3s ease-out;
+}
+
+#crm-menu-plus-btn-lead, #crm-menu-plus-btn-contact, #crm-menu-plus-btn-company, #crm-menu-plus-btn-deal, #crm-menu-plus-btn-quote, #crm-menu-plus-btn-invoice{
+    background-position: center -327px;
+}
+
+#crm-menu-plus-btn-lead:hover,
+#crm-menu-plus-btn-contact:hover,
+#crm-menu-plus-btn-company:hover,
+#crm-menu-plus-btn-deal:hover,
+#crm-menu-plus-btn-quote:hover,
+#crm-menu-plus-btn-invoice:hover{
+    background-position: center -376px;
+}
+
+.crm-menu-plus-btn{
+    bottom: -17px;
+    cursor: pointer;
+    display: none;
+    height: 35px;
+    margin-left: -28px;
+    left: 50%;
+    text-decoration: none;
+    position: absolute;
+    width: 50px;
+    z-index: 2;
+    background: url('images/crm-control-panel-sprite-12.png') no-repeat 500px 500px;
+}
+.crm-menu-item-wrap:hover .crm-menu-plus-btn{
+    display: block;
 }
