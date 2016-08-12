@@ -86,13 +86,13 @@
                 </div>
 
             </td>
-            <td class="crm-menu-cell">
-                <div class="crm-menu-item-wrap" id="crm_ctrl_panel_item_my_activity_new">
-                    <a data-toggle="modal" data-target="#entity-add-modal"  class="crm-menu-item crm-menu-new">
-                        <span class="crm-menu-icon"></span>
-                        <span class="crm-menu-name">Pievienot</span></a>
-                    <div id="crm-menu-plus-btn-new" class="crm-menu-plus-btn crm-menu-plus-btn-pro" style="display: none;"></div></div>
-            </td>
+            <!--<td class="crm-menu-cell">-->
+                <!--<div class="crm-menu-item-wrap" id="crm_ctrl_panel_item_my_activity_new">-->
+                    <!--<a data-toggle="modal" data-target="#entity-add-modal"  class="crm-menu-item crm-menu-new">-->
+                        <!--<span class="crm-menu-icon"></span>-->
+                        <!--<span class="crm-menu-name">Pievienot</span></a>-->
+                    <!--<div id="crm-menu-plus-btn-new" class="crm-menu-plus-btn crm-menu-plus-btn-pro" style="display: none;"></div></div>-->
+            <!--</td>-->
             <td class="crm-menu-cell ">
                 <div class="my-company-wrap">
                     <a data-toggle="modal" data-target="#companyModal" id="settings"  class="my-company-settings">
@@ -113,7 +113,7 @@
         <tr>
             <td class="bx-table-td id-cell" style="width: 55px;"></td>
             <td class="bx-table-td">Nosaukums</td>
-            <td class="bx-table-td" style="width: 200px;">Darbība</td>
+            <td class="bx-table-td" style="width: 300px;">Darbība</td>
         </tr>
     </table>
 
@@ -129,38 +129,38 @@
                 </div>
                 <div class="modal-body">
 
-                    <div class="input-group">
-                        <input id="entity-name" type="text" class="form-control" placeholder="" style="margin-bottom: 15px;">
-                    </div>
-                    <div id="crm-entity" data-toggle="tooltip" data-placement="top" title="CRM sadaļa nav izvēlēta">
-                        <div class="btn-group" data-toggle="buttons">
-                            <label class="btn btn-primary">
-                                <input type="radio" name="options" id="deal" autocomplete="off"> Darījumi
-                            </label>
+                    <!--<div class="input-group">-->
+                        <input id="entity-name" type="text" class="form-control">
+                    <!--</div>-->
+                    <!--<div id="crm-entity" data-toggle="tooltip" data-placement="top" title="CRM sadaļa nav izvēlēta">-->
+                        <!--<div class="btn-group" data-toggle="buttons">-->
                             <!--<label class="btn btn-primary">-->
-                                <!--<input type="radio" name="options" id="currency" autocomplete="off"> Valūtas-->
+                                <!--<input type="radio" name="options" id="deal" autocomplete="off"> Darījumi-->
                             <!--</label>-->
-                            <label class="btn btn-primary">
-                                <input type="radio" name="options" id="company" autocomplete="off"> Kompānijas
-                            </label>
-                            <label class="btn btn-primary">
-                                <input type="radio" name="options" id="contact" autocomplete="off"> Kontakti
-                            </label>
-                            <label class="btn btn-primary">
-                                <input type="radio" name="options" id="invoice" autocomplete="off"> Rēķini
-                            </label>
-                            <label class="btn btn-primary">
-                                <input type="radio" name="options" id="quote" autocomplete="off"> Piedāvājumi
-                            </label>
-                            <label class="btn btn-primary">
-                                <input type="radio" name="options" id="lead" autocomplete="off"> Līdi
-                            </label>
-                        </div>
-                    </div>
+                            <!--&lt;!&ndash;<label class="btn btn-primary">&ndash;&gt;-->
+                                <!--&lt;!&ndash;<input type="radio" name="options" id="currency" autocomplete="off"> Valūtas&ndash;&gt;-->
+                            <!--&lt;!&ndash;</label>&ndash;&gt;-->
+                            <!--<label class="btn btn-primary">-->
+                                <!--<input type="radio" name="options" id="company" autocomplete="off"> Kompānijas-->
+                            <!--</label>-->
+                            <!--<label class="btn btn-primary">-->
+                                <!--<input type="radio" name="options" id="contact" autocomplete="off"> Kontakti-->
+                            <!--</label>-->
+                            <!--<label class="btn btn-primary">-->
+                                <!--<input type="radio" name="options" id="invoice" autocomplete="off"> Rēķini-->
+                            <!--</label>-->
+                            <!--<label class="btn btn-primary">-->
+                                <!--<input type="radio" name="options" id="quote" autocomplete="off"> Piedāvājumi-->
+                            <!--</label>-->
+                            <!--<label class="btn btn-primary">-->
+                                <!--<input type="radio" name="options" id="lead" autocomplete="off"> Līdi-->
+                            <!--</label>-->
+                        <!--</div>-->
+                    <!--</div>-->
                 </div>
                 <div class="modal-footer">
-                    <button id="close-add-entity" type="button" class="btn btn-default" data-dismiss="modal">Aizvērt</button>
                     <button id="save-entity" type="button" class="btn btn-primary">Pievienot</button>
+                    <button id="close-add-entity" type="button" class="btn btn-default" data-dismiss="modal">Aizvērt</button>
                 </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
@@ -200,7 +200,7 @@
                     </div>
                     <div role="tabpanel" class="tab-pane" id="profile">
 
-                        <div class="col-md-12 col-sm-12 col-xs-6" style="margin-top: 10px;margin-bottom: 10px;">
+                        <div class="col-md-6 col-sm-6 col-xs-6" style="margin-top: 10px;margin-bottom: 10px;">
                             <div>Document robežas</div>
                             <div class="margin-wrap">
                                 <span class="" id="left">Pa reisi</span>

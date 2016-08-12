@@ -18,7 +18,9 @@
     height: auto;
     width: auto;
 }
-
+.template-wrap{
+    margin-top: 5px;
+}
 #api{
     float: right;
     margin-right: 5px;
@@ -72,8 +74,18 @@
 }
 
 #entity-add-modal{
-    width: 600px;
+    width: 400px;
     margin: 0 auto;
+}
+#entity-add-modal .modal-footer{
+    text-align: center;
+    border: none;
+}
+#entity-add-modal .modal-header{
+    border: none;
+}
+#entity-add-modal .modal-body{
+    padding: 0 15px;
 }
 #document-edit-modal{
     //width: 872px;
@@ -101,7 +113,7 @@
 
 .crm-menu-table {
     border-spacing: 0;
-    max-width: 900px;
+    max-width: 740px;
     padding: 0;
     width: 100%;
 }
@@ -138,7 +150,7 @@ table {
      cursor: pointer;
      display: inline-block;
      border-radius: 4px;
-     height: 78px;
+     height: 86px;
      margin-right: 5px;
 
      min-width: 70px;
@@ -208,6 +220,9 @@ a {
 .crm-menu-item-wrap:hover .crm-menu-name, .crm-menu-item-active .crm-menu-name {
     color: #333;
 }
+.crm-menu-item-wrap:hover .crm-menu-item{
+    background-color: #D6F1FB;
+}
 .crm-menu-new .crm-menu-icon {
     background: url('images/new.png') no-repeat;
     background-position: center 14px;
@@ -259,6 +274,9 @@ a.my-company-settings {
 }
 .my-company-wrap{
     margin-left: 50px;
+}
+.my-company-wrap .crm-menu-icon{
+    cursor: pointer;
 }
 #settings .crm-menu-icon{
     background-position: center -1409px;

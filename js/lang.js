@@ -84,7 +84,11 @@ function translate( crm, name ){
             PHONE: 'Telefons',
             EMAIL: 'Epasts',
             WEB: 'Web',
-            IM: 'IM'
+            IM: 'IM',
+            UF_CRM_BANK_DETAILS: 'Bankas konta detaļas',
+            UF_CRM_BANK_ACCOUNT: 'Bankas konts',
+            UF_CRM_SWIFT: 'Swift kods',
+
         },
 
         company: {
@@ -102,14 +106,18 @@ function translate( crm, name ){
             ADDRESS_COUNTRY_CODE: 'Valsts kods',
             ADDRESS_LEGAL: 'Iela, māja, korpuss',
             REG_ADDRESS: 'Juridiskā drese',
-            REG_ADDRESS2: 'Juridiskā adrese 2',
+            REG_ADDRESS_2: 'Juridiskā adrese iela',
             REG_ADDRESS_CITY: 'Jur. adr. pilsēta',
             REG_ADDRESS_POSTAL_CODE: 'Jur. adr. pasta indekss',
             REG_ADDRESS_REGION: 'Jur. adr. reģions',
             REG_ADDRESS_PROVINCE: 'Jur. adr. province',
             REG_ADDRESS_COUNTRY: 'Jur. adr. valsts',
             REG_ADDRESS_COUNTRY_CODE: 'Jur. adr. valsts kods',
-            BANKING_DETAILS: 'Bankas detaļas',
+            BANKING_DETAILS: 'Bankas konta detaļas',
+            UF_CRM_BANK_ACCOUNT: 'Bankas konts',
+            UF_CRM_SWIFT: 'Swift kods',
+            UF_CRM_REG_NR: 'Reģistrācijas numurs',
+            UF_CRM_PVN_NR: 'Swift kods',
             INDUSTRY: 'Industrija',
             EMPLOYEES: 'Darbinieku skaits',
             CURRENCY_ID: 'Valūtas kods',
@@ -161,6 +169,7 @@ function translate( crm, name ){
             LOCATION_ID: 'Atrašanās ID',
             ORIGIN_ID: 'Izcelšanās ID',
             ORIGIN_VERSION: 'Izcelšanās versija',
+            UF_CRM_DEAL_NUMBER: 'Darījuma numurs'
         },
 
         quote: {
@@ -326,5 +335,5 @@ function translate( crm, name ){
         }
     };
 
-    return translations[crm] !== undefined || translations[crm][name] !== undefined ? translations[crm][name] : name ;
+    return /*translations[crm] !== undefined ||*/ translations[crm][name] !== undefined ? translations[crm][name] : name ;
 }

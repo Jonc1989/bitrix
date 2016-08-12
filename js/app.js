@@ -9,13 +9,14 @@ var entityToAdd = null;
 function initDocument( fields, templateName ){
 
     initDroppable( $('#cke_TextArea1') );
+    $('.template-wrap').attr('name', templateName );
     $('.dropped').remove();
     // $("#document-edit-modal .modal-title").empty();
     // $("#document-edit-modal .modal-title").text(templateName);
 
     var text = '';
     $.each(fields[0].PROPERTY_VALUES, function( name, val ){
-        if(val){
+        if( val && name != 'templateName' ){
             var properties = JSON.parse(val);
 
 
@@ -41,18 +42,17 @@ function initDocument( fields, templateName ){
             CKEDITOR.config.autoGrow_minHeight = 300;
             CKEDITOR.config.autoGrow_maxHeight = 1000;
 
-        }else if( name == 'templateName' ){
-            $('.template-wrap').attr('name', val )
         }
 
     }
     });
+
     if( text == '' ){
         editor.setData('');
     }
     resizeMe();
-    filterCRM( fields[0].NAME ); console.log( fields[0].NAME )
-    $('#api option[value=' + currentCRMSection +']').attr('selected','selected');console.log( currentCRMSection )
+    filterCRM( fields[0].NAME );
+    $('#api option[value=' + fields[0].NAME +']').attr('selected','selected');
 
     $('.field').remove(':not(.dropped)');
     var method = currentCRMSection, params = {};
@@ -129,7 +129,7 @@ function getEntityProperties( entity ){
                     var documentProperties = {};
 
                     $.each( data.PROPERTY_VALUES, function( i, val ){
-                        if( val ){
+                        if( val && i != 'templateName' ){
                             var value = JSON.parse(val);
                             if( i == 'docProperties' ){
                                 documentProperties = value;
@@ -444,7 +444,7 @@ function getEntity( name ){
                                     entityFields = data[0].PROPERTY_VALUES;
                                     $.each(entityFields, function( index, value ){
                                         if( index == 'templateName' ){
-                                            templateName = JSON.parse(value);
+                                            templateName = value;
                                         }
                                     });
 
@@ -455,7 +455,7 @@ function getEntity( name ){
                                     '<td class="name-cell">' + templateName + '</td>' +
                                     '<td>' +
                                     '<span class="edit_entity" id="edit_' + val.ENTITY + '">Rediģēt</span>' +
-                                    '<span class="list_entity" id="list_' + val.ENTITY + '">Saraksts</span>' +
+                                    '<span class="list_entity" id="list_' + val.ENTITY + '">Dokumentu saraksts</span>' +
                                     '<span class="delete_entity" id="delete_' + val.ENTITY + '">Dzēst</span>' +
                                     '</td>' +
                                     '</tr>'
@@ -473,8 +473,6 @@ function getEntity( name ){
                                     });
                                     $('#delete_' + val.ENTITY).on('click', function () {
                                         deleteEntity( val.ENTITY, data[0].ID );                $('#template-' + data[0].ID ).fadeOut();
-                                        //back = 'getEntity("' + name + '")';
-                                        //Active( true );
                                     });
                                 }
                             }
@@ -519,7 +517,7 @@ function sync( name, fields ){
 
                                 var update = {};
                                 $.each(fields, function(i, val){
-                                    update[i] = JSON.stringify(fields[i]);
+                                    i == 'templateName' ? update[i] = fields[i] : update[i] = JSON.stringify(fields[i]);
                                 });
 
                                 setTimeout(function(){
@@ -689,8 +687,7 @@ jQuery(document).ready(function(){
     CKEDITOR.replace( 'TextArea1' );
     editor = CKEDITOR.instances['TextArea1'];
     CKEDITOR.config.height = 500;
-
-
+    
     CKEDITOR.on( 'dialogDefinition', function( ev ) {
 
 
@@ -699,9 +696,8 @@ jQuery(document).ready(function(){
 
             var dialogDefinition = ev.data.definition;
             var infoTab = dialogDefinition.getContents( 'Upload' );
-            console.log(dialogDefinition);
+
             infoTab.elements[0].style="display: none;";
-            //infoTab.remove( 'upload' );
             infoTab.remove( "uploadButton" );
 
             infoTab.add({
@@ -710,20 +706,21 @@ jQuery(document).ready(function(){
                 '<label style="margin-right: 5px;margin-top: 10px;" for="img-width">Width</label>' +
                 '<input type="text" id="img-width" class="cke_dialog_ui_input_text" style="width: 60px;"><br>' +
                 '<label  style="margin-right: 5px;" for="img-height">Height</label>' +
-                '<input type="text" id="img-height" class="cke_dialog_ui_input_text" style="width: 60px;"><br>' +
+                '<input type="text" id="img-height" class="cke_dialog_ui_input_text" style="width: 60px;margin-top: 5px;"><br>' +
                 '<img style="max-width: 300px;max-height: 300px;margin-top: 10px;" src="" id="img-preview">'
             });
-        }
 
-        dialogDefinition.onOk = function(){
-            previewFile( );
-            setTimeout(function () {
-                $('#img-width').val(''),
-                    $('#img-height').val(''),
-                    $('#img-preview').attr('src', ''),
-                    $('#my-img-upload').val('');
-            }, 500 );
-        };
+
+            dialogDefinition.onOk = function(){
+                readFile( $('#img-width').val(), $('#img-height').val() );
+                setTimeout(function () {
+                    $('#img-width').val(''),
+                        $('#img-height').val(''),
+                        $('#img-preview').attr('src', ''),
+                        $('#my-img-upload').val('');
+                }, 500 );
+            };
+        }
     });
     
     
@@ -735,7 +732,7 @@ jQuery(document).ready(function(){
 
         $(document).on('click', '#save-entity', function (e) {
 
-            var id = $('input[type="radio"]:checked').attr('id');
+            //var id = $('input[type="radio"]:checked').attr('id');
             if( entityToAdd != '' ){
                 BX24.callBatch({
                         addEntity: {
@@ -766,7 +763,7 @@ jQuery(document).ready(function(){
                                 ENTITY: $('#entity-name').val(),
                                 ID: '$result[addEntityItem]',
                                 PROPERTY_VALUES: {
-                                    'templateName': JSON.stringify($('#entity-name').val())
+                                    'templateName': $('#entity-name').val()
                                 }
                             }
                         }
@@ -774,15 +771,13 @@ jQuery(document).ready(function(){
                         $("#entity-add-modal #close-add-entity").click();
                         $('#entity-name').val('');
 
-                        if( currentCRMSection == entityToAdd ){
+                        if( currentCRMSection == entityToAdd || currentCRMSection == undefined ){
                             if( !editorOpen ){
                                 getEntity(entityToAdd);
                             }
 
                         }
                     });
-            }else{
-                $('#crm-entity').tooltip()
             }
         });
 
@@ -816,7 +811,7 @@ jQuery(document).ready(function(){
         }
 
         PROPERTY_VALUES['text'] = CKEDITOR.instances['TextArea1'].getData();
-        PROPERTY_VALUES['templateName'] = JSON.stringify( $('.template-wrap').attr('name' ) );
+        PROPERTY_VALUES['templateName'] = $('.template-wrap').attr('name' );
         PROPERTY_VALUES['docProperties'] = {
             left: ( $('.margin-left').val() != '') ? $('.margin-left').val() : 40 ,
             top: ($('.margin-top').val() != '') ? $('.margin-top').val() : 60 ,
@@ -867,7 +862,7 @@ jQuery(document).ready(function(){
 
 });
 
-function  showPreview( files )  {
+function showPreview( files )  {
     var reader  = new FileReader();
 
     reader.addEventListener("load", function () {
@@ -875,35 +870,76 @@ function  showPreview( files )  {
 
     }, false);
 
-    if (files) {
+    if ( files ) {
         reader.readAsDataURL(files[0]);
+    }else{
+        $('#my-img-upload').val('');
+        //alert("Attēla izmēram jābūt mazākam par 40 KB.");
     }
 }
 
-function  previewFile( ) {
+function readFile( width, height ) {
 
     var file    = document.querySelector('input[type=file]').files[0];
-    var reader  = new FileReader();
+    console.log( file );
 
-    reader.addEventListener("load", function () {
-        insertImage(reader.result)
+    BX24.callBatch({
+        uploadImage: {
+            method: 'entity.item.add',
+            params: {
+                'ENTITY': 'files',
+                'NAME': file.name,
+                'DETAIL_PICTURE': document.getElementById('my-img-upload')
+            }
+        },
+        getImage: {
+            method: 'entity.item.get',
+            params: {
+                'ENTITY': 'files',
+                FILTER: {
+                    'ID': '$result[uploadImage]'
+                }
+            }
+        }
+    }, function( result ){
+        if( !result.uploadImage.error()){
+        }
 
-    }, false);
-
-    if (file) {
-        reader.readAsDataURL(file);
+        if( !result.getImage.error()){
+            var data = result.getImage.data();
+            insertImage( data[0].DETAIL_PICTURE, width, height )
+        }
     }
+    );
+
+    // BX24.callMethod('entity.item.add', {
+    //     'ENTITY': 'files',
+    //     'NAME': file.name,
+    //     'DETAIL_PICTURE': document.getElementById('my-img-upload')
+    // }, function(r){
+    //     console.log(r);
+    // });
+
+    // var reader  = new FileReader();
+    //
+    // reader.addEventListener("load", function () {
+    //     insertImage(reader.result)
+    //
+    // }, false);
+    //
+    // if (file && (file.size / 1024) < 40 ) {
+    //     reader.readAsDataURL(file);
+    // }else{
+    //     console.log('Max 40 KB');
+    // }
 }
-function insertImage(href) {
+function insertImage(href, width, height) {
     var elem = CKEDITOR.instances['TextArea1'].document.createElement('img', {
         attributes: {
             src: href,
-            width: $('#img-width').val(),
-            height: $('#img-height').val()
+            width: width,
+            height:  height
         }
     });
-
-    $('#img-preview').attr('src', href );
-
     CKEDITOR.instances['TextArea1'].insertElement(elem);
 }

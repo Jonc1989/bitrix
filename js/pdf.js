@@ -87,7 +87,7 @@ function replaceMatched( field, text, crmName, key, dateFormat ){
                 var date = formatDateString( field, dateFormat );
                 text = text.replace( '{' + crmName +':' + key + '}', date );
             }else{
-                text = text.replace( '{' + crmName +':' + key + '}', field);
+                text = text.replace( '{' + crmName +':' + key + '}', field !== false ? field : '' );
             }
 
         }

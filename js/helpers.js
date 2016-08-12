@@ -15,35 +15,42 @@ function resizeMe(){
 }
 
 function filterField( currentCRMSection, fieldName, method ){
-    if( currentCRMSection == 'invoice' ){
-        if( method == 'productrow' ){
-            if( fieldName == 'CUSTOMIZED' || fieldName == 'DISCOUNT_PRICE' || fieldName == 'DISCOUNT_SUM' || fieldName == 'PRODUCT_NAME' || fieldName == 'PRICE' || fieldName == 'QUANTITY'
-                || fieldName == 'TAX_INCLUDED' || fieldName == 'TAX_RATE' || fieldName == 'SUM' || fieldName == 'DISCOUNT_PRICE_ALL' || fieldName == 'PRICE_EXCLUSIVE_ALL'
-                || fieldName == 'TAX_SUM' || fieldName == 'SUM_ALL'){
-                if( fieldName == 'TAX_INCLUDED' ){
-                    fieldName = 'VAT_INCLUDED'
-                }
-                if( fieldName == 'TAX_RATE' ){
-                    fieldName = 'VAT_RATE'
-                }
-                if( fieldName == 'DISCOUNT_SUM' ){
-                    fieldName = 'DISCOUNT_PRICE'
-                }
-                createField( fieldName, method );
-            }
-        }else{
-            createField( fieldName, method );
-        }
-    }else{
-        if( method == 'company' ){
-            if( fieldName != 'LOGO' ){
-                createField( fieldName, method );
-            }
-        }else{
-            createField( fieldName, method );
-        }
 
+    if( fieldName == 'EMP_PAYED_ID' || fieldName == 'EMP_STATUS_ID' || fieldName == 'LID' || fieldName == 'PHOTO' || fieldName == 'LOGO' || fieldName == 'CATEGORY_ID'
+        || fieldName == 'ORIGINATOR_ID' ){
+
+    }else{
+        if( currentCRMSection == 'invoice' ){
+            if( method == 'productrow' ){
+                if( fieldName == 'CUSTOMIZED' || fieldName == 'DISCOUNT_PRICE' || fieldName == 'DISCOUNT_SUM' || fieldName == 'PRODUCT_NAME' || fieldName == 'PRICE' || fieldName == 'QUANTITY'
+                    || fieldName == 'TAX_INCLUDED' || fieldName == 'TAX_RATE' || fieldName == 'SUM' || fieldName == 'DISCOUNT_PRICE_ALL' || fieldName == 'PRICE_EXCLUSIVE_ALL'
+                    || fieldName == 'TAX_SUM' || fieldName == 'SUM_ALL'){
+                    if( fieldName == 'TAX_INCLUDED' ){
+                        fieldName = 'VAT_INCLUDED'
+                    }
+                    if( fieldName == 'TAX_RATE' ){
+                        fieldName = 'VAT_RATE'
+                    }
+                    if( fieldName == 'DISCOUNT_SUM' ){
+                        fieldName = 'DISCOUNT_PRICE'
+                    }
+                    createField( fieldName, method );
+                }
+            }else{
+                createField( fieldName, method );
+            }
+        }else{
+            if( method == 'company' ){
+                if( fieldName != 'LOGO' ){
+                    createField( fieldName, method );
+                }
+            }else{
+                createField( fieldName, method );
+            }
+
+        }
     }
+
 }
 
 function filterCRM( crm ){

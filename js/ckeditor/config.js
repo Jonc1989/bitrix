@@ -4,49 +4,20 @@
  */
 
 CKEDITOR.editorConfig = function( config ) {
-	// Define changes to default configuration here.
-	// For complete reference see:
-	// http://docs.ckeditor.com/#!/api/CKEDITOR.config
+	// Define changes to default configuration here. For example:
+	// config.language = 'fr';
+	// config.uiColor = '#AADC6E';
+    CKEDITOR.config.allowedContent = true;
+    config.contentsCss = 'js/ckeditor/fonts.css';
 
-	// The toolbar groups arrangement, optimized for two toolbar rows.
-	config.toolbarGroups = [
-		{ name: 'clipboard',   groups: [ 'clipboard', 'undo' ] },
-		{ name: 'editing',     groups: [ 'find', 'selection', 'spellchecker' ] },
-		{ name: 'links' },
-		{ name: 'insert' },
-		{ name: 'forms' },
-		{ name: 'tools' },
-		{ name: 'document',	   groups: [ 'mode', 'document', 'doctools' ] },
-		{ name: 'others' },
-		'/',
-		{ name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
-		{ name: 'paragraph',   groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ] },
-		{ name: 'styles' },
-		{ name: 'colors' },
-		{ name: 'about' }
-	];
+    config.font_names = 'Roboto/Roboto;' + config.font_names;
+    config.font_names = 'Open Sans/Open Sans;' + config.font_names;
 
-	// Remove some buttons provided by the standard plugins, which are
-	// not needed in the Standard(s) toolbar.
-	config.removeButtons = 'Underline,Subscript,Superscript';
-
-	// Set the most common block elements.
-	config.format_tags = 'p;h1;h2;h3;pre';
-
-	// Simplify the dialog windows.
-	config.removeDialogTabs = 'image:advanced;link:advanced';
-
-	// config.mathJaxLib = '//cdn.mathjax.org/mathjax/2.6-latest/MathJax.js?config=TeX-AMS_HTML';
-	//
-	// config.extraPlugins = 'lineutils';
-	// config.extraPlugins = 'widget';
-	// config.extraPlugins = 'filetools';
-	// config.extraPlugins = 'notificationaggregator';
-	// config.extraPlugins = 'notification';
-	// config.extraPlugins = 'uploadwidget';
-	// config.extraPlugins = 'uploadimage';
-	// config.uploadUrl = 'js/upload.js';
-
-
-
+    config.extraPlugins = 'dragresize';
+    // config.extraPlugins = 'button';
+    // config.extraPlugins = 'listblock';
+    // config.extraPlugins = 'panel';
+    // config.extraPlugins = 'floatpanel';
+    // config.extraPlugins = 'richcombo';
+    // config.extraPlugins = 'stylescombo';
 };
